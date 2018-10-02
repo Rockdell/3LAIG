@@ -1,0 +1,186 @@
+<yas>
+
+    <scene root="cube" />
+
+    <views default="perspective">
+        <perspective id="perspective" near="0.0" far="500.0" angle="0.0">
+            <from x="500.0" y="500.0" z="500.0"/>
+            <to x="0.0" y="0.0" z="0.0" />
+        </perspective>
+    </views>
+
+    <ambient>
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
+        <background r="0.0" g="0.0" b="0.0" a="1.0" />
+    </ambient>
+
+    <lights>
+        <omni id="light" enabled="true">
+            <location x="0.0" y="0.0" z="0.0" w="1.0" />
+            <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <spectular r="1.0" g="1.0" b="1.0" a="1.0" />
+        </omni>
+    </lights>
+
+    <textures>
+        <texture id="cube_texture" file="" />
+    </textures>
+
+    <materials>
+        <material id="cube_material" shininess="1.0">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="0.4" g="0.4" b="0.4" a="1.0 " />
+            <diffuse r="0.4" g="0.4" b="0.4" a="1.0" />
+            <spectular r="0.0" g="0.0" b="0.0" a="1.0" />
+        </material>
+    </materials>
+
+    <transformations>
+        <transformation id="useless_transl">
+            <translate x="0.0" y="0.0" z="0.0" />
+        </transformation>
+    </transformations>
+
+    <primitives>
+        <primitive id="cube_face">
+            <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5" />
+        </primitive>
+    </primitives>
+
+    <components>    
+        <component id="cube">
+            <transformations> </transformations>
+
+            <materials>
+                <material id="cube_material" />
+            </materials>
+
+            <texture id="cube_texture" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="cube_front_face" />
+                <componentref id="cube_back_face" />
+                <componentref id="cube_top_face" />
+                <componentref id="cube_bottom_face" />
+                <componentref id="cube_right_face" />
+                <componentref id="cube_left_face" />
+            </children>
+        </component>
+
+        <component id="cube_front_face">
+            <transformations>
+                <transformation id="fface_trans">
+                    <translate x="0.0" y="0.0" z="0.5" />
+                </transformation>
+            </transformations>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="cube_face" />
+            </children>
+        </component>
+
+        <component id="cube_back_face">
+            <transformations>
+                <transformation id="bface_trans">
+                    <translate x="0.0" y="0.0" z="0.5" />
+                    <rotate axis="y" angle="180.0" />
+                </transformation>
+            </transformations>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="cube_face" />
+            </children>
+        </component>
+
+        <component id="cube_top_face">
+            <transformations>
+                <transformation id="tface_trans">
+                    <translate x="0.0" y="0.0" z="0.5" />
+                    <rotate axis="x" angle="90.0" />
+                </transformation>
+            </transformations>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="cube_face" />
+            </children>
+        </component>
+
+        <component id="cube_bottom_face">
+            <transformations>
+                <transformation id="bface_trans">
+                    <translate x="0.0" y="0.0" z="0.5" />
+                    <rotate axis="x" angle="-90.0" />
+                </transformation>
+            </transformations>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="cube_face" />
+            </children>
+        </component>
+
+        <component id="cube_right_face">
+            <transformations>
+                <transformation id="rface_trans">
+                    <translate x="0.0" y="0.0" z="0.5" />
+                    <rotate axis="y" angle="90.0" />
+                </transformation>
+            </transformations>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="cube_face" />
+            </children>
+        </component>
+
+        <component id="cube_left_face">
+            <transformations>
+                <transformation id="lface_trans">
+                    <translate x="0.0" y="0.0" z="0.5" />
+                    <rotate axis="y" angle="-90.0" />
+                </transformation>
+            </transformations>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="cube_face" />
+            </children>
+        </component>
+
+    </components>
+
+</yas>

@@ -1,12 +1,15 @@
 var DEGREE_TO_RAD = Math.PI / 180;
 
 // Order of the groups in the XML document.
-var INITIALS_INDEX = 0;
-var ILLUMINATION_INDEX = 1;
-var LIGHTS_INDEX = 2;
-var TEXTURES_INDEX = 3;
-var MATERIALS_INDEX = 4;
-var NODES_INDEX = 5;
+var SCENE_INDEX             = 0;
+var VIEWS_INDEX             = 1;
+var AMBIENT_INDEX           = 2;
+var LIGHTS_INDEX            = 3;
+var TEXTURES_INDEX          = 4;
+var MATERIALS_INDEX         = 5;
+var TRANSFORMATIONS_INDEX   = 6;
+var PRIMITIVES_INDEX        = 7;
+var COMPONENTS_INDEX        = 8;
 
 /**
  * MySceneGraph class, representing the scene graph.
@@ -16,6 +19,7 @@ class MySceneGraph {
      * @constructor
      */
     constructor(filename, scene) {
+
         this.loadedOk = null;
 
         // Establish bidirectional references between scene and graph.
@@ -41,8 +45,13 @@ class MySceneGraph {
          */
 
         this.reader.open('scenes/' + filename, this);
-    }
 
+        /** Data to be parsed */
+        this.scene_root = null;
+        this.scene_axis_length = null;
+
+        
+    }
 
     /*
      * Callback to be executed after successful reading
@@ -70,8 +79,8 @@ class MySceneGraph {
      * @param {XML root element} rootElement
      */
     parseXMLFile(rootElement) {
-        if (rootElement.nodeName != "SCENE")
-            return "root tag <SCENE> missing";
+        if (rootElement.nodeName != "yas")
+            return "root tag <yas> missing";
 
         var nodes = rootElement.children;
 
@@ -85,87 +94,150 @@ class MySceneGraph {
         var error;
 
         // Processes each node, verifying errors.
-
-        // <INITIALS>
         var index;
-        if ((index = nodeNames.indexOf("INITIALS")) == -1)
-            return "tag <INITIALS> missing";
-        else {
-            if (index != INITIALS_INDEX)
-                this.onXMLMinorError("tag <INITIALS> out of order");
 
-            //Parse INITIAL block
-            if ((error = this.parseInitials(nodes[index])) != null)
+        // <scene>
+        if ((index = nodeNames.indexOf("scene")) == -1)
+            return "tag <scene> missing";
+        else {
+            if (index != SCENE_INDEX)
+                this.onXMLMinorError("tag <scene> out of order");
+
+            //Parse views block
+            if ((error = this.parseScene(nodes[index])) != null)
+                return error;
+        }   
+        
+        // <views>
+        if ((index = nodeNames.indexOf("views")) == -1)
+            return "tag <views> missing";
+        else {
+            if (index != VIEWS_INDEX)
+                this.onXMLMinorError("tag <views> out of order");
+
+            //Parse views block
+            if ((error = this.parseViews(nodes[index])) != null)
                 return error;
         }
 
-        // <ILLUMINATION>
-        if ((index = nodeNames.indexOf("ILLUMINATION")) == -1)
-            return "tag <ILLUMINATION> missing";
+        // <ambient>
+        if ((index = nodeNames.indexOf("ambient")) == -1)
+            return "tag <ambient> missing";
         else {
-            if (index != ILLUMINATION_INDEX)
-                this.onXMLMinorError("tag <ILLUMINATION> out of order");
+            if (index != AMBIENT_INDEX)
+                this.onXMLMinorError("tag <ambient> out of order");
 
-            //Parse ILLUMINATION block
-            if ((error = this.parseIllumination(nodes[index])) != null)
+            //Parse ambient block
+            if ((error = this.parseAmbient(nodes[index])) != null)
                 return error;
         }
 
-        // <LIGHTS>
-        if ((index = nodeNames.indexOf("LIGHTS")) == -1)
-            return "tag <LIGHTS> missing";
+        // <lights>
+        if ((index = nodeNames.indexOf("lights")) == -1)
+            return "tag <lights> missing";
         else {
             if (index != LIGHTS_INDEX)
-                this.onXMLMinorError("tag <LIGHTS> out of order");
+                this.onXMLMinorError("tag <lights> out of order");
 
             //Parse LIGHTS block
             if ((error = this.parseLights(nodes[index])) != null)
                 return error;
         }
 
-        // <TEXTURES>
-        if ((index = nodeNames.indexOf("TEXTURES")) == -1)
-            return "tag <TEXTURES> missing";
+        // <textures>
+        if ((index = nodeNames.indexOf("textures")) == -1)
+            return "tag <textures> missing";
         else {
             if (index != TEXTURES_INDEX)
-                this.onXMLMinorError("tag <TEXTURES> out of order");
+                this.onXMLMinorError("tag <textures> out of order");
 
-            //Parse TEXTURES block
+            //Parse textures block
             if ((error = this.parseTextures(nodes[index])) != null)
                 return error;
         }
 
-        // <MATERIALS>
-        if ((index = nodeNames.indexOf("MATERIALS")) == -1)
-            return "tag <MATERIALS> missing";
+        // <materials>
+        if ((index = nodeNames.indexOf("materials")) == -1)
+            return "tag <materials> missing";
         else {
             if (index != MATERIALS_INDEX)
-                this.onXMLMinorError("tag <MATERIALS> out of order");
+                this.onXMLMinorError("tag <materials> out of order");
 
-            //Parse MATERIALS block
+            //Parse materials block
             if ((error = this.parseMaterials(nodes[index])) != null)
                 return error;
         }
 
-        // <NODES>
-        if ((index = nodeNames.indexOf("NODES")) == -1)
-            return "tag <NODES> missing";
+        // <transformations>
+        if ((index = nodeNames.indexOf("transformations")) == -1)
+            return "tag <transformations> missing";
         else {
-            if (index != NODES_INDEX)
-                this.onXMLMinorError("tag <NODES> out of order");
+            if (index != TRANSFORMATIONS_INDEX)
+                this.onXMLMinorError("tag <transformations> out of order");
 
-            //Parse NODES block
-            if ((error = this.parseNodes(nodes[index])) != null)
+            //Parse transformations block
+            if ((error = this.parseTransformations(nodes[index])) != null)
+                return error;
+        }
+
+        // <primitives>
+        if ((index = nodeNames.indexOf("primitives")) == -1)
+            return "tag <primitives> missing";
+        else {
+            if (index != PRIMITIVES_INDEX)
+                this.onXMLMinorError("tag <primitives> out of order");
+    
+            //Parse primitives block
+            if ((error = this.parsePrimitives(nodes[index])) != null)
+                return error;
+        }
+
+        // <components>
+        if ((index = nodeNames.indexOf("components")) == -1)
+            return "tag <components> missing";
+        else {
+            if (index != COMPONENTS_INDEX)
+                this.onXMLMinorError("tag <components> out of order");
+
+            //Parse components block
+            if ((error = this.parseComponents(nodes[index])) != null)
                 return error;
         }
     }
 
+    parseScene(sceneNode) {
+
+        /* */
+
+
+        // Get scene root
+        this.scene_root = this.readString(sceneNode, 'root');
+        this.scene_axis_length = this.readFloat(sceneNode, 'axis_length');
+
+        console.log("Root: " + this.scene_root);
+        console.log("Axis length: " + this.scene_axis_length);
+
+        var children = sceneNode.children;
+
+        var nodeNames = [];
+
+        for(var i = 0; i < children.length; i++)
+            nodeNames.push(children[i].nodeName);
+
+
+        
+
+        
+    }
+
+    //TODO
     /**
      * Parses the <INITIALS> block.
      */
-    parseInitials(initialsNode) {
+    /*
+    parseScene(sceneNode) {
 
-        var children = initialsNode.children;
+        var children = sceneNode.children;
 
         var nodeNames = [];
 
@@ -173,7 +245,7 @@ class MySceneGraph {
             nodeNames.push(children[i].nodeName);
 
         // Frustum planes
-        // (default values)
+        // (default messagevalues)
         this.near = 0.1;
         this.far = 500;
         var indexFrustum = nodeNames.indexOf("frustum");
@@ -251,6 +323,7 @@ class MySceneGraph {
 
         return null;
     }
+    */
 
     /**
      * Parses the <ILLUMINATION> block.
@@ -457,7 +530,7 @@ class MySceneGraph {
      * Callback to be executed on any minor error, showing a warning on the console.
      * @param {string} message
      */
-    onXMLMinorErro(message) {
+    onXMLMinorError(message) {
         console.warn("Warning: " + message);
     }
 
@@ -470,11 +543,190 @@ class MySceneGraph {
         console.log("   " + message);
     }
 
-    /**
+    /**parseInitials(initialsNode) {
+
+        var children = initialsNode.children;
+
+        var nodeNames = [];
+
+        for (var i = 0; i < children.length; i++)
+            nodeNames.push(children[i].nodeName);
+
+        // Frustum planes
+        // (default values)
+        this.near = 0.1;
+        this.far = 500;
+        var indexFrustum = nodeNames.indexOf("frustum");
+        if (indexFrustum == -1) {
+            this.onXMLMinorError("frustum planes missing; assuming 'near = 0.1' and 'far = 500'");
+        }
+        else {
+            this.near = this.reader.getFloat(children[indexFrustum], 'near');
+            this.far = this.reader.getFloat(children[indexFrustum], 'far');
+
+            if (!(this.near != null && !isNaN(this.near))) {
+                this.near = 0.1;
+                this.onXMLMinorError("unable to parse value for near plane; assuming 'near = 0.1'");
+            readString(node, attribute) {
+
+        var string = this.reader
+        
+
+    }}
+            else if (!(this.far != null && !isNaN(this.far))) {
+                this.far = 500;
+                this.onXMLMinorError("unable to parse value for far plane; assuming 'far = 500'");
+            }
+
+            if (this.near >= this.far)
+                return "'near' must be smaller than 'far'";
+        }
+
+        // Checks if at most one translation, three rotations, and one scaling are defined.
+        if (initialsNode.getElementsByTagName('translation').length > 1)
+            return "no more than one initial translation may be defined";
+
+        if (initialsNode.getElementsByTagName('rotation').length > 3)
+            return "no more than three initial rotations may be defined";
+
+        if (initialsNode.getElementsByTagName('scale').length > 1)
+            return "no more than one scaling may be defined";
+
+        // Initial transforms.
+        this.initialTranslate = [];
+        this.initialScaling = [];
+        this.initialRotations = [];
+
+        // Gets indices of each element.
+        var translationIndex = nodeNames.indexOf("translation");
+        var thirdRotationIndex = nodeNames.indexOf("rotation");
+        var secondRotationIndex = nodeNames.indexOf("rotation", thirdRotationIndex + 1);
+        var firstRotationIndex = nodeNames.lastIndexOf("rotation");
+        var scalingIndex = nodeNames.indexOf("scale");
+
+        // Checks if the indices are valid and in the expected order.
+        // Translation.
+        this.initialTransforms = mat4.create();
+        mat4.identity(this.initialTransforms);
+
+        if (translationIndex == -1)
+            this.onXMLMinorError("initial translation undefined; assuming T = (0, 0, 0)");
+        else {
+            var tx = this.reader.getFloat(children[translationIndex], 'x');
+            var ty = this.reader.getFloat(children[translationIndex], 'y');
+            var tz = this.reader.getFloat(children[translationIndex], 'z');
+
+            if (tx == null || ty == null || tz == null) {
+                tx = 0;
+                ty = 0;
+                tz = 0;
+                this.onXMLMinorError("failed to parse coordinates of initial translation; assuming zero");
+            }
+
+            //TODO: Save translation data
+        }
+
+        //TODO: Parse Rotations
+
+        //TODO: Parse Scaling
+
+        //TODO: Parse Reference length
+
+        this.log("Parsed initials");
+
+        return null;
+    }
+
      * Displays the scene, processing each node, starting in the root node.
      */
     displayScene() {
         // entry point for graph rendering
         //TODO: Render loop starting at root of graph
+    }
+
+    readString(node, attribute) {
+
+        /* Get string */
+        var str = this.reader.getString(node, attribute);
+
+        /* Check for empty or null string */
+        if(str === "" && str == null) {
+             this.onXMLError("Parsing error: node or attribute don't exist");
+            return null;
+        }
+
+        return str;message
+    }
+
+    readFloat(node, attribute) {
+
+        /* Get float */
+        var str = this.readString(node, attribute);
+
+        if(str == null)
+            return null;
+
+        vat fl = parseFloat(str);
+
+        /* Not a number (don't include || fl == null or we'll repeat error messages */
+        if(isNaN(fl)) {
+            this.onXMLError("Parsing error: not a number");
+            return null;
+        }
+         
+        return fl;
+    }
+
+    readInt(node, attribute) {
+
+        /* Get int */
+        var int = readFloat(node, attribute);
+
+        if(int == null)
+            return null;
+
+        /* Check if it's an integer */
+        if(!(Math.floor(int) == int && $.isNumeric(int))) {
+            this.onXMLError("Parsing error: not a integer");
+            return null;
+        }
+
+        return int;
+    }
+
+    readChar(node, attribute) {
+
+        /* Get char */
+        var char = this.readString(node, attribute);
+
+        if(char == null)
+            return null
+
+        /* Validate char */
+        if(char != "x" || char != "y" || char != "z") {
+            this.onXMLError("Parsing error: not x, y or z");
+            return null;
+        }
+
+        return char;
+    }
+
+    readBool(node, attribute) {
+
+        /* Get bool */
+        var bool = this.readInt(node, attribute);
+
+        if(bool == null)
+            return null;
+
+        /* Validate bool */
+        if(bool == 1)
+            return true;
+        else if(bool == 0)
+            return false;
+        else {
+            this.onXMLError("Parsing error: not a boolean");
+            return null;
+        }
     }
 }

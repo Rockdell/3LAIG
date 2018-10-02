@@ -34,6 +34,7 @@ class XMLscene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
 
         this.axis = new CGFaxis(this);
+        
     }
 
     /**
@@ -56,6 +57,8 @@ class XMLscene extends CGFscene {
 
             if (this.graph.lights.hasOwnProperty(key)) {
                 var light = this.graph.lights[key];
+
+                //TODO chnage this (confirm its okay)
 
                 //lights are predefined in cgfscene
                 this.lights[i].setPosition(light[1][0], light[1][1], light[1][2], light[1][3]);
@@ -86,6 +89,8 @@ class XMLscene extends CGFscene {
 
         //TODO: Change reference length according to parsed graph
         //this.axis = new CGFaxis(this, this.graph.referenceLength);
+
+        
 
         // TODO: Change ambient and background details according to parsed graph
 
