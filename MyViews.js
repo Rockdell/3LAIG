@@ -13,18 +13,16 @@ class MyPerspective extends MyView {
     constructor(id, near, far, angle) {
         super(id, near, far);
         this.angle = angle;
+        this.from = null;
+        this.to = null;
     }
 
-    setFrom(x, y, z) {
-        this.from_x = x;
-        this.from_y = y;
-        this.from_z = z;
+    setFrom(from) {
+        this.from = from;
     }
-
-    setTo(x, y, z) {
-        this.to_x = x;
-        this.to_y = y;
-        this.to_z = z;
+    
+    setTo(to) {
+        this.to = to;
     }
 }
 
