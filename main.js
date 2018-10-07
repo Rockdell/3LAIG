@@ -15,12 +15,7 @@ serialInclude([
     '../lib/CGF.js', 
     'XMLscene.js', 
     'MySceneGraph.js', 
-    'MyInterface.js', 
-    'MyViews.js', 
-    'MyLights.js',
-    'MyMaterial.js',
-    'MyTransformation.js',
-    'MyPrimitive.js',
+    'MyInterface.js',
     'MyTreeGraph.js',
 
 main=function()
