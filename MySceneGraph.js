@@ -1,16 +1,5 @@
 var DEGREE_TO_RAD = Math.PI / 180;
 
-// Order of the groups in the XML document.
-var SCENE_INDEX             = 0;
-var VIEWS_INDEX             = 1;
-var AMBIENT_INDEX           = 2;
-var LIGHTS_INDEX            = 3;
-var TEXTURES_INDEX          = 4;
-var MATERIALS_INDEX         = 5;
-var TRANSFORMATIONS_INDEX   = 6;
-var PRIMITIVES_INDEX        = 7;
-var COMPONENTS_INDEX        = 8;
-
 /**
  * MySceneGraph class, representing the scene graph.
  */
@@ -20,20 +9,11 @@ class MySceneGraph {
 	 */
 	constructor(filename, scene) {
 
-		this.loadedOk = null;
+		this.loadedOk = true;
 
 		// Establish bidirectional references between scene and graph.
 		this.scene = scene;
 		scene.graph = this;
-
-		this.nodes = [];
-
-		this.idRoot = null;                    // The id of the root element.
-
-		this.axisCoords = [];
-		this.axisCoords['x'] = [1, 0, 0];
-		this.axisCoords['y'] = [0, 1, 0];
-		this.axisCoords['z'] = [0, 0, 1];
 
 		// File reading 
 		this.reader = new CGFXMLreader();
@@ -45,42 +25,17 @@ class MySceneGraph {
 		 */
 
 		this.reader.open('scenes/' + filename, this);
-		
+
 		/* Data from XML */
-
-		//<scene>
-		this.scene_root 		= null;
-		this.axis_length 		= null;
-
-		//<views>
-		this.default_view		= null;
-		this.views				= new Map();
-
-		//<ambient>
-		this.ambient			= null;
-		this.background			= null;
-
-		//<lights>
-		this.lights				= new Map();
-
-		//<textures>
-		this.textures			= new Map();
-
-		//<materials>
-		this.materials 			= new Map();
-
-		//<transformations>
-		this.transformations 	= new Map();
-
-		//<primitives>
-		this.primitives			= new Map();
-
-		//<components>
-		this.treeGraph			= new MyTreeGraph();
-
-		//TODO check defaults and limits
-		//TODO remove .js class files and use { example: ....}
-		//TODO check -1 in indexes
+		this.scenes = {};
+		this.views = {};
+		this.ambient = {};
+		this.lights = {};
+		this.textures = {};
+		this.materials = {};
+		this.transformations = {};
+		this.primitives = {};
+		this.components = {};
 	}
 
 	/*
@@ -88,19 +43,14 @@ class MySceneGraph {
 	 */
 	onXMLReady() {
 
-		this.log("XML Loading finished.");
+		this.log("XML loading finished");
 
 		var rootElement = this.reader.xmlDoc.documentElement;
 
-		// Here should go the calls for different functions to parse the various blocks
-		var error = this.parseXMLFile(rootElement);
+		this.parseXMLFile(rootElement);
 
-		if (error != null) {
-			this.onXMLError(error);
+		if (!this.loadedOk)
 			return;
-		}
-
-		this.loadedOk = true;
 
 		// As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
 		this.scene.onGraphLoaded();
@@ -112,653 +62,1125 @@ class MySceneGraph {
 	 */
 	parseXMLFile(rootElement) {
 
-		//TODO simplify later!
+		// Order of the elements in the XML document.
+		const SCENE_INDEX = 0;
+		const VIEWS_INDEX = 1;
+		const AMBIENT_INDEX = 2;
+		const LIGHTS_INDEX = 3;
+		const TEXTURES_INDEX = 4;
+		const MATERIALS_INDEX = 5;
+		const TRANSFORMATIONS_INDEX = 6;
+		const PRIMITIVES_INDEX = 7;
+		const COMPONENTS_INDEX = 8;
 
-		if (rootElement.nodeName != "yas")
-			return "root tag <yas> missing";
-
-		var nodes = rootElement.children;
-
-		// Reads the names of the nodes to an auxiliary buffer.
-		var nodeNames = [];
-
-		for (var i = 0; i < nodes.length; i++) {
-			nodeNames.push(nodes[i].nodeName);
+		if (rootElement.nodeName != "yas") {
+			this.onXMLError("root tag <yas> is missing.");
+			return;
 		}
 
-		var error;
+		var indexes = [];
+		for (var i = 0; i < rootElement.children.length; ++i)
+			indexes.push(rootElement.children[i].nodeName);
 
-		// Processes each node, verifying errors.
 		var index;
 
 		// <scene>
-		if ((index = nodeNames.indexOf("scene")) == -1)
-			return "tag <scene> missing";
+		if ((index = indexes.indexOf("scene")) == -1)
+			return this.onXMLError("Tag <scene> is missing.");
 		else {
 			if (index != SCENE_INDEX)
-				this.onXMLMinorError("tag <scene> out of order");
+				this.onXMLMinorError("Tag <scene> is out of order.");
 
-			//Parse views block
-			if ((error = this.parseScene(nodes[index])) != null)
-				return error;
-		}   
-		
+			//Parse <scene> element
+			if (this.parseScene(rootElement.children[index]) == null)
+				return;
+		}
+
 		// <views>
-		if ((index = nodeNames.indexOf("views")) == -1)
-			return "tag <views> missing";
+		if ((index = indexes.indexOf("views")) == -1)
+			return this.onXMLError("Tag <views> is missing.");
 		else {
 			if (index != VIEWS_INDEX)
-				this.onXMLMinorError("tag <views> out of order");
+				this.onXMLMinorError("Tag <views> is out of order.");
 
-			//Parse views block
-			if ((error = this.parseViews(nodes[index])) != null)
-				return error;
+			//Parse <views> element
+			if (this.parseViews(rootElement.children[index]) == null)
+				return;
 		}
 
 		// <ambient>
-		if ((index = nodeNames.indexOf("ambient")) == -1)
-			return "tag <ambient> missing";
+		if ((index = indexes.indexOf("ambient")) == -1)
+			return this.onXMLError("Tag <ambient> is missing.");
 		else {
 			if (index != AMBIENT_INDEX)
-				this.onXMLMinorError("tag <ambient> out of order");
+				this.onXMLMinorError("Tag <ambient> is out of order.");
 
-			//Parse ambient block
-			if ((error = this.parseAmbient(nodes[index])) != null)
-				return error;
+			//Parse <ambient> element
+			if (this.parseAmbient(rootElement.children[index]) == null)
+				return;
 		}
 
 		// <lights>
-		if ((index = nodeNames.indexOf("lights")) == -1)
-			return "tag <lights> missing";
+		if ((index = indexes.indexOf("lights")) == -1)
+			return this.onXMLError("Tag <lights> is missing.");
 		else {
 			if (index != LIGHTS_INDEX)
-				this.onXMLMinorError("tag <lights> out of order");
+				this.onXMLMinorError("Tag <lights> is out of order.");
 
-			//Parse LIGHTS block
-			if ((error = this.parseLights(nodes[index])) != null)
-				return error;
+			//Parse <lights> element
+			if (this.parseLights(rootElement.children[index]) == null)
+				return;
 		}
 
 		// <textures>
-		if ((index = nodeNames.indexOf("textures")) == -1)
-			return "tag <textures> missing";
+		if ((index = indexes.indexOf("textures")) == -1)
+			return this.onXMLError("Tag <textures> is missing.");
 		else {
 			if (index != TEXTURES_INDEX)
-				this.onXMLMinorError("tag <textures> out of order");
+				this.onXMLMinorError("tag <textures> is out of order.");
 
-			//Parse textures block
-			if ((error = this.parseTextures(nodes[index])) != null)
-				return error;
+			//Parse <textures> element
+			if (this.parseTextures(rootElement.children[index]) == null)
+				return;
 		}
 
 		// <materials>
-		if ((index = nodeNames.indexOf("materials")) == -1)
-			return "tag <materials> missing";
+		if ((index = indexes.indexOf("materials")) == -1)
+			return this.onXMLError("Tag <materials> is missing.");
 		else {
 			if (index != MATERIALS_INDEX)
-				this.onXMLMinorError("tag <materials> out of order");
+				this.onXMLMinorError("Tag <materials> is out of order.");
 
-			//Parse materials block
-			if ((error = this.parseMaterials(nodes[index])) != null)
-				return error;
+			//Parse <materials> elements
+			if (this.parseMaterials(rootElement.children[index]) == null)
+				return;
 		}
 
 		// <transformations>
-		if ((index = nodeNames.indexOf("transformations")) == -1)
-			return "tag <transformations> missing";
+		if ((index = indexes.indexOf("transformations")) == -1)
+			return this.onXMLError("Tag <transformations> is missing.");
 		else {
 			if (index != TRANSFORMATIONS_INDEX)
-				this.onXMLMinorError("tag <transformations> out of order");
+				this.onXMLMinorError("Tag <transformations> is out of order.");
 
-			//Parse transformations block
-			if ((error = this.parseTransformations(nodes[index])) != null)
-				return error;
+			//Parse <transformations> element
+			if (this.parseTransformations(rootElement.children[index]) == null)
+				return;
 		}
 
 		// <primitives>
-		if ((index = nodeNames.indexOf("primitives")) == -1)
-			return "tag <primitives> missing";
+		if ((index = indexes.indexOf("primitives")) == -1)
+			return this.onXMLError("Tag <primitives> is missing.");
 		else {
 			if (index != PRIMITIVES_INDEX)
-				this.onXMLMinorError("tag <primitives> out of order");
-	
-			//Parse primitives block
-			if ((error = this.parsePrimitives(nodes[index])) != null)
-				return error;
+				this.onXMLMinorError("Tag <primitives> is out of order.");
+
+			//Parse <primitives> element
+			if (this.parsePrimitives(rootElement.children[index]) == null)
+				return;
 		}
 
 		// <components>
-		if ((index = nodeNames.indexOf("components")) == -1)
-			return "tag <components> missing";
+		if ((index = indexes.indexOf("components")) == -1)
+			return this.onXMLError("Tag <components> is missing.");
 		else {
 			if (index != COMPONENTS_INDEX)
-				this.onXMLMinorError("tag <components> out of order");
+				this.onXMLMinorError("Tag <components> is out of order.");
 
 			//Parse components block
-			if ((error = this.parseComponents(nodes[index])) != null)
-				return error;
+			if (this.parseComponents(rootElement.children[index]) == null)
+				return;
 		}
 	}
 
 	/**
 	 * Parses the <scene> element.
-	 * @param {XML scene element} sceneNode 
+	 * @param {XML scene element} sceneElement 
 	 */
-	parseScene(sceneNode) {
+	parseScene(sceneElement) {
 
-		// Scene root
-		this.scene_root = this.getString(sceneNode, "root");
+		// Root
+		if ((this.scenes.root = this.parseString(sceneElement, "root")) == null)
+			return null;
 
 		// Axis length
-		this.axis_length = this.getFloat(sceneNode, "axis_length");
+		if ((this.scenes.axis_length = this.parseFloat(sceneElement, "axis_length")) == null)
+			return null;
 
 		this.log("Parsed <scene> element.");
+
+		return 1;
 	}
 
 	/**
 	 * Parses the <views> element.
-	 * @param {XML views element} viewsNode 
+	 * @param {XML views element} viewsElement
 	 */
-	parseViews(viewsNode) {
-	
-		// Default view
-		this.default_view = this.getString(viewsNode, "default");
+	parseViews(viewsElement) {
 
-		for(var i = 0; i < viewsNode.children.length; ++i) {
+		// Default
+		if ((this.views.default = this.parseString(viewsElement, "default")) == null)
+			return null;
 
-			var viewChild = viewsNode.children[i];
+		for (var i = 0; i < viewsElement.children.length; ++i) {
+
+			var viewChild = viewsElement.children[i];
 
 			// New view
-			var view = {
-				id: this.getString(viewChild, "id"),
-				near: this.getFloat(viewChild, "near"),
-				far: this.getFloat(viewChild, "far")
+			var new_view = {};
+
+			// ID
+			if((new_view.id = this.parseString(viewChild, "id")) == null)
+				return null;
+
+			// Near
+			if((new_view.near = this.parseFloat(viewChild, "near")) == null)
+				return null;
+			
+			// Far
+			if((new_view.far = this.parseFloat(viewChild, "far")) == null)
+				return null;
+
+			if (new_view.near >= new_view.far) {
+				this.onXMLMinorError("Near value is bigger/equal than far value.");
+				return null;
 			}
 
-			if(viewChild.nodeName == "perspective") {
+			// Check type
+			if (viewChild.nodeName == "perspective") {
 
-				view.type = "perspective";
+				// Order of the elements
+				const FROM_INDEX = 0;
+				const TO_INDEX = 1;
 
-				var viewIndexes = [];
-				for(var j = 0; j < viewChild.children.length; ++j)
-					viewIndexes.push(viewChild.children[j].nodeName);
+				// Type
+				new_view.type = "perspective";
 
-				// Indexes
-				var from_index = viewIndexes.indexOf("from");
-				var to_index = viewIndexes.indexOf("to");
+				// Angle
+				if ((new_view.angle = this.parseFloat(viewChild, "angle")) == null)
+					return null;
 
-				view.angle = this.getFloat(viewChild, "angle");
+				var indexes = [];
+				for (var j = 0; j < viewChild.children.length; ++j)
+					indexes.push(viewChild.children[j].nodeName);
 
-				var from = {
-					x: this.getFloat(viewChild.children[from_index], "x"),
-					y: this.getFloat(viewChild.children[from_index], "y"),
-					z: this.getFloat(viewChild.children[from_index], "z")
+				var index;
+
+				// From
+				if ((index = indexes.indexOf("from")) == -1) {
+					this.onXMLError("Tag <from> is missing.");
+					return null;
+				}
+				else {
+
+					if (index != FROM_INDEX)
+						this.onXMLMinorError("Tag <from> is out of order.");
+
+					if ((new_view.from = this.parseXYZ(viewChild.children[index])) == null)
+						return null;
 				}
 
-				var to = {
-					x: this.getFloat(viewChild.children[to_index], "x"),
-					y: this.getFloat(viewChild.children[to_index], "y"),
-					z: this.getFloat(viewChild.children[to_index], "z")
+				// To
+				if ((index = indexes.indexOf("to")) == -1) {
+					this.onXMLError("Tag <to> is missing.");
+					return null;
 				}
+				else {
 
-				view.from = from;
-				view.to = to;
+					if (index != TO_INDEX)
+						this.onXMLMinorError("Tag <to> is out of order.");
+
+					if ((new_view.to = this.parseXYZ(viewChild.children[index])) == null)
+						return null;
+				}
 			}
-			else if(viewChild.nodeName == "ortho") {
+			else if (viewChild.nodeName == "ortho") {
 
-				view.type = "ortho";
+				// Type
+				new_view.type = "ortho";
 
-				view.left = this.getString(viewChild, "left");
-				view.right = this.getString(viewChild, "right");
-				view.top = this.getString(viewChild, "top");
-				view.bottom = this.getString(viewChild, "bottom");
+				// Left
+				if ((new_view.left = this.parseFloat(viewChild, "left")) == null)
+					return null;
+
+				// Right
+				if ((new_view.right = this.parseFloat(viewChild, "right")) == null)
+					return null;
+
+				// Top
+				if ((new_view.top = this.parseFloat(viewChild, "top")) == null)
+					return null;
+
+				// Bottom
+				if ((new_view.bottom = this.parseFloat(vviewChild, "bottom")) == null)
+					return null;
 			}
 
 			// Check ID
-			if(!this.views.has(view.id))
-				this.views.set(view.id, view);
+			if (!this.views.hasOwnProperty(new_view.id))
+				this.views[new_view.id] = new_view;
 			else
-				this.onXMLMinorError("ID already exists.");
+				this.onXMLMinorError("ID \"" + new_view.id + "\" already exists.");
 		}
 
-		if(this.views.length < 1)
-			this.onXMLMinorError("Need at least one view!");
-		else if(!this.views.has(this.default_view))
-			this.onXMLMinorError("Default view doesn't exist.");
+		if (this.views.length < 2) {
+			this.onXMLError("Need at least one view.");
+			return null;
+		}
+		if (!this.views.hasOwnProperty(this.views.default)) {
+			this.onXMLError("Default view doesn't exist.");
+			return null;
+		}
 
 		this.log("Parsed <views> element.");
+
+		return 1;
 	}
- 
+
 	/**
 	 * Parses the <ambient> element.
-	 * @param {XML ambient element} ambientNode
+	 * @param {XML ambient element} ambientElement
 	 */
-	parseAmbient(ambientNode) {
+	parseAmbient(ambientElement) {
 
-		var ambientIndexes = [];
-		for(var i = 0; i < ambientNode.children.length; ++i)
-			ambientIndexes.push(ambientNode.children[i].nodeName);
+		// Order of the elements
+		const AMBIENT_INDEX = 0;
+		const BACKGROUND_INDEX = 1;
 
-		// Indexes
-		var ambient_index = ambientIndexes.indexOf("ambient");
-		var background_index = ambientIndexes.indexOf("background");
+		var indexes = [];
+		for (var i = 0; i < ambientElement.children.length; ++i)
+			indexes.push(ambientElement.children[i].nodeName);
 
-		// Properties
-		this.ambient = {
-			r: this.getFloat(ambientNode.children[ambient_index], "r"),
-			g: this.getFloat(ambientNode.children[ambient_index], "g"), 
-			b: this.getFloat(ambientNode.children[ambient_index], "b"),
-			a: this.getFloat(ambientNode.children[ambient_index], "a")
+		var index;
+
+		// Ambient
+		if ((index = indexes.indexOf("ambient")) == -1) {
+			this.onXMLError("Tag <ambient> is missing.");
+			return null;
+		}
+		else {
+
+			if (index != AMBIENT_INDEX)
+				this.onXMLMinorError("Tag <ambient> is out of order.")
+
+			if ((this.ambient.ambient = this.parseRGBA(ambientElement.children[index])) == null)
+				return null;
 		}
 
-		this.background = {
-			r: this.getFloat(ambientNode.children[background_index], "r"),
-			g: this.getFloat(ambientNode.children[background_index], "g"), 
-			b: this.getFloat(ambientNode.children[background_index], "b"),
-			a: this.getFloat(ambientNode.children[background_index], "a")
+		// Background
+		if ((index = indexes.indexOf("background")) == -1) {
+			this.onXMLError("Tag <background> is missing.");
+			return null;
+		}
+		else {
+
+			if (index != BACKGROUND_INDEX)
+				this.onXMLMinorError("Tag <background> is out of order.");
+
+			if ((this.ambient.background = this.parseRGBA(ambientElement.children[index])) == null)
+				return null;
 		}
 
 		this.log("Parsed <ambient> element.");
+
+		return 1;
 	}
 
 	/**
 	 * Parses the <lights> element.
-	 * @param {XML lights element} lightsNode
+	 * @param {XML lights element} lightsElement
 	 */
-	parseLights(lightsNode) {
+	parseLights(lightsElement) {
 
-		for(var i = 0; i < lightsNode.children.length; ++i) {
+		for (var i = 0; i < lightsElement.children.length; ++i) {
 
-			var lightChild = lightsNode.children[i];
-
-			var lightIndexes = [];
-			for(var j = 0; j < lightChild.children.length; ++j)
-				lightIndexes.push(lightChild.children[j].nodeName);
-
-			// Indexes
-			var location_index = lightIndexes.indexOf("location");
-			var ambient_index = lightIndexes.indexOf("ambient");
-			var diffuse_index = lightIndexes.indexOf("diffuse");
-			var specular_index = lightIndexes.indexOf("specular");
+			var lightChild = lightsElement.children[i];
 
 			// New light
-			var light = {
-				id: this.getString(lightChild, "id"),
-				enabled: this.getBoolean(lightChild, "enabled")
-			}
+			var new_light = {};
 
-			light.location = {
-				x: this.getFloat(lightChild.children[location_index], "x"),
-				y: this.getFloat(lightChild.children[location_index], "y"),
-				z: this.getFloat(lightChild.children[location_index], "z"),
-				w: this.getFloat(lightChild.children[location_index], "w")
-			}
+			// ID
+			if((new_light.id = this.parseString(lightChild, "id")) == null)
+				return null;
 
-			light.ambient = {
-				r: this.getFloat(lightChild.children[ambient_index], "r"),
-				g: this.getFloat(lightChild.children[ambient_index], "g"),
-				b: this.getFloat(lightChild.children[ambient_index], "b"),
-				a: this.getFloat(lightChild.children[ambient_index], "a")
-			}
+			// Enabled
+			if((new_light.enabled = this.parseBool(lightChild, "enabled")) == null)
+				return null;
 
-			light.diffuse = {
-				r: this.getFloat(lightChild.children[diffuse_index], "r"),
-				g: this.getFloat(lightChild.children[diffuse_index], "g"),
-				b: this.getFloat(lightChild.children[diffuse_index], "b"),
-				a: this.getFloat(lightChild.children[diffuse_index], "a")
-			}
+			// Check type
+			if (lightChild.nodeName == "omni") {
 
-			light.specular = {
-				r: this.getFloat(lightChild.children[specular_index], "r"),
-				g: this.getFloat(lightChild.children[specular_index], "g"),
-				b: this.getFloat(lightChild.children[specular_index], "b"),
-				a: this.getFloat(lightChild.children[specular_index], "a")
+				// Order of elements
+				const LOCATION_INDEX = 0;
+				const AMBIENT_INDEX = 1;
+				const DIFFUSE_INDEX = 2;
+				const SPECULAR_INDEX = 3;
 
-			}
-			
-			if(lightChild.nodeName == "omni") {
-				light.type = "omni";
-			}
-			else if(lightChild.nodeName == "spot") {
+				new_light.type = "omni";
 
-				light.type = "spot";
+				var indexes = [];
+				for(var j = 0; j < lightChild.children.length; ++j)
+					indexes.push(lightChild.children[j].nodeName);
 
-				// Index
-				var target_index = lightProperties.indexOf("target");
+				var index;
 
-				light.angle = this.getFloat(llightChildght, "angle");
-				light.exponent = this.getFloat(lightChild, "exponent");
+				// Location
+				if((index = indexes.indexOf("location")) == -1) {
+					this.onXMLError("Tag <location> is missing.");
+					return;
+				}
+				else {
 
-				var target = {
-					x: this.getFloat(lightChild.children[target_index], "x"),
-					y: this.getFloat(lightChild.children[target_index], "y"),
-					z: this.getFloat(liglightChildht.children[target_index], "z")
+					if(index != LOCATION_INDEX)
+						this.onXMLMinorError("Tag <location> is out of order.");
+
+					if ((new_light.location = this.parseXYZ(lightChild.children[index])) == null)
+						return null;
 				}
 
-				light.target = target;
+				// Ambient
+				if ((index = indexes.indexOf("ambient")) == -1) {
+					this.onXMLError("Tag <ambient> is missing.");
+					return null;
+				}
+				else {
+
+					if (index != AMBIENT_INDEX)
+						this.onXMLMinorError("Tag <ambient> is out of order.");
+
+					if ((new_light.ambient = this.parseRGBA(lightChild.children[index])) == null)
+						return null;
+				}
+
+				// Diffuse
+				if ((index = indexes.indexOf("diffuse")) == -1) {
+					this.onXMLError("Tag <diffuse> is missing.");
+					return null;
+				}
+				else {
+
+					if (index != DIFFUSE_INDEX)
+						this.onXMLMinorError("Tag <diffuse> is out of order.");
+
+					if ((new_light.diffuse = this.parseRGBA(lightChild.children[index])) == null)
+						return null;
+				}
+
+				// Specular
+				if ((index = indexes.indexOf("specular")) == -1) {
+					this.onXMLError("Tag <specular> is missing.");
+					return null;
+				}
+				else {
+
+					if (index != SPECULAR_INDEX)
+						this.onXMLMinorError("Tag <specular> is out of order.");
+
+					if ((new_light.specular = this.parseRGBA(lightChild.children[index])) == null)
+						return null;
+				}
+			}
+			else if (lightsElement.children[i].nodeName == "spot") {
+
+				// Orders of elements
+				const LOCATION_INDEX = 0;
+				const TARGET_INDEX = 1
+				const AMBIENT_INDEX = 2;
+				const DIFFUSE_INDEX = 3;
+				const SPECULAR_INDEX = 4;
+
+				new_light.type = "spot";
+
+				var indexes = [];
+				for(var j = 0; j < lightChild.children.length; ++j)
+					indexes.push(lightChild.children[j].nodeName);
+
+				var index;
+
+				// Location
+				if ((index = indexes.indexOf("location")) == -1) {
+					this.onXMLError("Tag <location> is missing.");
+					return null;
+				}
+				else {
+
+					if (index != LOCATION_INDEX)
+						this.onXMLMinorError("Tag <location> is out of order.");
+
+					if ((new_light.location = this.parseXYZ(lightChild.children[index])) == null)
+						return null;
+				}
+
+				// Target
+				if ((index = indexes.indexOf("target")) == -1) {
+					this.onXMLError("Tag <target> is missing.");
+					return null;
+				}
+				else {
+
+					if (index != TARGET_INDEX)
+						this.onXMLMinorError("Tag <target> is out of order.");
+
+					if ((new_light.target = this.parseXYZ(lightChild.children[index])) == null)
+						return null;
+				}
+
+				// Ambient
+				if ((index = indexes.indexOf("ambient")) == -1) {
+					this.onXMLError("Tag <ambient> is missing.");
+					return null;
+				}
+				else {
+
+					if (index != AMBIENT_INDEX)
+						this.onXMLMinorError("Tag <ambient> is out of order.");
+
+					if ((new_light.ambient = this.parseRGBA(lightChild.children[index])) == null)
+						return null;
+				}
+
+				// Diffuse
+				if ((index = indexes.indexOf("diffuse")) == -1) {
+					this.onXMLError("Tag <diffuse> is missing.");
+					return null;
+				}
+				else {
+
+					if (index != DIFFUSE_INDEX)
+						this.onXMLMinorError("Tag <diffuse> is out of order.");
+
+					if ((new_light.diffuse = this.parseRGBA(lightChild.children[index])) == null)
+						return null;
+				}
+
+				// Specular
+				if ((index = indexes.indexOf("specular")) == -1) {
+					this.onXMLError("Tag <specular> is missing.");
+					return null;
+				}
+				else {
+
+					if (index != SPECULAR_INDEX)
+						this.onXMLMinorError("Tag <specular> is out of order.");
+
+					if ((new_light.specular = this.parseRGBA(lightChild.children[index])) == null)
+						return null;
+				}
 			}
 
 			// Check ID
-			if(!this.lights.has(light.id))				
-				this.lights.set(light.id, light);
+			if (!this.lights.hasOwnProperty(new_light.id))
+				this.lights[new_light.id] = new_light;
 			else
-				this.onXMLMinorError("ID already exists.");
+				this.onXMLMinorError("ID \"" + new_light.id + "\" already exists.");
 		}
 
-		if(this.lights.length < 1)
-			this.onXMLMinorError("Need at least one light!");
+		if (this.lights.length < 1)
+			return this.onXMLError("Need at least one light!");
 
 		this.log("Parsed <lights> element.");
+
+		return 1;
 	}
 
 	/**
 	 * Parses the <textures> element.
-	 * @param {XML textures element} texturesNode
+	 * @param {XML textures element} texturesElement
 	 */
-	parseTextures(texturesNode) {
+	parseTextures(texturesElement) {
 
-		for(var i = 0; i < texturesNode.children.length; ++i) {
+		for (var i = 0; i < texturesElement.children.length; ++i) {
 
-			var textureChild = texturesNode.children[i];
+			var textureChild = texturesElement.children[i];
 
 			// New texture
-			var texture = {
-				id: this.getString(textureChild, "id"),
-				file: this.getString(textureChild, "file")
-			}
+			var new_texture = {};
 
-			this.log(texture.id);
+			// ID
+			if ((new_texture.id = this.parseString(textureChild, "id")) == null)
+				return null;
 
-			if(!this.textures.has(texture.id))
-				this.textures.set(texture.id, texture);
+			// File
+			if ((new_texture.file = this.parseString(textureChild, "file")) == null)
+				return null;
+
+			if (!this.textures.hasOwnProperty(new_texture.id))
+				this.textures[new_texture.id] = new_texture;
 			else
-				this.onXMLMinorError("ID already exists.");
+				this.onXMLMinorError("ID \"" + new_texture.id + "\" already exists.");
 		}
 
-		if(this.textures.length < 1)
-			this.onXMLMinorError("Need at least one texture!");
-		
+		if (this.textures.length < 1)
+			return this.onXMLError("Need at least one texture!");
+
 		this.log("Parsed <textures> element.");
+
+		return 1;
 	}
 
 	/**
 	 * Parses the <materials> element.
-	 * @param {XML materials element} materialsNode
+	 * @param {XML materials element} materialsElement
 	 */
-	parseMaterials(materialsNode) {
+	parseMaterials(materialsElement) {
 
-		for(var i = 0; i < materialsNode.children.length; ++i) {
-		
-			var materialChild = materialsNode.children[i];
+		for (var i = 0; i < materialsElement.children.length; ++i) {
 
-			var materialIndexes = [];
-			for(var j = 0; j < materialChild.children.length; ++j)
-				materialIndexes.push(materialChild.children[j].nodeName);
-			
-			// Indexes
-			var emission_index = materialIndexes.indexOf("emission");
-			var ambient_index = materialIndexes.indexOf("ambient");
-			var diffuse_index = materialIndexes.indexOf("diffuse");
-			var specular_index = materialIndexes.indexOf("specular");
+			var materialChild = materialsElement.children[i];
+
+			// Order of elements
+			const EMISSION_INDEX = 0;
+			const AMBIENT_INDEX = 1;
+			const DIFFUSE_INDEX = 2;
+			const SPECULAR_INDEX = 3;
 
 			// New material
-			var material  = {
-				id: this.getString(materialChild, "id"),
-				shininess: this.getFloat(materialChild, "shininess"),
-			}
+			var new_material = {};
+
+			// ID
+			if ((new_material.id = this.parseString(materialChild, "id")) == null)
+				return null;
+
+			// Shininess
+			if ((new_material.shininess = this.parseString(materialChild, "shininess")) == null)
+				return null;
+
+			var indexes = [];
+			for (var j = 0; j < materialChild.children.length; ++j)
+				indexes.push(materialChild.children[j].nodeName);
+
+			var index;
 			
-			material.emission = {
-				r: this.getFloat(materialChild.children[emission_index], "r"),
-				g: this.getFloat(materialChild.children[emission_index], "g"),
-				b: this.getFloat(materialChild.children[emission_index], "b"),
-				a: this.getFloat(materialChild.children[emission_index], "a")
+			// Emission
+			if ((index = indexes.indexOf("emission")) == -1) {
+				this.onXMLError("Tag <emission> is missing.");
+				return null;
 			}
-			material.ambient = {
-				r: this.getFloat(materialChild.children[ambient_index], "r"),
-				g: this.getFloat(materialChild.children[ambient_index], "g"),
-				b: this.getFloat(materialChild.children[ambient_index], "b"),
-				a: this.getFloat(materialChild.children[ambient_index], "a")
+			else {
+
+				if (index != EMISSION_INDEX)
+					this.onXMLMinorError("Tag <emission> is out of order.");
+
+				if ((new_material.emission = this.parseRGBA(materialChild.children[index])) == null)
+					return null;
 			}
-			material.diffuse = {
-				r: this.getFloat(materialChild.children[diffuse_index], "r"),
-				b: this.getFloat(materialChild.children[diffuse_index], "g"),
-				g: this.getFloat(materialChild.children[diffuse_index], "b"),
-				a: this.getFloat(materialChild.children[diffuse_index], "a")
+
+			// Ambient
+			if ((index = indexes.indexOf("ambient")) == -1) {
+				this.onXMLError("Tag <ambient> is missing.");
+				return null;
 			}
-			material.specular = {
-				r: this.getFloat(materialChild.children[specular_index], "r"),
-				g: this.getFloat(materialChild.children[specular_index], "g"),
-				b: this.getFloat(materialChild.children[specular_index], "b"),
-				a: this.getFloat(materialChild.children[specular_index], "a")
+			else {
+
+				if (index != AMBIENT_INDEX)
+					this.onXMLMinorError("Tag <ambient> is out of order.");
+
+				if ((new_material.ambient = this.parseRGBA(materialChild.children[index])) == null)
+					return null;
+			}
+
+			// Diffuse
+			if ((index = indexes.indexOf("diffuse")) == -1) {
+				this.onXMLError("Tag <diffuse> is missing.");
+				return null;
+			}
+			else {
+
+				if (index != DIFFUSE_INDEX)
+					this.onXMLMinorError("Tag <diffuse> is out of order.");
+
+				if ((new_material.diffuse = this.parseRGBA(materialChild.children[index])) == null)
+					return null;
+			}
+
+			// Specular
+			if ((index = indexes.indexOf("specular")) == -1) {
+				this.onXMLError("Tag <specular> is missing.");
+				return null;
+			}
+			else {
+
+				if (index != SPECULAR_INDEX)
+					this.onXMLMinorError("Tag <specular> is out of order.");
+
+				if ((new_material.specular = this.parseRGBA(materialChild.children[index])) == null)
+					return null;
 			}
 
 			// Check ID
-			if(!this.materials.has(material.id))
-				this.materials.set(material.id, material);
+			if (!this.materials.hasOwnProperty(new_material.id))
+				this.materials[new_material.id] = new_material;
 			else
-				this.onXMLMinorError("ID already exists.");
+				this.onXMLMinorError("ID \"" + new_material.id + "\" already exists.");
 		}
 
-		if(this.materials.length < 1)
-			this.onXMLMinorError("Need at least one material!");
+		if (this.materials.length < 1)
+			return this.onXMLError("Need at least one material.");
 
 		this.log("Parse <materials> element.")
+
+		return 1;
 	}
 
 	/**
 	 * Parse the <transformations> element.
-	 * @param {XML transformations element} transformationsNode
+	 * @param {XML transformations element} transformationsElement
 	 */
-	parseTransformations(transformationsNode) {
+	parseTransformations(transformationsElement) {
 
-		for(var i = 0; i < transformationsNode.children.length; ++i) {
+		for (var i = 0; i < transformationsElement.children.length; ++i) {
 
-			var transformationChild = transformationsNode.children[i];
+			var transformationChild = transformationsElement.children[i];
 
 			// New transformation
-			var transformation = {
-				id: this.getString(transformationChild, "id")
-			}
-			
-			for(var j = 0; j < transformationChild.children.length; ++j) {
+			var new_transformation =  {};
 
-				var subTransformationChild = transformationChild.children[j];
+			// ID
+			if((new_transformation.id = this.parseString(transformationChild, "id")) == null)
+            	return null;
 
-				transformation.matrix = [];
+       		// Transformations
+        	new_transformation.transformations = [];
 
-				switch(subTransformationChild.nodeName) {
+			for (var j = 0; j < transformationChild.children.length; ++j) {
+
+				switch (transformationChild.children[j].nodeName) {
 					case "translate":
-					transformation.matrix.push({
+					new_transformation.transformations.push({
 						type: "translate",
-						x: this.getFloat(subTransformationChild, "x"),
-						y: this.getFloat(subTransformationChild, "y"),
-						z: this.getFloat(subTransformationChild, "z")
+						args: this.parseXYZ(transformationChild.children[j])
 					})
+
+					if (new_transformation.transformations[j].args == null)
+						return null;
 					break;
-					
+
 					case "rotate":
-					transformation.matrix.push({
+					new_transformation.transformations.push({
 						type: "rotate",
-						axis: this.getChar(subTransformationChild, "axis"),
-						angle: this.getFloat(subTransformationChild, "angle")
+						axis: this.parseChar(transformationChild.children[j], "axis"),
+						angle: this.parseFloat(transformationChild.children[j], "angle")
 					})
+
+					if (new_transformation.transformations[j].axis == null)
+						return null;
+
+					if (new_transformation.transformations[j].angle == null)
+						return null
 					break;
 
 					case "scale":
-					transformation.matrix.push({
+					new_transformation.transformations.push({
 						type: "scale",
-						x: this.getFloat(subTransformationChild, "x"),
-						y: this.getFloat(subTransformationChild, "y"),
-						z: this.getFloat(subTransformationChild, "z")
+						args: this.parseXYZ(transformationChild.children[j])
 					})
+
+					if (new_transformation.transformations[j].args == null)
+						return null;
 					break;
+
+					default:
+					this.onXMLError("Unknown transformation.");
+					return null;
 				}
 			}
 
 			// Check ID
-			if(!this.transformations.has(transformation.id))
-				this.transformations.set(transformation.id, transformation);
+			if (!this.transformations.hasOwnProperty(new_transformation.id))
+				this.transformations[new_transformation.id] = new_transformation;
 			else
-				this.onXMLMinorError("ID already exists.");
+				this.onXMLMinorError("ID \"" + new_transformation.id + "\" already exists.");
 		}
 
-		if(this.transformations.length < 1)
-			this.onXMLMinorError("Need at least one transformation!");
+		if (this.transformations.length < 1)
+			return this.onXMLError("Need at least one transformation!");
 
 		this.log("Parsed <transformations> element.");
+
+		return 1;
 	}
 
 	/**
 	 * Parse the <primitives> element.
-	 * @param {XML primitives element} primitivesNode
+	 * @param {XML primitives element} primitivesElement
 	 */
-	parsePrimitives(primitivesNode) {
+	parsePrimitives(primitivesElement) {
 
-		for(var i = 0; i < primitivesNode.children.length; ++i) {
+		for (var i = 0; i < primitivesElement.children.length; ++i) {
 
-			var primitiveChild = primitivesNode.children[i];
-
-			if(primitiveChild.children.length != 1)
-				this.onXMLMinorError("Too many/less primitives.");
-
-			var primitiveInfo = primitiveChild.children[0];
+			var primitiveChild = primitivesElement.children[i];
 
 			// New primitive
-			var primitive = {
-				id: this.getString(primitiveChild, "id")
+			var new_primitive = {};
+
+			// ID
+			if ((new_primitive.id = this.parseString(primitiveChild, "id")) == null)
+				return null;
+
+			if (primitiveChild.children.length != 1) {
+				this.onXMLError("Too many/few primitives.");
+				return null;
 			}
 
-			switch(primitiveInfo.nodeName) {
+			switch (primitiveChild.children[0].nodeName) {
 				case "rectangle":
-				primitive.type = "rectangle";
-				primitive.properties = {
-					x1: this.getFloat(primitiveInfo, "x1"),
-					y1: this.getFloat(primitiveInfo, "y1"),
-					x2: this.getFloat(primitiveInfo, "x2"),
-					y2: this.getFloat(primitiveInfo, "y2")
-				}
+
+				// Type
+				new_primitive.type = "rectangle";
+
+				// x1
+				if ((new_primitive.x1 = this.parseFloat(primitiveChild.children[0], "x1")) == null)
+					return null;
+
+				// y1
+				if ((new_primitive.y1 = this.parseFloat(primitiveChild.children[0], "y1")) == null)
+					return null;
+
+				// x2
+				if ((new_primitive.x2 = this.parseFloat(primitiveChild.children[0], "x2")) == null)
+					return null;
+
+				// y2
+				if ((new_primitive.y2 = this.parseFloat(primitiveChild.children[0], "y2")) == null)
+					return null;
 				break;
 
 				case "triangle":
-				primitive.type = "triangle";
-				primitive.properties = {
-					x1: this.getFloat(primitiveInfo, "x1"),
-					y1: this.getFloat(primitiveInfo, "y1"),
-					z1: this.getFloat(primitiveInfo, "z1"),
-					x2: this.getFloat(primitiveInfo, "x2"),
-					y2: this.getFloat(primitiveInfo, "y2"),
-					z2: this.getFloat(primitiveInfo, "z2"),
-					x3: this.getFloat(primitiveInfo, "x3"),
-					y3: this.getFloat(primitiveInfo, "y3"),
-					z3: this.getFloat(primitiveInfo, "z3")
-				}
+
+				// Type
+				new_primitive.type = "triangle";
+
+				// x1
+				if ((new_primitive.x1 = this.parseFloat(primitiveChild.children[0], "x1")) == null)
+					return null;
+
+				// y1
+				if ((new_primitive.y1 = this.parseFloat(primitiveChild.children[0], "y1")) == null)
+					return null;
+
+				// z1
+				if ((new_primitive.z1 = this.parseFloat(primitiveChild.children[0], "z1")) == null)
+					return null;
+
+				// x2
+				if ((new_primitive.x2 = this.parseFloat(primitiveChild.children[0], "x2")) == null)
+					return null;
+
+				// y2
+				if ((new_primitive.y2 = this.parseFloat(primitiveChild.children[0], "y2")) == null)
+					return null;
+
+				// z2
+				if ((new_primitive.z2 = this.parseFloat(primitiveChild.children[0], "z2")) == null)
+					return null;
+
+				// x3
+				if ((new_primitive.x3 = this.parseFloat(primitiveChild.children[0], "x3")) == null)
+					return null;
+
+				// y3
+				if ((new_primitive.y3 = this.parseFloat(primitiveChild.children[0], "y3")) == null)
+					return null;
+
+				// z3
+				if ((new_primitive.z3 = this.parseFloat(primitiveChild.children[0], "z3")) == null)
+					return null;
 				break;
 
 				case "cylinder":
-				primitive.type = "cylinder";
-				primitive.properties = {
-					base: this.getFloat(primitiveInfo, "base"),
-					top: this.getFloat(primitiveInfo, "top"),
-					height: this.getFloat(primitiveInfo, "height"),
-					slices: this.getFloat(primitiveInfo, "slices"),
-					stacks: this.getFloat(primitiveInfo, "stacks")
-				}
+
+				// Type
+				new_primitive.type = "cylinder";
+
+				// Base
+				if ((new_primitive.base = this.parseFloat(primitiveChild.children[0], "base")) == null)
+					return null;
+
+				// Top
+				if ((new_primitive.top = this.parseFloat(primitiveChild.children[0], "top")) == null)
+					return null;
+
+				// Height
+				if ((new_primitive.height = this.parseFloat(primitiveChild.children[0], "height")) == null)
+					return null;
+
+				// Slices
+				if ((new_primitive.slices = this.parseFloat(primitiveChild.children[0], "slices")) == null)
+					return null;
+
+				// Stacks
+				if ((new_primitive.stacks = this.parseFloat(primitiveChild.children[0], "stacks")) == null)
+					return null;
 				break;
 
 				case "sphere":
-				primitive.type = "sphere";
-				primitive.properties = {
-					radius: this.getFloat(primitiveInfo, "radius"),
-					slices: this.getFloat(primitiveInfo, "slices"),
-					stacks: this.getFloat(primitiveInfo, "stacks")
-				}
+
+				// Type
+				new_primitive.type = "sphere";
+
+				// Radius
+				if ((new_primitive.radius = this.parseFloat(primitiveChild.children[0], "radius")) == null)
+					return null;
+
+				// Slices
+				if ((new_primitive.slices = this.parseFloat(primitiveChild.children[0], "slices")) == null)
+					return null;
+
+				// Stacks
+				if ((new_primitive.stacks = this.parseFloat(primitiveChild.children[0], "stacks")) == null)
+					return null;
 				break;
 
 				case "torus":
-				primitive.type = "torus";
-				primitive.properties = {
-					inner: this.getFloat(primitiveInfo, "inner"),
-					outer: this.getFloat(primitiveInfo, "outer"),
-					slices: this.getFloat(primitiveInfo, "slices"),
-					loops: this.getFloat(primitiveInfo, "loops")
-				}
+
+				// Type
+				new_primitive.type = "torus";
+
+				// Inner
+				if ((new_primitive.inner = this.parseFloat(primitiveChild.children[0], "inner")) == null)
+					return;
+
+				// Outer
+				if ((new_primitive.outer = this.parseFloat(primitiveChild.children[0], "outer")) == null)
+					return null;
+
+				// Slices
+				if ((new_primitive.slices = this.parseFloat(primitiveChild.children[0], "slices")) == null)
+					return null;
+
+				// Loops
+				if ((new_primitive.loops = this.parseFloat(primitiveChild.children[0], "loops")) == null)
+					return null;
 				break;
 
 				default:
-				this.onXMLMinorError("Primitive \"" + primitiveInfo.nodeName + "\" does not exist." );
-				break;
+				this.onXMLError("Unknown primitive.");
+				return null;
 			}
 
 			// Check ID
-			if(!this.primitives.has(primitive.id))
-				this.primitives.set(primitive.id, primitive);
+			if (!this.primitives.hasOwnProperty(new_primitive.id))
+				this.primitives[new_primitive.id] = new_primitive;
 			else
-				this.onXMLMinorError("ID already exists.");
+				this.onXMLMinorError("ID \"" + new_primitive.id + "\" already exists.");
 		}
 
-		if(this.primitives.length < 1)
-			this.onXMLMinorError("Need at least one primitive!");
+		if (this.primitives.length < 1) {
+			this.onXMLError("Need at least one primitive.");
+			return null;
+		}
 
 		this.log("Parsed <primitives> element.");
+
+		return 1;
 	}
 
 	/**
 	 * Parse <components> element.
-	 * @param {XML components element} componentsNode
+	 * @param {XML components element} componentsElement
 	 */
-	parseComponents(componentsNode) {
+	parseComponents(componentsElement) {
 
-		//this.treeGraph.setRoot(this.scene_root);
+		for (var i = 0; i < componentsElement.children.length; ++i) {
 
-		for(var i = 0; i < componentsNode.children.length; ++i) {
+			var componentChild = componentsElement.children[i];
 
-			var componentChild = componentsNode.children[i];
-
-			var componentIndexes = [];
-			for(var j = 0; j < componentChild.children.length; ++j)
-				componentIndexes.push(componentChild.children[j].nodeName);
-
-			// Indexes
-			var transformation_index = componentIndexes.indexOf("transformation");
-			var materials_index = componentIndexes.indexOf("materials");
-			var texture_index = componentIndexes.indexOf("texture");
-			var children_index = componentIndexes.indexOf("children");
+			// Order of elements
+			const TRANSFORMATION_INDEX = 0;
+			const MATERIALS_INDEX = 1;
+			const TEXTURE_INDEX = 2;
+			const CHILDREN_INDEX = 3;
 
 			// New component
-			var component = {
-				id: this.getString(componentChild, "id"),
-				material: this.getString(componentChild.children[materials_index].children[0], "id"),
+			var new_component = {};
+
+			// ID
+			if ((new_component.id = this.parseString(componentChild, "id")) == null)
+				return null;
+
+			var indexes = [];
+			for (var j = 0; j < componentChild.children.length; ++j)
+				indexes.push(componentChild.children[j].nodeName);
+
+			var index;
+
+			// Transformation
+			if((index = indexes.indexOf("transformation")) == -1) {
+				this.onXMLError("Tag <transformation> is missing.");
+				return null;
+			}
+			else {
+
+				if(index != TRANSFORMATION_INDEX)
+					this.onXMLMinorError("Tag <transformation> is out of order.");
+
+				// Transformations
+				new_component.transformations = [];
+
+				var referencesCount = componentChild.children[index].getElementsByTagName("transformationref").length;
+				var transformationsCount = componentChild.children[index].getElementsByTagName("translate").length + componentChild.children[index].getElementsByTagName("rotate").length + componentChild.children[index].getElementsByTagName("scale").length;
+
+				if (referencesCount > 0 && transformationsCount > 0) {
+					this.onXMLError("Component has both references and explicits transformations.");
+					return null;
+				}
+
+				for (var j = 0; j < componentChild.children[index].children.length; ++j) {
+
+					var componentGrandChild = componentChild.children[index].children[j]
+
+					switch (componentGrandChild.nodeName) {
+						case "transformationref":
+						new_component.transformations.push({
+								id: this.parseString(componentGrandChild, "id")
+							})
+
+							if (new_component.transformations[j].id == null)
+								return null;
+							break;
+
+						case "translate":
+						new_component.transformations.push({
+								type: "translate",
+								args: this.parseXYZ(componentGrandChild)
+							})
+
+							if (new_component.transformations[j].args == null)
+								return null;
+							break;
+
+						case "rotate":
+						new_component.transformations.push({
+								type: "rotate",
+								axis: this.parseChar(componentGrandChild, "axis"),
+								angle: this.parseFloat(componentGrandChild, "angle")
+							})
+
+							if (new_component.transformations[j].axis == null)
+								return null;
+
+							if (new_component.transformations[j].angle == null)
+								return null;
+							break;
+
+						case "scale":
+						new_component.transformations.push({
+							type: "scale",
+							args: this.parseXYZ(componentGrandChild)
+						})
+
+						if (new_component.transformations[j].args == null)
+							return null;
+						break;
+
+						default:
+						this.onXMLError("Unknown transformation.");
+						return null;
+					}
+				}
 			}
 
-			// Get transformation TODO
-			//var transf_block = component_child.children[transformation_index];
-			//var transformation = {};
+			// Materials
+			if((index = indexes.indexOf("materials")) == -1) {
+				this.onXMLError("Tag <materials> is missing.");
+				return null;
+			}
+			else {
 
-			component.texture = {
-				id: this.getString(componentChild.children[texture_index],"id"),
-				length_s: this.getFloat(componentChild.children[texture_index], "length_s"),
-				length_t: this.getFloat(componentChild.children[texture_index], "length_t")
+				if(index != MATERIALS_INDEX)
+					this.onXMLMinorError("Tag <materials is out of order.");
+	
+				new_component.materials = [];
+
+				for (var j = 0; j < componentChild.children[index].children.length; ++j) {
+
+					var componentGrandChild = componentChild.children[index].children[j];
+
+					new_component.materials.push({
+						id: this.parseString(componentGrandChild, "id")
+					});
+
+					if (new_component.materials[j].id == null)
+						return null;
+				}	
 			}
 
-			component.children = [];
+			// Texture
+			if((index = indexes.indexOf("texture")) == -1) {
+				this.onXMLError("Tag <texture> is missing.");
+				return null;
+			}
+			else {
 
-			for(var j = 0; j < componentChild.children[children_index].length; ++j) {
-
-				var child =  componentChild.children[j];
+				if(index != TEXTURE_INDEX)
+					this.onXMLMinorError("Tag <texture> is out of order.");
 				
-				component.children.push({
-					type: child.nodeName,
-					id: this.getString(child, "id")
-				});
+				new_component.texture = {
+					id: this.parseString(componentChild.children[index], "id")
+				}
+
+				if(!new_component.texture)
+					return;
+				else if(new_component.texture.id != "none" && new_component.texture.id != "inherit") {
+
+					if ((new_component.texture.length_s = this.parseFloat(componentChild.children[index], "length_s")) == null)
+						return null;
+
+					if ((new_component.texture.length_t = this.parseFloat(componentChild.children[index], "length_t")) == null)
+						return null;
+				}
 			}
 
-			//TODO Check if already exists
+			// Children
+			if((index = indexes.indexOf("children")) == -1) {
+				this.onXMLError("Tag <children> is missing.");
+				return null;
+			}
+			else {
 
-			// COMPLETE TREE STRUCTURE (CHANGE TO ONLY HAVE COMPONENTS, NO PRIMITIVES)
-			//this.treeGraph.addNode(component);
+				if(index != CHILDREN_INDEX)
+					this.onXMLMinorError("Tag <children> is out of order.");
+
+				new_component.children = [];
+
+				for (var j = 0; j < componentChild.children[index].children.length; ++j) {
+
+					var componentGrandChild = componentChild.children[index].children[j];
+
+					switch (componentGrandChild.nodeName) {
+						case "componentref":
+						new_component.children.push({
+							type: "component",
+							id: this.parseString(componentGrandChild, "id")
+						})
+						break;
+
+						case "primitiveref":
+						new_component.children.push({
+							type: "primitive",
+							id: this.parseString(componentGrandChild, "id")
+						})
+						break;
+					}
+
+					if (new_component.children[j].id == null)
+						return null;;
+				}
+			}
+
+			// Check ID
+			if (!this.components.hasOwnProperty(new_component.id))
+				this.components[new_component.id] = new_component;
+			else
+				this.onXMLMinorError("ID \"" + new_component.id + "\" already exists.");
 		}
 
-		this.log("Parsed <components> element. TODO tranformations")
+		if (!this.components.hasOwnProperty(this.scenes.root))
+			return this.onXMLError("Scene root doesn't exist.");
+
+		this.log("Parsed <components> element.")
+
+		return 1;
 	}
 
 	/*
@@ -766,7 +1188,7 @@ class MySceneGraph {
 	 * @param {string} message
 	 */
 	onXMLError(message) {
-		console.error("XML Loading Error: " + message);
+		console.error("XML Error: " + message);
 		this.loadedOk = false;
 	}
 
@@ -783,7 +1205,7 @@ class MySceneGraph {
 	 * @param {string} message
 	 */
 	log(message) {
-		console.log("   " + message);
+		console.log("	" + message);
 	}
 
 	/**
@@ -794,93 +1216,115 @@ class MySceneGraph {
 		//TODO: Render loop starting at root of graph
 	}
 
-	getAttribute(node, attribute) {
+	// Helper functions
 
-		if(!node.hasAttribute(attribute)) {
-			this.onXMLError(" Attribute \"" + attribute + "\" not found in \"" + node.nodeName + "\".");
+	parseInt(element, attribute) {
+
+		var integer = this.reader.getInteger(element, attribute, false);
+
+		if (integer = null || isNaN(integer)) {
+			this.onXMLError("Attribute \"" + attribute + "\" in \"" + element + "\" is not an integer.");
 			return null;
 		}
-
-		return node.getAttribute(attribute);
-	}
-
-	getString(node, attribute) {
-	
-		/* Get string */
-		var string =  this.getAttribute(node, attribute)
-
-		if(string == null) return;
-
-		//var str = this.reader.getString(node, attribute);
-
-		/* Check for empty */
-		if(string === "")
-			this.onXMLError("Attribute \"" + attribute + "\" is empty.");
-
-		return string;
-	}
-
-	getFloat(node, attribute) {
-
-		/* Get float */
-		var float = parseFloat(this.getAttribute(node, attribute));
-
-		if(float == null) return;
-		
-		//var fl = this.reader.getFloat(node, attribute);
-
-		/* Check for valid number */
-		if(isNaN(float))
-			this.onXMLError("Attribute is not a valid float number.");
-		 
-		return float;
-	}
-
-	getInteger(node, attribute) {
-
-		/* Get int */
-		var integer = parseFloat(this.getAttribute(node, attribute));
-
-		if(integer == null) return;
-
-		//var integer = this.reader.getFloat(node, attribute);
-
-		/* Check if it's an integer */
-		if(isNaN(integer) || !(integer % 1 === 0))
-			this.onXMLError("Attribute is not a valid integer number.");
 
 		return integer;
 	}
 
-	getChar(node, attribute) {
+	parseFloat(element, attribute) {
 
-		/* Get char */
-		var char = this.getAttribute(node, attribute);
+		var float = this.reader.getFloat(element, attribute, false);
 
-		if(char == null) return;
-		
-		//var char = this.reader.getString(node, attribute);
+		if (float == null || isNaN(float)) {
+			this.onXMLError("Attribute \"" + attribute + "\" in \"" + element + "\" is not a float.");
+			return null;
+		}
 
-		/* Validate char */
-		if(char != "x" || char != "y" || char != "z")
-			this.onXMLError("Attribute is not x, y or z");
+		return float;
+	}
+
+	parseString(element, attribute) {
+
+		var string = this.reader.getString(element, attribute, false);
+
+		if (string == null || string === "") {
+			this.onXMLError("Attribute \"" + attribute + "\" in \"" + element + "\" is not a string.");
+			return null;
+		}
+
+		return string;
+	}
+
+	parseChar(element, attribute) {
+
+		var char = this.reader.getString(element, attribute, false);
+
+		if (char == null || (char != "x" && char != "y" && char != "z")) {
+			this.onXMLError("Attribute \"" + attribute + "\" in \"" + element + "\" is not a character.");
+			return null;
+		}
 
 		return char;
 	}
 
-	getBoolean(node, attribute) {
+	parseBool(element, attribute) {
 
-		/* Get bool */
-		var boolean = this.getAttribute(node, attribute);
+		var bool = this.reader.getBoolean(element, attribute, false);
 
-		if(boolean == null) return;
-		
-		//var bool = this.reader.getFloat(node, attribute);
+		if (bool == null || isNaN(bool)) {
+			this.onXMLError("Attribute \"" + attribute + "\" in \"" + element + "\" is not a boolean.");
+			return null;
+		}
 
-		/* Validate bool */
-		if(boolean != 0 && boolean != 1)
-			this.onXMLError("Attribute is not a boolean value.");
-		
-		return !!boolean;
+		return bool;
+	}
+
+	parseRGBA(element) {
+
+		var args = ["r", "g", "b", "a"];
+
+		var rgba = {};
+
+		for (var i = 0; i < args.length; ++i) {
+
+			var tmp = this.reader.getFloat(element, args[i], false);
+
+			if (tmp == null || isNaN(tmp)) {
+				this.onXMLError("Attribute \"" + args[i] + "\" in \"" + element + "\" is not a float.");
+				return null;
+			}
+			else if (tmp < 0.0 || tmp > 1.0) {
+				this.onXMLError("Attribute \"" + args[i] + "\" in \"" + element + "\" is out of bounds.");
+				return null;
+			}
+			else
+				rgba[args[i]] = tmp;
+		}
+
+		return rgba;
+	}
+
+	parseXYZ(element) {
+
+		var args;
+		if (this.reader.hasAttribute(element, "w"))
+			args = ["x", "y", "z", "w"];
+		else
+			args = ["x", "y", "z"];
+
+		var xyz = {};
+
+		for (var i = 0; i < args.length; ++i) {
+
+			var tmp = this.reader.getFloat(element, args[i], false);
+
+			if (tmp == null || isNaN(tmp)) {
+				this.onXMLError("Attribute \"" + args[i] + "\" in \"" + element + "\" is not a float.");
+				return null;
+			}
+			else
+				xyz[args[i]] = tmp;
+		}
+
+		return xyz;
 	}
 }

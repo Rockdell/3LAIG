@@ -16,7 +16,6 @@ serialInclude([
     'XMLscene.js', 
     'MySceneGraph.js', 
     'MyInterface.js',
-    'MyTreeGraph.js',
 
 main=function()
 {
