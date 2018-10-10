@@ -1236,6 +1236,71 @@ class MySceneGraph {
 	displayScene() {
 		// entry point for graph rendering
 		//TODO: Render loop starting at root of graph
+		this.scene.pushMatrix();
+
+			this.scene.loadIdentity();
+			this.processNode(false, this.scenes.root, this.scene.getMatrix());
+
+		this.scene.popMatrix();
+
+	}
+
+	processNode(prim, id, tg, mat, text, ls, lt) {
+
+		if(prim) {
+			this.drawElement(id, mat, text, ls, lt);
+		}
+		else {
+			var currentComp = this.components[id];
+
+			//Adjust material
+			//TODO alter later to multiple materials
+			mat = currentComp.materials[0].id != "inherit" ? currentComp.materials[0].id : mat;
+			
+			switch(currentComp.texture.id) {
+				case "none":
+					text = null;
+				break;
+
+				case "inherit":
+					//Nothing happens
+				break;
+
+				default:
+					text = currentComp.texture.id;
+				break;
+			}
+
+		}
+
+
+	}
+
+	drawElement(id, mat, text, ls, lt) {
+
+		switch(this.primitives[id].type) {
+			case "rectangle":
+
+			break;
+
+			case "triangle":
+
+			break;
+
+			case "cylinder":
+
+			break;
+
+			case "sphere":
+
+			break;
+
+			case "torus":
+
+			break;
+
+		}
+
 	}
 
 	// Helper functions
