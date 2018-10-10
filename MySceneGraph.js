@@ -1247,6 +1247,8 @@ class MySceneGraph {
 
 	processNode(prim, id, tg, mat, text, ls, lt) {
 
+		console.log(id);
+
 		if(prim) {
 			this.drawElement(id, mat, text, ls, lt);
 		}
@@ -1255,8 +1257,11 @@ class MySceneGraph {
 
 			//Adjust material
 			//TODO alter later to multiple materials
+
+			//TODO give different name DUMBASS
 			mat = currentComp.materials[0].id != "inherit" ? currentComp.materials[0].id : mat;
 			
+			//Adjust Texture
 			switch(currentComp.texture.id) {
 				case "none":
 					text = null;
@@ -1271,8 +1276,73 @@ class MySceneGraph {
 				break;
 			}
 
-		}
+			//Adjust Transformation Matrix
+			this.adjustMatrix(currentComp);
+			console
 
+			for (var childID in currentComp.children) {
+				//push
+				var child = currentComp.children[childID];
+
+				if(child.texture)
+					this.processNode(child.type == "primitive" ? true : false, child.id, 1, mat, text, child.texture.length_s, child.texture.length_t);
+				else
+					this.processNode(child.type == "primitive" ? true : false, child.id, 1, mat);
+				//pop
+			}
+
+		}
+		
+	}
+
+	adjustMatrix(component) {
+
+		//Checks if it has any transformations
+		if(!component.transformations[0]) {
+			console.log("no trans found");
+			return;
+		}
+			
+		//Checks if it is a transformation reference of a new transformation
+		if(component.transformations[0].hasOwnProperty("id")) {
+			console.log("its a reference trans");
+			//Transformation reference
+				for(var transRef in component.transformations) {
+					var tf = this.transformations[component.transformations[transRef].id];
+
+					for(var ptransID in tf.transformations) {
+					
+						var ptrans = tf.transformations[ptransID];
+
+						switch (ptrans.type) {
+							case "translate" :
+								console.log("translate");
+								this.scene.translate(ptrans.x, ptrans.y, ptrans.z);
+							break;
+
+							case "scale" :
+								console.log("scale");
+
+							break;
+
+							case "rotate" :
+								console.log("rotate");
+
+							break;
+						}
+					}
+
+
+
+				}
+
+			return this.scene.getMatrix();
+
+		}
+		else {
+			//New transformation
+
+		}
 
 	}
 
