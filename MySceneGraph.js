@@ -9,7 +9,7 @@ class MySceneGraph {
 	 */
 	constructor(filename, scene) {
 
-		this.loadedOk = true;
+		this.loadedOk = null;
 
 		// Establish bidirectional references between scene and graph.
 		this.scene = scene;
@@ -85,8 +85,10 @@ class MySceneGraph {
 		var index;
 
 		// <scene>
-		if ((index = indexes.indexOf("scene")) == -1)
-			return this.onXMLError("Tag <scene> is missing.");
+		if ((index = indexes.indexOf("scene")) == -1) {
+			this.onXMLError("Tag <scene> is missing.");
+			return null;
+		}
 		else {
 			if (index != SCENE_INDEX)
 				this.onXMLMinorError("Tag <scene> is out of order.");
@@ -97,8 +99,10 @@ class MySceneGraph {
 		}
 
 		// <views>
-		if ((index = indexes.indexOf("views")) == -1)
-			return this.onXMLError("Tag <views> is missing.");
+		if ((index = indexes.indexOf("views")) == -1) {
+			this.onXMLError("Tag <views> is missing.");
+			return null;
+		}
 		else {
 			if (index != VIEWS_INDEX)
 				this.onXMLMinorError("Tag <views> is out of order.");
@@ -109,8 +113,10 @@ class MySceneGraph {
 		}
 
 		// <ambient>
-		if ((index = indexes.indexOf("ambient")) == -1)
-			return this.onXMLError("Tag <ambient> is missing.");
+		if ((index = indexes.indexOf("ambient")) == -1) {
+			this.onXMLError("Tag <ambient> is missing.");
+			return null;
+		}
 		else {
 			if (index != AMBIENT_INDEX)
 				this.onXMLMinorError("Tag <ambient> is out of order.");
@@ -121,8 +127,10 @@ class MySceneGraph {
 		}
 
 		// <lights>
-		if ((index = indexes.indexOf("lights")) == -1)
-			return this.onXMLError("Tag <lights> is missing.");
+		if ((index = indexes.indexOf("lights")) == -1) {
+			this.onXMLError("Tag <lights> is missing.");
+			return null;
+		}
 		else {
 			if (index != LIGHTS_INDEX)
 				this.onXMLMinorError("Tag <lights> is out of order.");
@@ -133,8 +141,10 @@ class MySceneGraph {
 		}
 
 		// <textures>
-		if ((index = indexes.indexOf("textures")) == -1)
-			return this.onXMLError("Tag <textures> is missing.");
+		if ((index = indexes.indexOf("textures")) == -1) {
+			this.onXMLError("Tag <textures> is missing.");
+			return;
+		}
 		else {
 			if (index != TEXTURES_INDEX)
 				this.onXMLMinorError("tag <textures> is out of order.");
@@ -145,8 +155,10 @@ class MySceneGraph {
 		}
 
 		// <materials>
-		if ((index = indexes.indexOf("materials")) == -1)
-			return this.onXMLError("Tag <materials> is missing.");
+		if ((index = indexes.indexOf("materials")) == -1) {
+			this.onXMLError("Tag <materials> is missing.");
+			return;
+		}
 		else {
 			if (index != MATERIALS_INDEX)
 				this.onXMLMinorError("Tag <materials> is out of order.");
@@ -157,8 +169,10 @@ class MySceneGraph {
 		}
 
 		// <transformations>
-		if ((index = indexes.indexOf("transformations")) == -1)
-			return this.onXMLError("Tag <transformations> is missing.");
+		if ((index = indexes.indexOf("transformations")) == -1) {
+			this.onXMLError("Tag <transformations> is missing.");
+			return null;
+		}
 		else {
 			if (index != TRANSFORMATIONS_INDEX)
 				this.onXMLMinorError("Tag <transformations> is out of order.");
@@ -169,8 +183,10 @@ class MySceneGraph {
 		}
 
 		// <primitives>
-		if ((index = indexes.indexOf("primitives")) == -1)
-			return this.onXMLError("Tag <primitives> is missing.");
+		if ((index = indexes.indexOf("primitives")) == -1) {
+			this.onXMLError("Tag <primitives> is missing.");
+			return null;
+		}
 		else {
 			if (index != PRIMITIVES_INDEX)
 				this.onXMLMinorError("Tag <primitives> is out of order.");
@@ -181,8 +197,10 @@ class MySceneGraph {
 		}
 
 		// <components>
-		if ((index = indexes.indexOf("components")) == -1)
-			return this.onXMLError("Tag <components> is missing.");
+		if ((index = indexes.indexOf("components")) == -1) {
+			this.onXMLError("Tag <components> is missing.");
+			return null;
+		}
 		else {
 			if (index != COMPONENTS_INDEX)
 				this.onXMLMinorError("Tag <components> is out of order.");
@@ -191,6 +209,8 @@ class MySceneGraph {
 			if (this.parseComponents(rootElement.children[index]) == null)
 				return;
 		}
+
+		this.loadedOk = true;
 	}
 
 	/**
@@ -717,7 +737,7 @@ class MySceneGraph {
 		if (this.materials.length < 1)
 			return this.onXMLError("Need at least one material.");
 
-		this.log("Parse <materials> element.")
+		this.log("Parsed <materials> element.")
 
 		return 1;
 	}
@@ -1175,8 +1195,10 @@ class MySceneGraph {
 				this.onXMLMinorError("ID \"" + new_component.id + "\" already exists.");
 		}
 
-		if (!this.components.hasOwnProperty(this.scenes.root))
-			return this.onXMLError("Scene root doesn't exist.");
+		if (!this.components.hasOwnProperty(this.scenes.root)) {
+			this.onXMLError("Scene root doesn't exist.");
+			return null;
+		}
 
 		this.log("Parsed <components> element.")
 
@@ -1223,7 +1245,7 @@ class MySceneGraph {
 		var integer = this.reader.getInteger(element, attribute, false);
 
 		if (integer = null || isNaN(integer)) {
-			this.onXMLError("Attribute \"" + attribute + "\" in \"" + element + "\" is not an integer.");
+			this.onXMLError("Attribute \"" + attribute + "\" in \"" + element.nodeName + "\" is not an integer.");
 			return null;
 		}
 
@@ -1235,7 +1257,7 @@ class MySceneGraph {
 		var float = this.reader.getFloat(element, attribute, false);
 
 		if (float == null || isNaN(float)) {
-			this.onXMLError("Attribute \"" + attribute + "\" in \"" + element + "\" is not a float.");
+			this.onXMLError("Attribute \"" + attribute + "\" in \"" + element.nodeName + "\" is not a float.");
 			return null;
 		}
 
@@ -1247,7 +1269,7 @@ class MySceneGraph {
 		var string = this.reader.getString(element, attribute, false);
 
 		if (string == null || string === "") {
-			this.onXMLError("Attribute \"" + attribute + "\" in \"" + element + "\" is not a string.");
+			this.onXMLError("Attribute \"" + attribute + "\" in \"" + element.nodeName + "\" is not a string.");
 			return null;
 		}
 
@@ -1259,7 +1281,7 @@ class MySceneGraph {
 		var char = this.reader.getString(element, attribute, false);
 
 		if (char == null || (char != "x" && char != "y" && char != "z")) {
-			this.onXMLError("Attribute \"" + attribute + "\" in \"" + element + "\" is not a character.");
+			this.onXMLError("Attribute \"" + attribute + "\" in \"" + element.nodeName + "\" is not a character.");
 			return null;
 		}
 
@@ -1271,7 +1293,7 @@ class MySceneGraph {
 		var bool = this.reader.getBoolean(element, attribute, false);
 
 		if (bool == null || isNaN(bool)) {
-			this.onXMLError("Attribute \"" + attribute + "\" in \"" + element + "\" is not a boolean.");
+			this.onXMLError("Attribute \"" + attribute + "\" in \"" + element.nodeName + "\" is not a boolean.");
 			return null;
 		}
 
@@ -1289,11 +1311,11 @@ class MySceneGraph {
 			var tmp = this.reader.getFloat(element, args[i], false);
 
 			if (tmp == null || isNaN(tmp)) {
-				this.onXMLError("Attribute \"" + args[i] + "\" in \"" + element + "\" is not a float.");
+				this.onXMLError("Attribute \"" + args[i] + "\" in \"" + element.nodeName + "\" is not a float.");
 				return null;
 			}
 			else if (tmp < 0.0 || tmp > 1.0) {
-				this.onXMLError("Attribute \"" + args[i] + "\" in \"" + element + "\" is out of bounds.");
+				this.onXMLError("Attribute \"" + args[i] + "\" in \"" + element.nodeName + "\" is out of bounds.");
 				return null;
 			}
 			else
@@ -1318,7 +1340,7 @@ class MySceneGraph {
 			var tmp = this.reader.getFloat(element, args[i], false);
 
 			if (tmp == null || isNaN(tmp)) {
-				this.onXMLError("Attribute \"" + args[i] + "\" in \"" + element + "\" is not a float.");
+				this.onXMLError("Attribute \"" + args[i] + "\" in \"" + element.nodeName + "\" is not a float.");
 				return null;
 			}
 			else
