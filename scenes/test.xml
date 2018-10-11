@@ -4,25 +4,25 @@
 
     <views default="perspective">
         <perspective id="perspective" near="0.1" far="500.0" angle="0.4">
-            <from x="30.0" y="30.0" z="30.0" />
+            <from x="20.0" y="30.0" z="30.0" />
             <to x="0.0" y="0.0" z="0.0" />
         </perspective>
     </views>
 
     <ambient>
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
-        <background r="0.0" g="0.0" b="0.0" a="1.0" />
+        <background r="0.0" g="0.75" b="1.0" a="1.0" />
     </ambient>
 
     <lights>
-        <omni id="light" enabled="0">
+        <omni id="light" enabled="1">
             <location x="6.0" y="6.0" z="0.0" w="1.0" />
             <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
         </omni>
 		
-		 <omni id="light2" enabled="0">
+		 <omni id="light2" enabled="1">
             <location x="6.0" y="6.0" z="6.0" w="1.0" />
             <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
@@ -221,7 +221,8 @@
 
             <transformation>
                 <rotate axis="x" angle="-90.0" />
-                <scale x="0.3" y="0.3" z="1.5" />
+                <translate x="0.0" y="-0.85" z="0.0" />
+                <scale x="0.3" y="0.3" z="0.5" />
             </transformation>
 
             <materials>
@@ -432,10 +433,10 @@
             <transformation> </transformation>
 
             <materials>
-                <material id="inherit" />
+                <material id="cube_material" />
             </materials>
 
-            <texture id="cube_texture" length_s="1.0" length_t="1.0" />
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
 
             <children>
                 <componentref id="cube_front_face" />
@@ -465,8 +466,8 @@
 
         <component id="cube_back_face">
             <transformation>
-                <translate x="0.0" y="0.0" z="0.5" />
                 <rotate axis="y" angle="180.0" />
+                <translate x="0.0" y="0.0" z="0.5" />    
             </transformation>
 
             <materials>
@@ -482,8 +483,8 @@
 
         <component id="cube_top_face">
             <transformation>
-                <translate x="0.0" y="0.0" z="0.5" />
                 <rotate axis="x" angle="-90.0" />
+                <translate x="0.0" y="0.0" z="0.5" />
             </transformation>
 
             <materials>
@@ -499,8 +500,8 @@
 
         <component id="cube_bottom_face">
             <transformation>
-                <translate x="0.0" y="0.0" z="0.5" />
                 <rotate axis="x" angle="90.0" />
+                <translate x="0.0" y="0.0" z="0.5" />
             </transformation>
 
             <materials>
@@ -516,8 +517,8 @@
 
         <component id="cube_right_face">
             <transformation>
-                <translate x="0.0" y="0.0" z="0.5" />
                 <rotate axis="y" angle="90.0" />
+                <translate x="0.0" y="0.0" z="0.5" />
             </transformation>
 
             <materials>
@@ -532,9 +533,9 @@
         </component>
 
         <component id="cube_left_face">
-            <transformation>
-                <translate x="0.0" y="0.0" z="0.5" />
+            <transformation>  
                 <rotate axis="y" angle="-90.0" />
+                <translate x="0.0" y="0.0" z="0.5" />
             </transformation>
 
             <materials>

@@ -25,6 +25,11 @@ serialInclude([
     '../factories/textureFactory.js',
     '../factories/transformationFactory.js',
     '../factories/viewFactory.js',
+    '../prims/MyTriangle.js',
+    '../prims/MyRectangle.js',
+    '../prims/MyCylinder.js',
+    '../prims/MySphere.js',
+    '../prims/MyTorus.js',
 
 main=function()
 {

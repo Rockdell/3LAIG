@@ -104,11 +104,6 @@ class MyTriangle extends CGFobject
             p1u, p1v,
             p2u, p2v
         ];
-        
-        
-        for(let i = 0; i < 6; i++) {
-            console.log(i + " - " + this.texCoords[i]);
-        }
 			
 		this.primitiveType=this.scene.gl.TRIANGLES;
 		this.initGLBuffers();

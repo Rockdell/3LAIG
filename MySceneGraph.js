@@ -546,41 +546,80 @@ class MySceneGraph {
 		console.log("	" + message);
 	}
 
+	createPrims() {
+
+		this.displayPrimitives = new Map();
+
+		//Cycles through all parsed primitives
+		for(var primID in this.primitives) {
+			var currPrim = this.primitives[primID];
+
+			switch(currPrim.type) {
+				case 'rectangle' :
+					this.displayPrimitives.set(currPrim.id, new MyRectangle(this.scene, currPrim.args.x1, currPrim.args.y1, currPrim.args.x2, currPrim.args.y2));
+				break;
+
+				case 'triangle' :
+					this.displayPrimitives.set(currPrim.id, new MyTriangle(this.scene, currPrim.args.x1, currPrim.args.y1, currPrim.args.z1, currPrim.args.x2, currPrim.args.y2, currPrim.args.z2, currPrim.args.x3, currPrim.args.y3, currPrim.args.z3));
+				break;
+
+				case 'cylinder' :
+					this.displayPrimitives.set(currPrim.id, new MyCylinder(this.scene, currPrim.args.base, currPrim.args.top, currPrim.args.height, currPrim.args.slices, currPrim.args.stacks));
+				break;
+
+				case 'sphere' :
+					this.displayPrimitives.set(currPrim.id, new MySphere(this.scene, currPrim.args.radius, currPrim.args.slices, currPrim.args.stacks));
+				break;
+
+				case 'torus' :
+					this.displayPrimitives.set(currPrim.id, new MyTorus(this.scene, currPrim.args.inner, currPrim.args.outer, currPrim.args.slices, currPrim.args.loops));
+				break;
+			}
+
+			//console.log("Primitive: " + currPrim.id);
+		}
+	}
+
 	/**
 	 * Displays the scene, processing each node, starting in the root node.
 	 */
 	displayScene() {
+
 		// entry point for graph rendering
 		//TODO: Render loop starting at root of graph
 		this.scene.pushMatrix();
 
-			this.scene.loadIdentity();
+			//this.scene.loadIdentity();
 			this.processNode(false, this.scenes.root, this.scene.getMatrix());
 
 		this.scene.popMatrix();
 
 	}
 
-	processNode(prim, id, tg, mat, text, ls, lt) {
+	processNode(prim, id, mat, text, ls, lt) {
 
 		//console.log(id);
-
+		
 		if(prim) {
-			this.drawElement(id, mat, text, ls, lt);
+			//Draw element
+			//console.log("Displaying: " + id);
+			this.displayPrimitives.get(id).display();
+			//this.scene.test.display();
 		}
 		else {
 			var currentComp = this.components[id];
 
-			//Adjust material
 			//TODO alter later to multiple materials
-
-			//TODO give different name DUMBASS
-			mat = currentComp.materials[0].id != "inherit" ? currentComp.materials[0].id : mat;
+			//Adjust material
+			var newMat = currentComp.materials[0].id != "inherit" ? currentComp.materials[0].id : mat;
 			
 			//Adjust Texture
+			var newText = null;
+			var newLs = null;
+			var newLt = null;
 			switch(currentComp.texture.id) {
 				case "none":
-					text = null;
+					newText = null;
 				break;
 
 				case "inherit":
@@ -588,27 +627,26 @@ class MySceneGraph {
 				break;
 
 				default:
-					text = currentComp.texture.id;
+					newText = currentComp.texture.id;
+					newLs = currentComp.texture.lenght_s;
+					newLt = currentComp.texture.length_t;
 				break;
 			}
 
-			//Adjust Transformation Matrix
-			this.adjustMatrix(currentComp);
-			console
+			this.scene.pushMatrix();
+			
+				//Adjust Transformation Matrix
+				this.adjustMatrix(currentComp);
+	
+				for (var childID in currentComp.children) {
 
-			for (var childID in currentComp.children) {
-				//push
-				var child = currentComp.children[childID];
+					var child = currentComp.children[childID];
 
-				if(child.texture)
-					this.processNode(child.type == "primitive" ? true : false, child.id, 1, mat, text, child.texture.length_s, child.texture.length_t);
-				else
-					this.processNode(child.type == "primitive" ? true : false, child.id, 1, mat);
-				//pop
-			}
+					this.processNode(child.type == "primitive" ? true : false, child.id, newMat, newText, newLs, newLt);
+				}
 
-		}
-		
+			this.scene.popMatrix();
+		}	
 	}
 
 	adjustMatrix(component) {
@@ -620,71 +658,56 @@ class MySceneGraph {
 		}
 			
 		//Checks if it is a transformation reference of a new transformation
-		if(component.transformations[0]["id"]) {
+		if(component.transformations[0].args.hasOwnProperty("id")) {
+		
 			//console.log("its a reference trans");
+
 			//Transformation reference
-				for(var transRef in component.transformations) {
-					var tf = this.transformations[component.transformations[transRef].id];
+			var tf = this.transformations[component.transformations[0].args.id];
 
-					for(var ptransID in tf.transformations) {
-					
-						var ptrans = tf.transformations[ptransID];
-
-						switch (ptrans.type) {
-							case "translate" :
-								//console.log("translate");
-								this.scene.translate(ptrans.x, ptrans.y, ptrans.z);
-							break;
-
-							case "scale" :
-								//console.log("scalspecular r="1.0" g="1.0" b="1.0" a="1.0" />e");
-
-							break;
-
-							case "rotate" :
-								//console.log("rotate");
-
-							break;
-						}
-					}
-
-
-
-				}
-
-			return this.scene.getMatrix();
-
+			//TODO alter to "properties" later
+			for(let i = 0; i < tf.properties.length; i++) {
+				this.readTransformations(tf.properties[i]);
+			}
 		}
 		else {
 			//New transformation
-
+			for(let i = 0; i < component.transformations.length; i++) {
+				this.readTransformations(component.transformations[i]);
+			}
 		}
 
 	}
 
-	drawElement(id, mat, text, ls, lt) {
+	readTransformations(ptrans) {
 
-		switch(this.primitives[id].type) {
-			case "rectangle":
+		switch (ptrans.type) {
+			case "translate" :
+			//	console.log("translate: " + ptrans.args.x + " - " + ptrans.args.y + " - " + ptrans.args.z);
+				this.scene.translate(ptrans.args.x, ptrans.args.y, ptrans.args.z);
+			break;
+
+			case "scale" :
+				//console.log("scale");
+				this.scene.scale(ptrans.args.x, ptrans.args.y, ptrans.args.z);
 
 			break;
 
-			case "triangle":
-
+			case "rotate" :
+				//console.log("rotate: " + ptrans.axis + " - " + ptrans.angle);
+				
+				switch(ptrans.args.axis) {
+					case 'x':
+						this.scene.rotate(ptrans.args.angle * DEGREE_TO_RAD, 1, 0, 0);
+					break;
+					case 'y':
+						this.scene.rotate(ptrans.args.angle * DEGREE_TO_RAD, 0, 1, 0);
+					break;
+					case 'z':
+						this.scene.rotate(ptrans.args.angle * DEGREE_TO_RAD, 0, 0, 1);
+					break;
+				}
 			break;
-
-			case "cylinder":
-
-			break;
-
-			case "sphere":
-
-			break;
-
-			case "torus":
-
-			break;
-
 		}
 
 	}

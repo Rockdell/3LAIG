@@ -1,0 +1,835 @@
+<yas>
+
+    <scene root="room" axis_length="3.0" />
+    
+    <views default="pview01" >
+
+        <perspective id="pview01" near="0.1" far="500" angle="50.0">
+            <from x="8" y="10" z="15" />
+            <to x="8" y="0" z="0" />
+        </perspective>
+    
+        <ortho id="oview02" near="10.0" far="20.0"
+        left="3.0" right="4.0" top="5.0" bottom="6.0" />
+    </views>
+
+
+    <ambient>
+        <ambient r="0.2" g="0.2" b="0.2" a="0.2" />
+        <background r="0.1" g="0.2" b="0.3" a="0.4" />
+    </ambient>
+
+
+    <lights>
+    
+        <omni id="ceilling_left" enabled="1" >
+            <location x="4" y="3.8" z="4" w="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1" />
+            <diffuse r="1" g="1" b="1" a="1" />
+            <specular r="0.5" g="0.5" b="0.5" a="1" />
+        </omni>
+
+        <omni id="ceilling_right" enabled="1" >
+            <location x="12" y="3.8" z="4" w="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1" />
+            <diffuse r="1" g="1" b="1" a="1" />
+            <specular r="0.5" g="0.5" b="0.5" a="1" />
+        </omni>
+    
+        <!-- <spot id="spot01" enabled="0" angle="35" exponent="2">
+            <location x="2" y="3" z="40" w="1" />
+            <target x="3" y="6" z="0" />
+            <ambient r="0.06" g="0.15" b="0.13" a="0.09" />
+            <diffuse r="0.23" g="0.26" b="0.21" a="0.19" />
+            <specular r="0.14" g="0.16" b="0.17" a="0.15" />
+        </spot> -->
+    </lights>
+
+    <textures>
+        <!-- Deve existir um ou mais blocos "texture" -->
+        <!-- Os identificadores "id" nao podem ser repetidos -->
+        <texture id="bank" file="bank.jpg" />
+        <texture id="leaves" file="leaves.jpg" />
+        <texture id="rocks" file="rocks.jpg" />
+        <texture id="trunk-image" file="trunk-image.jpg" />
+        <texture id="vidral" file="vidral.jpg" />
+        <texture id="wood" file="wood.jpg" />
+        <texture id="floor" file="floor.jpg" />
+        <texture id="kiss" file="kiss.jpg" />
+        <texture id="woman_in_gold" file ="woman.jpg"/>
+        <texture id="kandinsky" file="kandinsky.jpg" />
+        <texture id="salvador_dali" file="salvador_dali.jpg" />
+        <texture id="mona_lisa" file="mona_lisa.jpg" />
+        <texture id="fpessoa" file="fpessoa.jpg" />
+    </textures>
+
+
+    <materials>
+        <material id="defaultMat" shininess = "10" >
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.2" g="0.2" b="0.2" a="1" />
+            <diffuse r="0.5" g="0.5" b="0.5" a="1" />
+            <specular r="0.5" g="0.5" b="0.5" a="1" />
+        </material>
+        <material id="wood" shininess = "10" >
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.5" g="0.5" b="0.5" a="1" />
+            <diffuse r="0.51" g="0.32" b="0.01" a="1" />
+            <specular r="0.051" g="0.032" b="0" a="1" />
+        </material>
+        <material id="floor" shininess = "10" >
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.5" g="0.5" b="0.5" a="1" />
+            <diffuse r="0.4" g="0.4" b="0.4" a="1" />
+            <specular r="0.1" g="0.1" b="0.1" a="1" />
+        </material>
+        <material id="walls" shininess = "10" >
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.5" g="0.5" b="0.5" a="1" />
+            <diffuse r="0.5" g="0.5" b="0.5" a="1" />
+            <specular r="0.05" g="0.05" b="0.05" a="1" />
+        </material>
+        <material id="white" shininess = "1" >
+            <emission r="1" g="1" b="1" a="1" />
+            <ambient r="0.5" g="0.5" b="0.5" a="1" />
+            <diffuse r="0.9" g="0.9" b="0.9" a="1" />
+            <specular r="0.1" g="0.1" b="0.1" a="1" />
+        </material>
+        <material id="2" shininess = "1" >
+            <emission r="0.5" g="0.5" b="0.4" a="0.2" />
+            <ambient r="0.5" g="0.5" b="0.1" a="1" />
+            <diffuse r="0.75" g="0.25" b="0.25" a="1" />
+            <specular r="0.1" g="0.1" b="0.8" a="1" />
+        </material>
+    </materials>
+
+
+    <transformations>
+
+        <transformation id="transform01">
+            <translate x="0" y="5" z="0" />
+            <rotate axis="x" angle="20" />
+            <scale x="2" y="1" z="1" />
+        </transformation>
+
+    </transformations> 
+
+
+    <primitives>
+        
+        <primitive id="unitQuad">
+            <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5" />
+        </primitive >
+
+        <primitive id="p_yz_wall">
+            <rectangle x1="0" y1="0" x2="8" y2="4" />
+        </primitive >
+
+        <primitive id="p_xy_wall">
+            <rectangle x1="0" y1="0" x2="16" y2="4" />
+        </primitive >
+
+        <primitive id="p_middle_wall">
+            <rectangle x1="0" y1="0" x2="5" y2="4" />
+        </primitive >
+
+        <primitive id="p_middle_wall_lat">
+            <rectangle x1="0" y1="0" x2="0.5" y2="4" />
+        </primitive >
+
+
+
+        <primitive id="tr1">
+            <triangle x1="0" y1="0" z1="0"
+            x2="1" y2="1" z2="0"
+            x3="0" y3="1" z3="0" />
+        </primitive >
+
+        <primitive id="c1">
+            <cylinder base="0.4" top="0.2" height="1.5" slices="20" stacks="20" />
+        </primitive >
+
+        <primitive id="to1">
+            <torus inner="0.2" outer="0.5" slices="20" loops="20" />
+        </primitive >
+        
+    </primitives > 
+
+
+    <components>
+        <component id="room">
+
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="defaultMat" />
+            </materials>
+
+            <texture id="none" length_s="1.0" length_t="1.0" />
+        
+            <children>
+                <componentref id="floor" />
+                <componentref id="wall"/>
+                <componentref id="benchs"/>
+                <componentref id="the_kiss_painting" />
+                <componentref id="the_woman_in_gold" />
+                <componentref id="kandinsky" />
+                <componentref id="salvador_dali" />
+                <componentref id="fpessoa" />
+                <componentref id="mona_lisa" />
+                <componentref id="support" />
+            </children>
+        </component>
+
+        <component id="floor">
+
+            <transformation>
+                <scale x="16" y="1" z="8" />
+                <translate x= "0.5" y="0" z="0.5"/>
+                <rotate axis="x" angle="-90" />
+            </transformation>
+
+            <materials>
+                <material id="floor" />
+            </materials>
+
+            <texture id="floor" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="unitQuad" />
+            </children>
+
+        </component>
+
+        <component id="wall">
+
+            <transformation>
+                <scale x="1" y="1" z="1" />
+            </transformation>
+
+            <materials>
+                <material id="walls" />
+            </materials>
+
+            <texture id="bank" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="p_xy_wall" />
+                <componentref id="yz_wall" />
+                <componentref id="yz_wall_2" />
+                <componentref id="middle_wall_1" />
+                <componentref id="middle_wall_2" />
+                <componentref id="middle_wall_lat_1" />
+                <componentref id="middle_wall_lat_2" />
+            </children>
+
+        </component>
+
+        <component id="yz_wall">
+
+            <transformation>
+                <translate x="0" y="0" z="8" />
+                <rotate axis="y" angle="90"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="p_yz_wall" />
+            </children>
+
+        </component>
+
+        <component id="yz_wall_2">
+
+            <transformation>
+                <translate x="16" y="0" z="0" />
+                <rotate axis="y" angle="-90"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="p_yz_wall"  />
+            </children>
+
+        </component>
+
+        <component id="middle_wall_1">
+
+            <transformation>
+                <translate x="8" y="0" z="1.5" />
+                <rotate axis="y" angle="-90"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="p_middle_wall" />
+            </children>
+
+        </component>
+
+        <component id="middle_wall_2">
+
+            <transformation>
+                <translate x="8.5" y="0" z="6.5" />
+                <rotate axis="y" angle="90"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="p_middle_wall" />
+            </children>
+
+        </component>
+
+        <component id="middle_wall_lat_1">
+
+            <transformation>
+                <translate x="8" y="0" z="6.5" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="p_middle_wall_lat" />
+            </children>
+
+        </component>
+
+        <component id="middle_wall_lat_2">
+
+            <transformation>
+                <translate x="8.5" y="0" z="1.5" />
+                <rotate axis="y" angle="180"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="p_middle_wall_lat" />
+            </children>
+
+        </component>
+
+
+        <component id="benchs">
+
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="wood" />
+            </materials>
+
+            <texture id="wood" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="bench_left" />
+                <componentref id="bench_right" />
+            </children>
+
+        </component>
+
+        <component id="bench_left">
+
+            <transformation>
+                <translate x="6.5" y="0" z="4" />
+                <rotate axis="y" angle="90" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="bench_legs" />
+                <componentref id="bench_seat" />
+            </children>
+
+        </component>
+
+        <component id="bench_right">
+
+            <transformation>
+                <translate x="9" y="0" z="4" />
+                <rotate axis="y" angle="90" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="bench_legs" />
+                <componentref id="bench_seat" />
+            </children>
+
+        </component>
+
+        
+        <component id="bench_legs">
+
+            <transformation>
+                <translate x="-1" y="0" z = "0" />
+                <scale x="0.1" y="0.5" z = "0.5" />
+                <translate x="4" y="0.5" z = "0.5" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="unitCube" />
+                <componentref id="bench_leg_2"/>
+            </children>
+
+        </component>
+
+
+        <component id="bench_leg_2">
+
+            <transformation>
+                <translate x="11" y="0" z = "0" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="unitCube" />
+            </children>
+
+        </component>
+
+        <component id="bench_seat">
+
+            <transformation>
+                <translate x="0" y="0.5" z = "0.2" />
+                <scale x="2" y="0.1" z = "0.7" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="unitCube" />
+            </children>
+
+        </component>
+
+
+
+        <component id="support"> 
+            <transformation>
+                <translate x="3" y="1.5" z="4"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="rocks" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="support_cone" />
+                <componentref id="support_cube" />
+                <componentref id="art_piece" />
+            </children>
+
+        </component>
+
+        <component id="support_cone"> 
+            <transformation>
+                <rotate axis="x" angle="90" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="rocks" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="c1" />
+            </children>
+
+        </component>
+
+        <component id="support_cube"> 
+            <transformation>
+                <scale x="1.5" y="0.1" z="1.5" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="rocks" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="unitCube" />
+            </children>
+
+        </component>
+
+        <component id="art_piece"> 
+            <transformation>
+                <translate x="0" y="0.6" z="0"/>
+                <rotate axis="x" angle="30" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="leaves" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="to1" />
+            </children>
+
+        </component>
+
+        <component id="the_kiss_painting">
+            <transformation>
+                <translate x="0.05" y="2" z="2.25"/>
+                <scale x="0.1" y="2" z="1.5" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="kiss" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="frame" />
+                <componentref id="cube_front_side" />
+            </children>
+
+        </component>
+
+        <component id="the_woman_in_gold">
+            <transformation>
+                <translate x="0.05" y="2" z="5.25"/>
+                <scale x="0.1" y="2" z="1.5" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="woman_in_gold" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="frame" />
+                <componentref id="cube_front_side" />
+            </children>
+
+        </component>
+
+        <component id="kandinsky">
+            <transformation>
+                <translate x="4" y="2" z="0"/>
+                <rotate axis="y" angle="-90" />
+                <scale x="0.2" y="2.5" z="4" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="kandinsky" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="frame" />
+                <componentref id="cube_front_side" />
+            </children>
+
+        </component>
+
+        <component id="salvador_dali">
+            <transformation>
+                <translate x="12.5" y="2" z="0"/>
+                <rotate axis="y" angle="-90" />
+                <scale x="0.2" y="2.5" z="4" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="salvador_dali" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="frame" />
+                <componentref id="cube_front_side" />
+            </children>
+
+        </component>
+
+         <component id="fpessoa">
+            <transformation>
+                <translate x="15.95" y ="2" z="2.25"/>
+                <rotate axis="y" angle="180" />
+                <scale x="0.1" y="2" z="1.5" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="fpessoa" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="frame" />
+                <componentref id="cube_front_side" />
+            </children>
+
+        </component>
+
+        <component id="mona_lisa">
+            <transformation>
+                <translate x="15.95" y ="2" z="5.25"/>
+                <rotate axis="y" angle="180" />
+                <scale x="0.1" y="2" z="1.5" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="mona_lisa" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="frame" />
+                <componentref id="cube_front_side" />
+            </children>
+
+        </component>
+
+        <component id="frame">
+            <transformation>
+                <scale x="1" y="1" z="1" />
+            </transformation>
+
+            <materials>
+                <material id="wood" />
+            </materials>
+
+            <texture id="wood" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="cube_top_side" />
+                <componentref id="cube_bottom_side" />
+                <componentref id="cube_right_side" />
+                <componentref id="cube_left_side" />
+            </children>
+
+        </component>
+
+
+
+        <component id="unitCube">
+
+            <transformation>
+                <translate x="0" y="0" z="0" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="cube_top_side" />
+                <componentref id="cube_bottom_side" />
+                <componentref id="cube_right_side" />
+                <componentref id="cube_left_side" />
+                <componentref id="cube_front_side" />
+                <componentref id="cube_back_side" />
+            </children>
+
+        </component>
+
+        <component id="cube_left_side">
+
+            <transformation>
+                <translate x="0" y="0" z="0.5" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="unitQuad" />
+            </children>
+
+        </component>
+
+        <component id="cube_right_side">
+
+            <transformation>
+                <rotate axis="y" angle="180"/>
+                <translate x="0" y="0" z="0.5" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="unitQuad" />
+            </children>
+
+        </component>
+
+
+        <component id="cube_front_side">
+
+            <transformation>
+                <rotate axis="y" angle="90"/>
+                <translate x="0" y="0" z="0.5" />
+            </transformation>
+
+            <materials>
+                <material id="defaultMat" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="unitQuad" />
+            </children>
+
+        </component>
+
+        <component id="cube_front_painting">
+
+            <transformation>
+                <rotate axis="y" angle="90"/>
+                <translate x="0" y="0" z="0.5" />
+            </transformation>
+
+            <materials>
+                <material id="white" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="unitQuad" />
+            </children>
+
+        </component>
+
+        <component id="cube_back_side">
+
+            <transformation>
+                <rotate axis="y" angle="-90"/>
+                <translate x="0" y="0" z="0.5" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="unitQuad" />
+            </children>
+
+        </component>
+
+        <component id="cube_top_side">
+
+            <transformation>
+                <rotate axis="x" angle="90"/>
+                <translate x="0" y="0" z="0.5" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="unitQuad" />
+            </children>
+
+        </component>
+
+        <component id="cube_bottom_side">
+
+            <transformation>
+                <rotate axis="x" angle="-90"/>
+                <translate x="0" y="0" z="0.5" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="unitQuad" />
+            </children>
+
+        </component>
+
+        
+
+
+    </components>
+
+</yas>

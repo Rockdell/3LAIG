@@ -34,6 +34,12 @@ class XMLscene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
 
         this.axis = new CGFaxis(this);
+
+        this.materialDefault = new CGFappearance(this);
+		this.materialDefault.setAmbient(0,0,0,1);
+		this.materialDefault.setDiffuse(0,0.5,0.5,1);
+		this.materialDefault.setSpecular(0.2,0.2,0.2,1);
+		this.materialDefault.setShininess(10);
     }
 
     /**
@@ -47,6 +53,9 @@ class XMLscene extends CGFscene {
      * As loading is asynchronous, this may be called already after the application has started the run loop
      */
     onGraphLoaded() {
+
+        //Create primitives
+		this.graph.createPrims();
 
         this.initAxis();
             
@@ -164,6 +173,8 @@ class XMLscene extends CGFscene {
 
             // Draw axis
             this.axis.display();
+
+            this.materialDefault.apply();
             
             var i = 0;
             for (var key in this.lightValues) {
@@ -182,6 +193,8 @@ class XMLscene extends CGFscene {
                     ++i;
                 }
             }
+
+            this.test = new MyCylinder(this, 1, 1, 1, 20, 20);
             
             // Displays the scene (MySceneGraph function).
             this.graph.displayScene();
