@@ -152,7 +152,7 @@
             </transformation>
 
             <materials>
-                <material id="artifact_torus" />
+                <material id="torus_material" />
             </materials>
 
             <texture id="none" length_s="1.0" length_t="1.0" />

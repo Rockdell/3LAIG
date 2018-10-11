@@ -16,6 +16,15 @@ serialInclude([
     'XMLscene.js', 
     'MySceneGraph.js', 
     'MyInterface.js',
+    '../factories/ambientFactory.js',
+    '../factories/componentFactory.js',
+    '../factories/lightFactory.js',
+    '../factories/materialFactory.js',
+    '../factories/primitiveFactory.js',
+    '../factories/sceneFactory.js',
+    '../factories/textureFactory.js',
+    '../factories/transformationFactory.js',
+    '../factories/viewFactory.js',
 
 main=function()
 {
