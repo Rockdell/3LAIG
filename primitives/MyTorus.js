@@ -9,8 +9,8 @@ class MyTorus extends CGFobject
 	constructor(scene, inner, outer, loops, slices)
 	{
         super(scene);
-        this.r = (outer - inner) / 2.0;
-        this.R = inner + this.r;
+        this.r = inner;
+        this.R = outer;
         this.loops = loops;
         this.slices = slices;
         
@@ -48,35 +48,35 @@ class MyTorus extends CGFobject
 			{
 				//Vertices
 				var vx1 = (this.R + this.r * Math.cos(teta * i)) * Math.cos(delta * j);
-				var vz1 = (this.R + this.r * Math.cos(teta * i)) * Math.sin(delta * j);
-                var vy1 = this.r * Math.sin(teta * i);
+				var vy1 = (this.R + this.r * Math.cos(teta * i)) * Math.sin(delta * j);
+                var vz1 = this.r * Math.sin(teta * i);
 
                 var vx2 = (this.R + this.r * Math.cos(teta * (i + 1))) * Math.cos(delta * j);
-				var vz2 = (this.R + this.r * Math.cos(teta * (i + 1))) * Math.sin(delta * j);
-                var vy2 = this.r * Math.sin(teta * (i + 1));
+				var vy2 = (this.R + this.r * Math.cos(teta * (i + 1))) * Math.sin(delta * j);
+                var vz2 = this.r * Math.sin(teta * (i + 1));
 
                 var vx3 = (this.R + this.r * Math.cos(teta * i)) * Math.cos(delta * (j + 1));
-				var vz3 = (this.R + this.r * Math.cos(teta * i)) * Math.sin(delta * (j + 1));
-                //var vy3 = this.r * Math.sin(teta * i) == vy1
+				var vy3 = (this.R + this.r * Math.cos(teta * i)) * Math.sin(delta * (j + 1));
+                //var vz3 = this.r * Math.sin(teta * i) == vz1
 
                 var vx4 = (this.R + this.r * Math.cos(teta * (i + 1))) * Math.cos(delta * (j + 1));
-				var vz4 = (this.R + this.r * Math.cos(teta * (i + 1))) * Math.sin(delta * (j + 1));
-                //var vy4 = this.r * Math.sin(teta * (i + 1)) == vy2
+				var vy4 = (this.R + this.r * Math.cos(teta * (i + 1))) * Math.sin(delta * (j + 1));
+                //var vz4 = this.r * Math.sin(teta * (i + 1)) == vz2
 
 				this.vertices.push(vx1, vy1, vz1);
 				this.vertices.push(vx2, vy2, vz2);
-				this.vertices.push(vx3, vy1, vz3);
-				this.vertices.push(vx4, vy2, vz4);
+				this.vertices.push(vx3, vy3, vz1);
+				this.vertices.push(vx4, vy4, vz2);
 
 				//Indexes
-				this.indices.push(ind, ind + 1, ind + 2);
-				this.indices.push(ind + 3, ind + 2, ind + 1);	
+				this.indices.push(ind + 2, ind + 1, ind);
+				this.indices.push(ind + 1, ind + 2, ind + 3);	
 				ind += 4;
 	
                 //Normals
                 var vx1 = this.r * Math.cos(teta * i) * Math.cos(delta * j);
-                var vy1 = this.r * Math.sin(teta * i);
-                var vz1 = this.r * Math.cos(teta * i) * Math.sin(delta * j);
+                var vz1 = this.r * Math.sin(teta * i);
+                var vy1 = this.r * Math.cos(teta * i) * Math.sin(delta * j);
                 //Convert to versor
                 var length = Math.sqrt(Math.pow(vx1, 2.0) + Math.pow(vy1, 2.0) + Math.pow(vz1, 2.0));
                 vx1 /= length;
@@ -84,8 +84,8 @@ class MyTorus extends CGFobject
                 vz1 /= length;
 
                 var vx2 = this.r * Math.cos(teta * (i + 1)) * Math.cos(delta * j);
-                var vy2 = this.r * Math.sin(teta * (i + 1));
-                var vz2 = this.r * Math.cos(teta * (i + 1)) * Math.sin(delta * j);
+                var vz2 = this.r * Math.sin(teta * (i + 1));
+                var vy2 = this.r * Math.cos(teta * (i + 1)) * Math.sin(delta * j);
                 //Convert to versor
                 length = Math.sqrt(Math.pow(vx2, 2.0) + Math.pow(vy2, 2.0) + Math.pow(vz2, 2.0));
                 vx2 /= length;
@@ -93,8 +93,8 @@ class MyTorus extends CGFobject
                 vz2 /= length;           
 
                 var vx3 = this.r * Math.cos(teta * i) * Math.cos(delta * (j + 1));
-                var vy3 = this.r * Math.sin(teta * i);
-                var vz3 = this.r * Math.cos(teta * i) * Math.sin(delta * (j + 1));
+                var vz3 = this.r * Math.sin(teta * i);
+                var vy3 = this.r * Math.cos(teta * i) * Math.sin(delta * (j + 1));
                 //Convert to versor
                 length = Math.sqrt(Math.pow(vx3, 2.0) + Math.pow(vy3, 2.0) + Math.pow(vz3, 2.0));
                 vx3 /= length;
@@ -102,8 +102,8 @@ class MyTorus extends CGFobject
                 vz3 /= length;
 
                 var vx4 = this.r * Math.cos(teta * (i + 1)) * Math.cos(delta * (j + 1));
-                var vy4 = this.r * Math.sin(teta * (i + 1));
-                var vz4 = this.r * Math.cos(teta * (i + 1)) * Math.sin(delta * (j + 1));
+                var vz4 = this.r * Math.sin(teta * (i + 1));
+                var vy4 = this.r * Math.cos(teta * (i + 1)) * Math.sin(delta * (j + 1));
                 //Convert to versor
                 length = Math.sqrt(Math.pow(vx4, 2.0) + Math.pow(vy4, 2.0) + Math.pow(vz4, 2.0));
                 vx4 /= length;

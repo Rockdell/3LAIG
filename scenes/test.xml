@@ -46,6 +46,7 @@
 
     <textures>
         <texture id="cube_texture" file="./images/bank.jpg" />
+        <texture id="testText" file="./images/testTexture.jpg" />
     </textures>
 
     <materials>
@@ -111,7 +112,7 @@
         </primitive>
 
         <primitive id="torus_prim">
-            <torus inner="0.3" outer="1.0" slices="20" loops="20" />
+            <torus inner="0.2" outer="0.5" slices="20" loops="20" />
         </primitive>
 
         <primitive id="sphere_prim">
@@ -166,7 +167,9 @@
 
         <component id="artifact_torus">
 
-            <transformation> </transformation>
+            <transformation>
+                <rotate axis="x" angle="-90" />
+            </transformation>
 
             <materials>
                 <material id="inherit" />
@@ -433,7 +436,7 @@
             <transformation> </transformation>
 
             <materials>
-                <material id="cube_material" />
+                <material id="inherit" />
             </materials>
 
             <texture id="inherit" length_s="1.0" length_t="1.0" />

@@ -6,7 +6,7 @@
 
 class MyRectangle extends CGFobject
 {
-	constructor(scene, x1, y1, x2, y2, minS, maxS, minT, maxT)
+	constructor(scene, x1, y1, x2, y2, ls, lt)
 	{
         super(scene);
         
@@ -15,10 +15,8 @@ class MyRectangle extends CGFobject
         this.y1 = y1;
         this.y2 = y2;
 
-		this.minS = minS || 0.0;
-		this.maxS = maxS || 1.0;
-		this.minT = minT || 0.0;
-		this.maxT = maxT || 1.0;
+		this.ls = ls || 1.0;
+		this.lt = lt || 1.0;
 		
         this.initBuffers();
 	};
@@ -50,16 +48,31 @@ class MyRectangle extends CGFobject
 
 		this.texCoords = [
 			//Left lower
-			this.minS, this.maxT,
+			0, this.lt,
 			//Right lower
-			this.maxS, this.maxT,
+			this.ls, this.lt,
 			//Left upper
-			this.minS, this.minT,
+			0, 0,
 			//Rigth upper
-			this.maxS, this.minT
+			this.ls, 0
 		];
 			
 		this.primitiveType=this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
 	};
+
+	updateTextST(ls, lt) {
+		this.texCoords = [
+			//Left lower
+			0, lt,
+			//Right lower
+			ls, lt,
+			//Left upper
+			0, 0,
+			//Rigth upper
+			ls, 0
+		];
+
+		this.updateTexCoordsGLBuffers();
+	}
 };

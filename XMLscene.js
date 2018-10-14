@@ -25,7 +25,7 @@ class XMLscene extends CGFscene {
         this.sceneInited = false;
 
         this.initCameras();
-
+        
         this.enableTextures(true);
 
         this.gl.clearDepth(100.0);
@@ -39,7 +39,8 @@ class XMLscene extends CGFscene {
 		this.materialDefault.setAmbient(0,0,0,1);
 		this.materialDefault.setDiffuse(0,0.5,0.5,1);
 		this.materialDefault.setSpecular(0.2,0.2,0.2,1);
-		this.materialDefault.setShininess(10);
+        this.materialDefault.setShininess(10);
+
     }
 
     /**
@@ -47,6 +48,7 @@ class XMLscene extends CGFscene {
      */
     initCameras() {
         this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+        console.log("Initialized camera.");
     }
 
     /* Handler called when the graph is finally loaded. 
@@ -55,7 +57,13 @@ class XMLscene extends CGFscene {
     onGraphLoaded() {
 
         //Create primitives
-		this.graph.createPrims();
+        this.graph.createPrimitives();
+
+        //Create materials
+        this.graph.createMaterials();
+        
+        //Create textures
+        this.graph.createTextures();
 
         this.initAxis();
             
@@ -66,13 +74,13 @@ class XMLscene extends CGFscene {
         this.initLights();
 
         // Adds lights group.
-        this.interface.addLightsGroup(this.graph.lights);
+        this.interface.addLightsGroup(this.graph.parsedXML.lights);
 
         this.sceneInited = true;
     }
 
     initAxis() {
-        this.axis = new CGFaxis(this, this.graph.scenes.axis_length);
+        this.axis = new CGFaxis(this, this.graph.parsedXML.scene.axis_length);
 
         console.log("Initialized axis.");
     }
@@ -81,19 +89,16 @@ class XMLscene extends CGFscene {
 
         //TODO add other cameras here
 
-        var default_view = this.graph.views[this.graph.views.default];
+        var default_view = this.graph.parsedXML.views[this.graph.parsedXML.views.default];
 
         switch(default_view.type) {
             case "perspective":
-
-            this.camera.near = default_view.near;
-            this.camera.far = default_view.far;
-            this.camera.fov = default_view.angle;
-
-            this.camera.setPosition(vec3.fromValues(default_view.from.x, default_view.from.y, default_view.from.z));
-            this.camera.setTarget(vec3.fromValues(default_view.to.x, default_view.to.y, default_view.to.z));
-            break;
-
+                this.camera.near = default_view.near;
+                this.camera.far = default_view.far;
+                this.camera.fov = default_view.angle;
+                this.camera.setPosition(vec3.fromValues(default_view.from.x, default_view.from.y, default_view.from.z));
+                this.camera.setTarget(vec3.fromValues(default_view.to.x, default_view.to.y, default_view.to.z));
+                break;
             case "ortho":
 
             //this.camera = new CGFcameraOrtho(default_view.)
@@ -105,11 +110,11 @@ class XMLscene extends CGFscene {
 
     initAmbient() {
 
-        var ambient = this.graph.ambient.ambient;
+        var ambient = this.graph.parsedXML.ambient.ambient;
 
         this.setGlobalAmbientLight(ambient.r, ambient.g, ambient.b, ambient.a);
 
-        var background = this.graph.ambient.background;
+        var background = this.graph.parsedXML.ambient.background;
 
         this.gl.clearColor(background.r, background.g, background.b, background.a);
 
@@ -120,14 +125,14 @@ class XMLscene extends CGFscene {
 
         var i = 0;
 
-        for(var key in this.graph.lights) {
+        for(var key in this.graph.parsedXML.lights) {
 
             if(i >= 8)
                 break;
 
-            if(this.graph.lights.hasOwnProperty(key)) {
+            if(this.graph.parsedXML.lights[key]) {
 
-                var light = this.graph.lights[key];
+                var light = this.graph.parsedXML.lights[key];
 
                 this.lights[i].setVisible(true);
 

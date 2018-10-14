@@ -90,22 +90,39 @@ class MyTriangle extends CGFobject
         var sinb = Math.sqrt(1 - cosb * cosb);
 
         //Texture Coordinates -> P0, P1, P2
-        var p0u = lengthC - lengthA * cosb;
-        var p0v = this.v - lengthA * sinb;
+        this.p0u = lengthC - lengthA * cosb;
+        this.p0v = this.v - lengthA * sinb;
 
-        var p1u = 0;
-        var p1v = this.v;
+        this.p1u = 0;
+        this.p1v = this.v;
 
-        var p2u = lengthC;
-        var p2v = this.v;
+        this.p2u = lengthC;
+        this.p2v = this.v;
 
 		this.texCoords = [
-            p0u, p0v,
-            p1u, p1v,
-            p2u, p2v
+            this.p0u, this.p0v,
+            this.p1u, this.p1v,
+            this.p2u, this.p2v
         ];
-			
+            
+        // console.log(this.p0u + " - " + this.p0v);
+        // console.log(this.p1u + " - " + this.p1v);
+        // console.log(this.p2u + " - " + this.p2v);
+
 		this.primitiveType=this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
-	};
+    };
+    
+    updateTextST(ls, lt) {
+        this.u = ls;
+        this.v = lt;
+
+        this.texCoords = [
+            this.p0u * ls, this.p0v * lt,
+            this.p1u * ls, this.p1v * lt,
+            this.p2u * ls, this.p2v * lt
+		];
+
+        this.updateTexCoordsGLBuffers();
+    }
 };

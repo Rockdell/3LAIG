@@ -33,6 +33,7 @@ class MyCylinder extends CGFobject
 		this.initGLBuffers();
 	};
 
+	//Tube
 	drawFace()
 	{
 		var alpha = (2 * Math.PI) / this.slices;
@@ -68,8 +69,8 @@ class MyCylinder extends CGFobject
 				this.vertices.push(vx4, vy4, vz2);
 
 				//Indexes
-				this.indices.push(ind, ind + 1, ind + 2);
-				this.indices.push(ind + 3, ind + 2, ind + 1);	
+				this.indices.push(this.height > 0 ? ind : ind + 2, ind + 1, this.height > 0 ? ind + 2 : ind);
+				this.indices.push(this.height > 0 ? ind + 3 : ind + 1, ind + 2, this.height > 0 ? ind + 1 : ind + 3);	
 				ind += 4;
 	
 				//Normals
@@ -79,12 +80,64 @@ class MyCylinder extends CGFobject
 				this.normals.push(vx2, vy2, 0);
 
 				//Texture Coordinates
-				this.texCoords.push(sliceHeight * i, stackHeight * j);
+				this.texCoords.push(sliceHeight * i, stackHeight * j);		
 				this.texCoords.push(sliceHeight * (i + 1), stackHeight * j);
 				this.texCoords.push(sliceHeight * i, stackHeight * (j + 1));
 				this.texCoords.push(sliceHeight * (i + 1), stackHeight * (j + 1));
 			}
 		}
+
+		//Front Base
+		this.vertices.push(0.0, 0.0, this.height > 0 ? this.height : 0.0);
+		this.normals.push(0.0, 0.0, 1.0);
+		this.texCoords.push(0.5, 0.5);
+
+		for(var i = 0; i < this.slices; i++) {
+		
+			var vx = Math.cos(i * alpha);
+			var vy = Math.sin(i * alpha);
+
+			//Vertices
+			this.vertices.push(vx, vy, this.height > 0 ? this.height : 0.0);
+
+			//Normals
+			this.normals.push(0.0, 0.0, 1.0);
+			
+			//TexCoords
+			this.texCoords.push(0.5 + 0.5 * vx, 0.5 - 0.5 * vy);	
+		}
+
+		for(var i = 1; i <= this.slices; i++) {
+			//Indices
+			this.indices.push(i == this.slices ? ind + 1 : (ind + i + 1), ind, ind + i);
+		}
+
+		//Back Base
+		ind += this.slices + 1;
+		this.vertices.push(0.0, 0.0, this.height > 0 ? 0.0 : this.height);
+		this.normals.push(0.0, 0.0, 1.0);
+		this.texCoords.push(0.5, 0.5);
+
+		for(var i = 0; i < this.slices; i++) {
+		
+			var vx = Math.cos(i * alpha);
+			var vy = Math.sin(i * alpha);
+
+			//Vertices
+			this.vertices.push(vx, vy, this.height > 0 ? 0.0 : this.height);
+
+			//Normals
+			this.normals.push(0.0, 0.0, -1.0);
+			
+			//TexCoords
+			this.texCoords.push(0.5 + 0.5 * vx, 0.5 - 0.5 * vy);	
+		}
+
+		for(var i = 1; i <= this.slices; i++) {
+			//Indices
+			this.indices.push(ind + i, ind, i == this.slices ? ind + 1 : (ind + i + 1));
+		}
+
 	};
 
 };
