@@ -12,6 +12,7 @@ class XMLscene extends CGFscene {
         super();
 
         this.interface = myinterface;
+        this.viewValues = {};
         this.lightValues = {};
     }
 
@@ -24,8 +25,6 @@ class XMLscene extends CGFscene {
 
         this.sceneInited = false;
 
-        this.initCameras();
-        
         this.enableTextures(true);
 
         this.gl.clearDepth(100.0);
@@ -34,21 +33,16 @@ class XMLscene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
 
         this.axis = new CGFaxis(this);
+        this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+
+        this.currentCamera = 0;
+        this.cameras = [];
 
         this.materialDefault = new CGFappearance(this);
 		this.materialDefault.setAmbient(0,0,0,1);
 		this.materialDefault.setDiffuse(0,0.5,0.5,1);
 		this.materialDefault.setSpecular(0.2,0.2,0.2,1);
         this.materialDefault.setShininess(10);
-
-    }
-
-    /**
-     * Initializes the scene cameras.
-     */
-    initCameras() {
-        this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-        console.log("Initialized camera.");
     }
 
     /**
@@ -78,6 +72,9 @@ class XMLscene extends CGFscene {
         // Initialize lights
         this.initLights();
 
+        // Adds views group
+        this.interface.addViewsGroup(this.graph.parsedXML.views);
+
         // Adds lights group.
         this.interface.addLightsGroup(this.graph.parsedXML.lights);
 
@@ -98,22 +95,41 @@ class XMLscene extends CGFscene {
      */
     initViews() {
 
-        //TODO add other cameras here
+        var i = 0;
 
-        var default_view = this.graph.parsedXML.views[this.graph.parsedXML.views.default];
+        for(var viewKey in this.graph.parsedXML.views) {
 
-        switch(default_view.type) {
-            case "perspective":
-                this.camera.near = default_view.near;
-                this.camera.far = default_view.far;
-                this.camera.fov = default_view.angle;
-                this.camera.setPosition(vec3.fromValues(default_view.from.x, default_view.from.y, default_view.from.z));
-                this.camera.setTarget(vec3.fromValues(default_view.to.x, default_view.to.y, default_view.to.z));
-                break;
-            case "ortho":
+            if(viewKey == "default") continue;
 
-            //this.camera = new CGFcameraOrtho(default_view.)
-            break;
+            var view = this.graph.parsedXML.views[viewKey];
+
+            if(view.id == this.graph.parsedXML.views.default) 
+                this.currentCamera = i;
+
+            var camera;
+
+            switch(view.type) {
+                case "perspective":
+                    camera = new CGFcamera(
+                        view.angle, view.near, view.far,
+                        vec3.fromValues(view.from.x, view.from.y, view.from.z),
+                        vec3.fromValues(view.to.x, view.to.y, view.to.z)
+                    );
+                    break;
+                case "ortho":
+                    camera = new CGFcameraOrtho(
+                        view.left, view.right, view.bottom, view.top,
+                        view.near, view.far,
+                        vec3.fromValues(view.from.x, view.from.y, view.from.z),
+                        vec3.fromValues(view.to.x, view.to.y, view.to.z),
+                        vec3.fromValues(0, 1, 0)
+                    );
+                    break;
+            }
+
+            this.cameras.push(camera);
+
+            ++i;
         }
 
         console.log("Initialized views.");
@@ -142,31 +158,34 @@ class XMLscene extends CGFscene {
 
         var i = 0;
 
-        for(var key in this.graph.parsedXML.lights) {
+        for(var lightKey in this.graph.parsedXML.lights) {
 
-            if(i >= 8)
+            if (i >= 8)
                 break;
 
-            if(this.graph.parsedXML.lights[key]) {
+            var light = this.graph.parsedXML.lights[lightKey];
 
-                var light = this.graph.parsedXML.lights[key];
+            this.lights[i].setVisible(true);
 
-                this.lights[i].setVisible(true);
+            this.lights[i].setPosition(light.location.x, light.location.y, light.location.z, light.location.w);
+            this.lights[i].setAmbient(light.ambient.r, light.ambient.g, light.ambient.b, light.ambient.a);
+            this.lights[i].setDiffuse(light.diffuse.r, light.diffuse.g, light.diffuse.b, light.diffuse.a);
+            this.lights[i].setSpecular(light.specular.r, light.specular.g, light.specular.b, light.specular.a);
 
-                this.lights[i].setPosition(light.location.x, light.location.y, light.location.z, light.location.w);
-                this.lights[i].setAmbient(light.ambient.r, light.ambient.g, light.ambient.b, light.ambient.a);
-                this.lights[i].setDiffuse(light.diffuse.r, light.diffuse.g, light.diffuse.b, light.diffuse.a);
-                this.lights[i].setSpecular(light.specular.r, light.specular.g, light.specular.b, light.specular.a);
-
-                if(light.enabled)
-                    this.lights[i].enable()
-                else
-                    this.lights[i].disable();
-
-                this.lights[i].update();
-
-                ++i;
+            if(light.type == "spot") {
+                this.lights[i].setSpotCutOff(light.angle);
+                this.lights[i].setSpotExponent(light.exponent);
+                this.lights[i].setSpotDirection(light.target.x, light.target.y, light.target.z);
             }
+
+            if (light.enabled)
+                this.lights[i].enable()
+            else
+                this.lights[i].disable();
+
+            this.lights[i].update();
+
+            ++i;
         }
 
         console.log("Initialized lights.");
@@ -197,9 +216,13 @@ class XMLscene extends CGFscene {
             this.axis.display();
 
             this.materialDefault.apply();
-            
+
+            this.camera = this.cameras[this.currentCamera];
+            this.interface.setActiveCamera(this.camera);
+
             var i = 0;
             for (var key in this.lightValues) {
+
                 if (this.lightValues[key]) {
                     this.lights[i].setVisible(true);
                     this.lights[i].enable();

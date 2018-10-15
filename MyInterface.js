@@ -25,6 +25,23 @@ class MyInterface extends CGFinterface {
         return true;
     }
 
+    addViewsGroup(views) {
+
+        var group = this.gui.addFolder("Cameras");
+        group.open();
+
+        var i = 0;
+        for(var key in views) {
+
+            if(key == "default")  continue;
+
+            this.scene.viewValues[key] = i;
+            ++i;
+        }
+
+        this.gui.add(this.scene, 'currentCamera', this.scene.viewValues);
+    }
+
     /**
      * Adds a folder containing the IDs of the lights passed as parameter.
      * @param {array} lights
@@ -38,10 +55,14 @@ class MyInterface extends CGFinterface {
         // e.g. this.option1=true; this.option2=false;
 
         for (var key in lights) {
-            if (lights.hasOwnProperty(key)) {
-                this.scene.lightValues[key] = lights[key].enabled;
-                group.add(this.scene.lightValues, key);
-            }
+
+            this.scene.lightValues[key] = lights[key].enabled;
+            group.add(this.scene.lightValues, key);
+
+            // if (lights[key)) {
+            //     this.scene.lightValues[key] = lights[key].enabled;
+            //     group.add(this.scene.lightValues, key);
+            // }
         }
     }
 }

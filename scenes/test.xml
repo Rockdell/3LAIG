@@ -7,6 +7,11 @@
             <from x="20.0" y="30.0" z="30.0" />
             <to x="0.0" y="0.0" z="0.0" />
         </perspective>
+           
+        <ortho id="ortho" near="0.1" far="500.0" left="5.0" right="5.0" top="5.0" bottom="5.0">
+            <from x="20.0" y="20.0" z="20.0" />
+            <to x="0.0" y="0.0" z="0.0" />
+        </ortho>
     </views>
 
     <ambient>
@@ -15,14 +20,14 @@
     </ambient>
 
     <lights>
-        <omni id="light" enabled="1">
+        <omni id="light" enabled="0">
             <location x="6.0" y="6.0" z="0.0" w="1.0" />
             <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
         </omni>
 		
-		 <omni id="light2" enabled="1">
+		 <omni id="light2" enabled="0">
             <location x="6.0" y="6.0" z="6.0" w="1.0" />
             <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
@@ -42,6 +47,14 @@
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
         </omni>
+
+        <spot id="light5" enabled="0" angle="35" exponent="0.1">
+            <location x="-6.0" y="3.0" z="3.0" w="1.0" />
+            <target x="0.0" y="3.0" z="3.0" />
+            <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+        </spot>
     </lights>
 
     <textures>
