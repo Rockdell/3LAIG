@@ -51,26 +51,31 @@ class XMLscene extends CGFscene {
         console.log("Initialized camera.");
     }
 
-    /* Handler called when the graph is finally loaded. 
+    /**
+     * Handler called when the graph is finally loaded. 
      * As loading is asynchronous, this may be called already after the application has started the run loop
      */
     onGraphLoaded() {
 
-        //Create primitives
+        // Create primitives
         this.graph.createPrimitives();
 
-        //Create materials
+        // Create materials
         this.graph.createMaterials();
         
-        //Create textures
+        // Create textures
         this.graph.createTextures();
 
+        // Initialize axis
         this.initAxis();
             
+        // Initialize views
         this.initViews();
         
+        // Initialize ambient
         this.initAmbient();
         
+        // Initialize lights
         this.initLights();
 
         // Adds lights group.
@@ -79,12 +84,18 @@ class XMLscene extends CGFscene {
         this.sceneInited = true;
     }
 
+    /**
+     * Initialze the axis, according to parsed data.
+     */
     initAxis() {
         this.axis = new CGFaxis(this, this.graph.parsedXML.scene.axis_length);
 
         console.log("Initialized axis.");
     }
 
+    /**
+     * Initialize views, according to parsed data.
+     */
     initViews() {
 
         //TODO add other cameras here
@@ -108,6 +119,9 @@ class XMLscene extends CGFscene {
         console.log("Initialized views.");
     }
 
+    /**
+     * Initialize ambient, according to parsed data.
+     */
     initAmbient() {
 
         var ambient = this.graph.parsedXML.ambient.ambient;
@@ -121,6 +135,9 @@ class XMLscene extends CGFscene {
         console.log("Initialized ambient.");
     }
 
+    /**
+     * Initialize lights, according to parsed data.
+     */
     initLights() {
 
         var i = 0;
@@ -183,23 +200,19 @@ class XMLscene extends CGFscene {
             
             var i = 0;
             for (var key in this.lightValues) {
-                if (this.lightValues.hasOwnProperty(key)) {
-                    if (this.lightValues[key]) {
-                        this.lights[i].setVisible(true);
-                        this.lights[i].enable();
-                    }
-                    else {
-                        this.lights[i].setVisible(false);
-                        this.lights[i].disable();
-                    }
-
-                    this.lights[i].update();
-
-                    ++i;
+                if (this.lightValues[key]) {
+                    this.lights[i].setVisible(true);
+                    this.lights[i].enable();
                 }
-            }
+                else {
+                    this.lights[i].setVisible(false);
+                    this.lights[i].disable();
+                }
 
-            this.test = new MyCylinder(this, 1, 1, 1, 20, 20);
+                this.lights[i].update();
+
+                ++i;
+            }
             
             // Displays the scene (MySceneGraph function).
             this.graph.displayScene();

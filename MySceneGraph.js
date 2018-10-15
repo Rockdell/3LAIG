@@ -63,8 +63,6 @@ class MySceneGraph {
 
 		this.parsedXML = this.parseBlock(rootElement, this.structure["yas"]);
 
-		//console.log(this.parsedXML);
-
 		if(this.parsedXML == null)
 			return;
 
@@ -76,6 +74,9 @@ class MySceneGraph {
 		this.log("Parsed and checked XML document with success");
 	}
 
+	/**
+	 * Creates primitives from parsed data.
+	 */
 	createPrimitives() {
 
 		this.displayPrimitives = {};
@@ -106,6 +107,9 @@ class MySceneGraph {
 		console.log("Loaded Primitives.");
 	}
 
+	/**
+	 * Create materials from parsed data.
+	 */
 	createMaterials() {
 
 		this.displayMaterials = {};
@@ -126,6 +130,9 @@ class MySceneGraph {
 		console.log("Loaded Materials.");
 	}
 
+	/**
+	 * Create textures from parsed data.
+	 */
 	createTextures() {
 
 		this.displayTextures = {};
@@ -138,7 +145,7 @@ class MySceneGraph {
 
 			this.displayTextures[texID] = tex;
 		}
-
+	//console.log(this.parsedXML);
 		console.log("Loaded Textures.");
 	}
 
@@ -153,24 +160,29 @@ class MySceneGraph {
 
 	}
 
-	processNode(prim, id, mat, text, ls, lt) {
+	/**
+	 * Processes node from graph (either a component or a primitive).
+	 */
+	processNode(prim, id, mat, tex, ls, lt) {
 
+		// If it's a primitives
 		if(prim) {
 
 			//Apply Material
 			this.displayMaterials[mat].apply();
 			
 			//Apply Texture
-			if(text) {
+			if(tex) {
 				if(this.parsedXML.primitives[id].list[0].type == "rectangle" || this.parsedXML.primitives[id].list[0].type == "triangle")
 					this.displayPrimitives[id].updateTextST(ls, lt);
 
-				this.displayTextures[text].apply();
+				this.displayTextures[tex].apply();
 			}
 
 			//Draw element
 			this.displayPrimitives[id].display();
 		}
+		// If it's a component
 		else {
 			var currentComp = this.parsedXML.components[id];
 
@@ -179,7 +191,7 @@ class MySceneGraph {
 			var newMat = currentComp.materials.list[0].id != "inherit" ? currentComp.materials.list[0].id : mat;
 			
 			//Adjust Texture
-			var newText = text;
+			var newText = tex;
 			var newLs = ls;
 			var newLt = lt;
 
@@ -202,7 +214,7 @@ class MySceneGraph {
 
 			this.scene.pushMatrix();
 			
-				//Adjust Transformation Matrix
+				//Adjust transformation matrix
 				this.adjustMatrix(currentComp);
 	
 				for (var childID in currentComp.children) {
@@ -216,6 +228,10 @@ class MySceneGraph {
 		}	
 	}
 
+	/**
+	 * Adjusts the transformation matrix of the component.
+	 * @param {Component} component 
+	 */
 	adjustMatrix(component) {
 
 		//Checks if it has any transformations
@@ -226,13 +242,14 @@ class MySceneGraph {
 		if(component.transformation.list[0].type == "transformationref") {
 
 			//Transformation reference
-			var reference = this.parsedXML.transformations[component.transformation.list[0].id];
+			var tf = this.parsedXML.transformations[component.transformation.list[0].id];
 
-			for(let i = 0; i < reference.list.length; i++) {
-				this.readTransformations(reference.list[i]);
+			for(let i = 0; i < tf.list.length; i++) {
+				this.readTransformations(tf.list[i]);
 			}
 		}
 		else {
+
 			//New transformation
 			for(let i = 0; i < component.transformation.list.length; i++) {
 				this.readTransformations(component.transformation.list[i]);
@@ -240,6 +257,10 @@ class MySceneGraph {
 		}
 	}
 
+	/**
+	 * Processes a transformation and aplies it to the scene.
+	 * @param {Transformation} ptrans 
+	 */
 	readTransformations(ptrans) {
 
 		switch (ptrans.type) {
@@ -267,6 +288,12 @@ class MySceneGraph {
 
 	// --- Parser functions ---
 	
+	/**
+	 * Parses an attribute.
+	 * @param {Element of the attribute} element 
+	 * @param {Name of the attribute} attribute 
+	 * @param {Type of the attribute} type 
+	 */
 	parseAttribute(element, attribute, type) {
 
 		var value;
@@ -295,6 +322,11 @@ class MySceneGraph {
 		return (value == null ? null : value);
 	}
 
+	/**
+	 * Parses an int.
+	 * @param {ELement of the attribute} element 
+	 * @param {Name of the attribute} attribute 
+	 */
 	parseInt(element, attribute) {
 
 		var integer = this.reader.getInteger(element, attribute, false);
@@ -307,6 +339,11 @@ class MySceneGraph {
 		return integer;
 	}
 
+	/**
+	 * Parses a float.
+	 * @param {Element of the attribute} element 
+	 * @param {Name of the attribute} attribute 
+	 */
 	parseFloat(element, attribute) {
 
 		var float = this.reader.getFloat(element, attribute, false);
@@ -319,6 +356,11 @@ class MySceneGraph {
 		return float;
 	}
 
+	/**
+	 * Parses a string.
+	 * @param {ELement of the attribute} element 
+	 * @param {Name of the attribute} attribute 
+	 */
 	parseString(element, attribute) {
 
 		var string = this.reader.getString(element, attribute, false);
@@ -331,6 +373,11 @@ class MySceneGraph {
 		return string;
 	}
 
+	/**
+	 * Parses a char.
+	 * @param {ELement of the attribute} element 
+	 * @param {Name of the attribute} attribute 
+	 */
 	parseChar(element, attribute) {
 
 		var char = this.reader.getString(element, attribute, false);
@@ -343,6 +390,11 @@ class MySceneGraph {
 		return char;
 	}
 
+	/**
+	 * Parses a boolean.
+	 * @param {ELement of the attribute} element 
+	 * @param {Name of the attribute} attribute 
+	 */
 	parseBool(element, attribute) {
 
 		var bool = this.reader.getBoolean(element, attribute, false);
@@ -355,6 +407,11 @@ class MySceneGraph {
 		return bool;
 	}
 
+	/**
+	 * Parses a block of XML, according to the defined structure.
+	 * @param {Element to be parsed} element 
+	 * @param {Defined structure of the element} struct
+	 */
 	parseBlock(element, struct) {
 
 		// Create new object
@@ -421,6 +478,11 @@ class MySceneGraph {
 		return obj;
 	}
 
+	/**
+	 * Validates a block of XML, according to the defined structure.
+	 * @param {Element to be validated} element 
+	 * @param {Defined structure of the element} struct 
+	 */
 	validateBlock(element, struct) {
 
 		// Check "id" option
@@ -435,12 +497,13 @@ class MySceneGraph {
 			return 1;
 		}
 
-		// Check attribute order
+		// Check muber of attributes
 		if(element.attributes.length != struct.attributes.length) {
 			this.onXMLError("Element " +  element.nodeName + " has wrong number of attributes.")
 			return 1;
 		}
 
+		// Check order of attributes
 		for(var i = 0; i < element.attributes.length; ++i) {
 
 			var attributeName = element.attributes[i].name;
@@ -460,14 +523,16 @@ class MySceneGraph {
 			}
 		}
 
-		// Check children order
+		// Check "order" option
 		if(struct.options.includes("order")) {
 
+			// Check number of children
 			if(element.children.length != struct.children.length) {
 				this.onXMLError("Element " + element.nodeName + " has wrong number of children.");
 				return 1;
 			}
 
+			// Check order of children
 			for(var i = 0; i < element.children.length; ++i) {
 
 				var childName = element.children[i].nodeName;
@@ -491,6 +556,9 @@ class MySceneGraph {
 		return 0;
 	}
 
+	/**
+	 * Check YAS constraints on parsed data.
+	 */
 	checkConstraints() {
 
 		//<views>
