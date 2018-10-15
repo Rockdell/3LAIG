@@ -18,7 +18,7 @@ class XMLscene extends CGFscene {
 
     /**
      * Initializes the scene, setting some WebGL defaults, initializing the camera and the axis.
-     * @param {CGFApplication} application
+     * @param application Application.
      */
     init(application) {
         super.init(application);
@@ -39,9 +39,9 @@ class XMLscene extends CGFscene {
         this.cameras = [];
 
         this.materialDefault = new CGFappearance(this);
-		this.materialDefault.setAmbient(0,0,0,1);
-		this.materialDefault.setDiffuse(0,0.5,0.5,1);
-		this.materialDefault.setSpecular(0.2,0.2,0.2,1);
+        this.materialDefault.setAmbient(0, 0, 0, 1);
+        this.materialDefault.setDiffuse(0, 0.5, 0.5, 1);
+        this.materialDefault.setSpecular(0.2, 0.2, 0.2, 1);
         this.materialDefault.setShininess(10);
     }
 
@@ -56,19 +56,19 @@ class XMLscene extends CGFscene {
 
         // Create materials
         this.graph.createMaterials();
-        
+
         // Create textures
         this.graph.createTextures();
 
         // Initialize axis
         this.initAxis();
-            
+
         // Initialize views
         this.initViews();
-        
+
         // Initialize ambient
         this.initAmbient();
-        
+
         // Initialize lights
         this.initLights();
 
@@ -85,9 +85,12 @@ class XMLscene extends CGFscene {
      * Initialze the axis, according to parsed data.
      */
     initAxis() {
-        this.axis = new CGFaxis(this, this.graph.parsedXML.scene.axis_length);
 
-        console.log("Initialized axis.");
+        const { scene } = this.graph.parsedXML;
+
+        this.axis = new CGFaxis(this, scene.axis_length);
+
+        console.log('Initialized axis.');
     }
 
     /**
@@ -95,43 +98,45 @@ class XMLscene extends CGFscene {
      */
     initViews() {
 
-        var i = 0;
+        const { views } = this.graph.parsedXML;
 
-        for(var viewKey in this.graph.parsedXML.views) {
+        let i = 0;
 
-            if(viewKey == "default") continue;
+        for (let key in views) {
 
-            var view = this.graph.parsedXML.views[viewKey];
+            if (!views.hasOwnProperty(key) || key === 'default') continue;
 
-            if(view.id == this.graph.parsedXML.views.default) 
+            let view = views[key];
+
+            if (view.id === views.default)
                 this.currentCamera = i;
 
-            var camera;
+            let camera;
 
-            switch(view.type) {
-                case "perspective":
+            switch (view.type) {
+                case 'perspective':
                     camera = new CGFcamera(
                         view.angle * DEGREE_TO_RAD, view.near, view.far,
                         vec3.fromValues(view.from.x, view.from.y, view.from.z),
                         vec3.fromValues(view.to.x, view.to.y, view.to.z)
                     );
                     break;
-                case "ortho":
+                case 'ortho':
 
-                    var y_vector = vec3.fromValues(0, 1, 0);
+                    let y_vector = vec3.fromValues(0, 1, 0);
 
-                    var look_vector = vec3.create();
+                    let look_vector = vec3.create();
                     vec3.subtract(look_vector, vec3.fromValues(view.to.x, view.to.y, view.to.z), vec3.fromValues(view.from.x, view.from.y, view.from.y));
 
-                    var side_vector = vec3.create();
+                    let side_vector = vec3.create();
                     vec3.cross(side_vector, y_vector, look_vector);
 
-                    var up_vector = vec3.create();
+                    let up_vector = vec3.create();
                     vec3.cross(up_vector, look_vector, side_vector);
 
                     vec3.normalize(up_vector, up_vector);
 
-                    if(up_vector.len < 0.1)
+                    if (up_vector.len < 0.1)
                         look_vector[1] > 0 ? up_vector = vec3.fromValues(1, 0, 0) : up_vector = vec3.fromValues(-1, 0, 0);
 
                     camera = new CGFcameraOrtho(
@@ -148,7 +153,7 @@ class XMLscene extends CGFscene {
             ++i;
         }
 
-        console.log("Initialized views.");
+        console.log('Initialized views.');
     }
 
     /**
@@ -156,15 +161,13 @@ class XMLscene extends CGFscene {
      */
     initAmbient() {
 
-        var ambient = this.graph.parsedXML.ambient.ambient;
+        const { ambient, background } = this.graph.parsedXML.ambient;
 
         this.setGlobalAmbientLight(ambient.r, ambient.g, ambient.b, ambient.a);
 
-        var background = this.graph.parsedXML.ambient.background;
-
         this.gl.clearColor(background.r, background.g, background.b, background.a);
 
-        console.log("Initialized ambient.");
+        console.log('Initialized ambient.');
     }
 
     /**
@@ -172,14 +175,18 @@ class XMLscene extends CGFscene {
      */
     initLights() {
 
-        var i = 0;
+        const { lights } = this.graph.parsedXML;
 
-        for(var lightKey in this.graph.parsedXML.lights) {
+        let i = 0;
+
+        for (let key in lights) {
+
+            if (!lights.hasOwnProperty(key)) continue;
 
             if (i >= 8)
                 break;
 
-            var light = this.graph.parsedXML.lights[lightKey];
+            let light = this.graph.parsedXML.lights[key];
 
             this.lights[i].setVisible(true);
 
@@ -188,14 +195,14 @@ class XMLscene extends CGFscene {
             this.lights[i].setDiffuse(light.diffuse.r, light.diffuse.g, light.diffuse.b, light.diffuse.a);
             this.lights[i].setSpecular(light.specular.r, light.specular.g, light.specular.b, light.specular.a);
 
-            if(light.type == "spot") {
+            if (light.type === 'spot') {
                 this.lights[i].setSpotCutOff(light.angle * DEGREE_TO_RAD);
                 this.lights[i].setSpotExponent(light.exponent);
                 this.lights[i].setSpotDirection(light.target.x, light.target.y, light.target.z);
             }
 
             if (light.enabled)
-                this.lights[i].enable()
+                this.lights[i].enable();
             else
                 this.lights[i].disable();
 
@@ -204,7 +211,7 @@ class XMLscene extends CGFscene {
             ++i;
         }
 
-        console.log("Initialized lights.");
+        console.log('Initialized lights.');
     }
 
     /**
@@ -236,8 +243,10 @@ class XMLscene extends CGFscene {
             this.camera = this.cameras[this.currentCamera];
             this.interface.setActiveCamera(this.camera);
 
-            var i = 0;
-            for (var key in this.lightValues) {
+            let i = 0;
+            for (let key in this.lightValues) {
+
+                if (!this.lightValues.hasOwnProperty(key)) continue;
 
                 if (this.lightValues[key]) {
                     this.lights[i].setVisible(true);
@@ -252,7 +261,7 @@ class XMLscene extends CGFscene {
 
                 ++i;
             }
-            
+
             // Displays the scene (MySceneGraph function).
             this.graph.displayScene();
         }
