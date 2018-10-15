@@ -40,7 +40,7 @@ class MyInterface extends CGFinterface {
             ++i;
         }
 
-        this.gui.add(this.scene, 'currentCamera', this.scene.viewValues);
+            this.gui.add(this.scene, 'currentCamera', this.scene.viewValues);
     }
 
     /**

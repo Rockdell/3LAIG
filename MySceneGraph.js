@@ -328,8 +328,14 @@ class MySceneGraph {
                 value = this.parseBool(element, attribute);
                 break;
             default:
-                this.onXMLError(`Type of attribute \"${attribute}\" is not expected.`);
+                this.onXMLError(`Type of attribute \"${attribute}\" is not expected (at \"${element.nodeName}\").`);
                 return null;
+        }
+
+        // Check if attribute RGB is between [0.0, 1.0]
+        if ((attribute === 'r' || attribute === 'g' || attribute === 'b') && (value < 0 || value > 1)) {
+            this.onXMLError(`Attribute \"${attribute}\" is not between 0.0 and 1.0 (at \"${element.nodeName}\").`);
+            return null;
         }
 
         return (value == null ? null : value);
@@ -342,14 +348,14 @@ class MySceneGraph {
      */
     parseInt(element, attribute) {
 
-        let integer = this.reader.getInteger(element, attribute, false);
+        let value = this.reader.getInteger(element, attribute, false);
 
-        if (integer == null || isNaN(integer)) {
-            this.onXMLError(`Attribute \"${attribute}\" in \"${element.nodeName}\" is not an integer.`);
+        if (value == null || isNaN(value)) {
+            this.onXMLError(`Attribute \"${attribute}\" is not an integer (at \"${element.nodeName}\").`);
             return null;
         }
 
-        return integer;
+        return value;
     }
 
     /**
@@ -359,14 +365,14 @@ class MySceneGraph {
      */
     parseFloat(element, attribute) {
 
-        let float = this.reader.getFloat(element, attribute, false);
+        let value = this.reader.getFloat(element, attribute, false);
 
-        if (float == null || isNaN(float)) {
-            this.onXMLError(`Attribute \"${attribute}\" in \"${element.nodeName}\" is not an float.`);
+        if (value == null || isNaN(value)) {
+            this.onXMLError(`Attribute \"${attribute}\" is not an float (at \"${element.nodeName}\").`);
             return null;
         }
 
-        return float;
+        return value;
     }
 
     /**
@@ -376,14 +382,14 @@ class MySceneGraph {
      */
     parseString(element, attribute) {
 
-        let string = this.reader.getString(element, attribute, false);
+        let value = this.reader.getString(element, attribute, false);
 
-        if (string == null || string === "") {
-            this.onXMLError(`Attribute \"${attribute}\" in \"${element.nodeName}\" is not an string.`);
+        if (value == null || value === "") {
+            this.onXMLError(`Attribute \"${attribute}\" is not an string (at \"${element.nodeName}\").`);
             return null;
         }
 
-        return string;
+        return value;
     }
 
     /**
@@ -393,14 +399,14 @@ class MySceneGraph {
      */
     parseChar(element, attribute) {
 
-        let char = this.reader.getString(element, attribute, false);
+        let value = this.reader.getString(element, attribute, false);
 
-        if (char == null || (char !== "x" && char !== "y" && char !== "z")) {
-            this.onXMLError(`Attribute \"${attribute}\" in \"${element.nodeName}\" is not an char.`);
+        if (value == null || (value !== "x" && value !== "y" && value !== "z")) {
+            this.onXMLError(`Attribute \"${attribute}\" is not an char (at \"${element.nodeName}\").`);
             return null;
         }
 
-        return char;
+        return value;
     }
 
     /**
@@ -410,37 +416,37 @@ class MySceneGraph {
      */
     parseBool(element, attribute) {
 
-        let bool = this.reader.getBoolean(element, attribute, false);
+        let value = this.reader.getBoolean(element, attribute, false);
 
-        if (bool == null || isNaN(bool)) {
-            this.onXMLError(`Attribute \"${attribute}\" in \"${element.nodeName}\" is not an bool.`);
+        if (value == null) {
+            this.onXMLError(`Attribute \"${attribute}\" is not an bool (at \"${element.nodeName}\").`);
             return null;
         }
 
-        return bool;
+        return value;
     }
 
     /**
      * Parses a block of XML, according to the defined structure.
      * @param element Element to be parsed.
-     * @param struct Defined structure of the element.
+     * @param structure Defined structure of the element.
      */
-    parseBlock(element, struct) {
+    parseBlock(element, structure) {
 
-        const { attributes, options } = struct;
+        const { attributes, options } = structure;
 
         // Create new object
         let obj = {};
 
         // Check attribute order
-        if (this.validateBlock(element, struct))
+        if (this.validateBlock(element, structure))
             return null;
 
         // Iterate through attributes
         for (let i = 0; i < attributes.length; ++i) {
 
-            let attributeName = struct.attributes[i][0];
-            let attributeType = struct.attributes[i][1];
+            let attributeName = attributes[i][0];
+            let attributeType = attributes[i][1];
 
             let value = this.parseAttribute(element, attributeName, attributeType);
 
@@ -461,7 +467,7 @@ class MySceneGraph {
         for (let i = 0; i < element.children.length; ++i) {
 
             let child = element.children[i];
-            let childStructure = struct[child.nodeName];
+            let childStructure = structure[child.nodeName];
             let childBlock = this.parseBlock(child, childStructure);
 
             if (childStructure == null || childBlock == null)
@@ -476,7 +482,7 @@ class MySceneGraph {
 
                 // Check for existing ID
                 if (obj[childBlock.id]) {
-                    this.onXMLError(`Element with ID \"${childBlock.id}\" already exists.`);
+                    this.onXMLError(`Element with ID \"${childBlock.id}\" already exists (at \"${element.nodeName}\").`);
                     return null;
                 }
                 else
@@ -488,7 +494,7 @@ class MySceneGraph {
 
         // Check "log" option
         if (options.includes('log'))
-            this.log(`Parsed element <${element.nodeName}> with success.`);
+            this.log(`Parsed element \"${element.nodeName}\".`);
 
         return obj;
     }
@@ -529,15 +535,15 @@ class MySceneGraph {
             if (attributeName !== attributes[i][0]) {
 
                 if (!attributes.includes(attributeName)) {
-                    this.onXMLError(`Attribute \"${attributeName}\" is not expected.`);
+                    this.onXMLError(`Attribute \"${attributeName}\" is not expected (at \"${element.nodeName}\").`);
                     return 1;
                 }
                 else if (!element.hasAttribute(attributes[i])) {
-                    this.onXMLError(`Attribute \"${attributes[i]}\" is missing.`);
+                    this.onXMLError(`Attribute \"${attributes[i]}\" is missing (at \"${element.nodeName}\").`);
                     return 1;
                 }
                 else
-                    MySceneGraph.onXMLMinorError(`Attribute \"{attributeName} is out of order.`);
+                    this.onXMLMinorError(`Attribute \"${attributeName}\" is out of order (at \"${element.nodeName}\").`);
             }
         }
 
@@ -557,16 +563,16 @@ class MySceneGraph {
 
                 if (childName !== tags[i]) {
 
-                    if (!children.includes(childName)) {
-                        this.onXMLError(`Tag <${childName}> is not expected.`);
+                    if (!tags.includes(childName)) {
+                        this.onXMLError(`Element \"${childName}\" is not expected (at \"${element.nodeName}\").`);
                         return 1;
                     }
                     else if (!element.hasOwnProperty(tags[i])) {
-                        this.onXMLError(`Tag <${tags[i]}> is missing.`);
+                        this.onXMLError(`Element \"${tags[i]}\" is missing (at \"${element.nodeName}\").`);
                         return 1;
                     }
                     else
-                        MySceneGraph.onXMLMinorError(`Tag <${childName}> is out of order.`);
+                        this.onXMLMinorError(`Tag \"${childName}\" is out of order (at \"${element.nodeName}\").`);
                 }
             }
         }
@@ -581,7 +587,7 @@ class MySceneGraph {
 
         const { scene, views, lights, textures, materials, transformations, primitives, components } = this.parsedXML;
 
-        //<views>
+        // <views>
 
         // Check minimum number of views
         if (Object.keys(views).length < 2) {
@@ -595,7 +601,7 @@ class MySceneGraph {
             return 1;
         }
 
-        //<lights>
+        // <lights>
 
         // Check minimum number of lights
         if (Object.keys(lights).length < 1) {
@@ -603,7 +609,7 @@ class MySceneGraph {
             return 1;
         }
 
-        //<textures>
+        // <textures>
 
         // Check minimum number of textures
         if (Object.keys(textures).length < 1) {
@@ -611,7 +617,7 @@ class MySceneGraph {
             return 1;
         }
 
-        //<materials>
+        // <materials
 
         // Check minimum number of materials
         if (Object.keys(materials).length < 1) {
@@ -619,7 +625,7 @@ class MySceneGraph {
             return 1;
         }
 
-        //<transformations>
+        // <transformations>
 
         // Check minimum number of complex transformations
         if (Object.keys(transformations).length < 1) {
@@ -629,11 +635,8 @@ class MySceneGraph {
 
         // Check minimum number of simple transformations
         for (let key in transformations) {
-
-            if (!transformations.hasOwnProperty(key)) continue;
-
             if (transformations[key].list.length < 1) {
-                this.onXMLError('Need at least one simple transformation.');
+                this.onXMLError(`Need at least one simple transformation (at \"${key}\").`);
                 return 1;
             }
         }
@@ -648,11 +651,8 @@ class MySceneGraph {
 
         // Check unique primitive type
         for (let key in primitives) {
-
-            if (!primitives.hasOwnProperty(key)) continue;
-
             if (primitives[key].list.length !== 1) {
-                this.onXMLError('Can only have one primitive type.');
+                this.onXMLError(`Can only have one primitive type (at \"${key}\").`);
                 return 1;
             }
         }
@@ -668,8 +668,6 @@ class MySceneGraph {
         // Check properties of components
         for (let componentKey in components) {
 
-            if (!components.hasOwnProperty(componentKey)) continue;
-
             const component = components[componentKey];
 
             const transfList = component.transformation.list;
@@ -679,7 +677,7 @@ class MySceneGraph {
 
                 // Check if component has both reference and explicit transformations
                 if (transfList.includes('translate') || transfList.includes('rotate') || transfList.includes('scale')) {
-                    this.onXMLError('Component cannot have both references and explicit transformations.');
+                    this.onXMLError(`Component cannot have both references and explicit transformations (at \"${componentKey}\").`);
                     return 1;
                 }
 
@@ -687,14 +685,14 @@ class MySceneGraph {
 
                 // Check reference to transformation
                 if (!transformations[transf]) {
-                    this.onXMLError(`Transformation \"${transf}\" does not exist.`);
+                    this.onXMLError(`Transformation \"${transf}\" does not exist (at \"${componentKey}\").`);
                     return 1;
                 }
             }
 
             // Check minimum number of materials
             if (component.materials.list.length < 1) {
-                this.onXMLError('Need at least one material per component.');
+                this.onXMLError(`Need at least one material per component (at \"${componentKey}\").`);
                 return 1;
             }
 
@@ -704,7 +702,7 @@ class MySceneGraph {
                 const material = component.materials.list[i].id;
 
                 if (material !== 'inherit' && !materials[material]) {
-                    this.onXMLError(`Material \"${material}\" does not exist.`);
+                    this.onXMLError(`Material \"${material}\" does not exist (at \"${componentKey}\").`);
                     return 1;
                 }
             }
@@ -713,33 +711,31 @@ class MySceneGraph {
             const texture = component.texture.id;
 
             if (texture !== 'none' && texture !== 'inherit' && !textures[texture]) {
-                this.onXMLError(`Texture \"${texture}\" does not exist.`);
+                this.onXMLError(`Texture \"${texture}\" does not exist (at \"${componentKey}\").`);
                 return 1;
             }
 
             // Check minimum amount of children
             if (Object.keys(component.children).length < 1) {
-                this.onXMLError('Need at least one child per component.');
+                this.onXMLError(`Need at least one child per component (at \"${componentKey}\").`);
                 return 1;
             }
 
             // Check references to children
             for (let childKey in component.children) {
 
-                if (!component.children.hasOwnProperty(childKey)) continue;
-
                 const child = component.children[childKey];
 
                 switch (child.type) {
                     case 'componentref':
                         if (!components[child.id]) {
-                            this.onXMLError(`Component \"${child.id}\" does not exist.`);
+                            this.onXMLError(`Component \"${childKey}\" does not exist (at \"${componentKey}\").`);
                             return 1;
                         }
                         break;
                     case 'primitiveref':
                         if (!primitives[child.id]) {
-                            this.onXMLError(`Primitive \"${child.id}\" does not exist.`);
+                            this.onXMLError(`Primitive \"${childKey}\" does not exist (at \"${componentKey}\").`);
                             return 1;
                         }
                         break;
@@ -759,16 +755,75 @@ class MySceneGraph {
         for (let i = 0; i < components[root].materials.list.length; ++i) {
 
             if (components[root].materials.list[i].id === 'inherit') {
-                this.onXMLError('Component root cannot inherit a material.');
+                this.onXMLError('Component root cannot inherit a material (at \"${root}\").');
                 return 1;
             }
         }
 
         // Check if root inherits texture
         if (components[root].texture.id === 'inherit') {
-            this.onXMLError('Component root cannot inherit a texture.');
+            this.onXMLError('Component root cannot inherit a texture (at \"${root}\").');
             return 1;
         }
+
+        // Check for cycles in graph
+        let visited = {};
+        for (let key in components)
+            visited[key] = false;
+
+        const checkCyclicGraph = function (node) {
+            visited[node] = true;
+
+            for (let child in components[node].children) {
+
+                if (components[node].children[child].type === 'primitiveref') continue;
+
+                if (!visited[child]) {
+                    if (checkCyclicGraph(child))
+                        return 1;
+                }
+                else
+                    return 1;
+
+                visited[child] = false;
+            }
+
+            return 0;
+        };
+
+        if (checkCyclicGraph(scene.root)) {
+            this.onXMLError('Found a cycle in graph.');
+            return 1;
+        }
+
+        /*
+        let stack = [];
+
+        stack.push(scene.root);
+
+        while(stack.length > 0) {
+
+            let node = stack.pop();
+
+            if(!visited[node]) {
+                visited[node] = true;
+
+                console.log(`Processed ${node}.`);
+
+                for(let child in components[node].children) {
+                    if(components[node].children[child].type === 'primitiveref') continue;
+
+                    if(!stack.includes(child))
+                        stack.push(child);
+
+                    if(visited[child] && stack.includes(child)) {
+                        this.onXMLError(`Cycle detected in the graph (at \"${node}\").`);
+                        return 1;
+                    }
+                }
+            }
+        }
+        */
 
         return 0;
     }
@@ -778,7 +833,7 @@ class MySceneGraph {
      * @param {string} message
      */
     onXMLError(message) {
-        console.error(`Error: ${message}.`);
+        console.error(`Error: ${message}`);
         this.loadedOk = false;
     }
 
@@ -787,7 +842,7 @@ class MySceneGraph {
      * @param {string} message
      */
     onXMLMinorError(message) {
-        console.warn(`Warning: ${message}.`);
+        console.warn(`Warning: ${message}`);
     }
 
     /**
@@ -795,6 +850,6 @@ class MySceneGraph {
      * @param {string} message
      */
     log(message) {
-        console.log(`   ${message}.`);
+        console.log(`   ${message}`);
     }
 }

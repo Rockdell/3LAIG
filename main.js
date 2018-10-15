@@ -40,7 +40,7 @@ serialInclude([
         // get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
         // or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
 
-        let filename = getUrlVars()['file'] || 'test3.xml';
+        let filename = getUrlVars()['file'] || 'test.xml';
 
         // create and load graph, and associate it to scene. 
         // Check console for loading errors

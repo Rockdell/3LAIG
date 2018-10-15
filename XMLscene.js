@@ -104,7 +104,7 @@ class XMLscene extends CGFscene {
 
         for (let key in views) {
 
-            if (!views.hasOwnProperty(key) || key === 'default') continue;
+            if (key === 'default') continue;
 
             let view = views[key];
 
@@ -181,8 +181,6 @@ class XMLscene extends CGFscene {
 
         for (let key in lights) {
 
-            if (!lights.hasOwnProperty(key)) continue;
-
             if (i >= 8)
                 break;
 
@@ -245,8 +243,6 @@ class XMLscene extends CGFscene {
 
             let i = 0;
             for (let key in this.lightValues) {
-
-                if (!this.lightValues.hasOwnProperty(key)) continue;
 
                 if (this.lightValues[key]) {
                     this.lights[i].setVisible(true);
