@@ -111,18 +111,34 @@ class XMLscene extends CGFscene {
             switch(view.type) {
                 case "perspective":
                     camera = new CGFcamera(
-                        view.angle, view.near, view.far,
+                        view.angle * DEGREE_TO_RAD, view.near, view.far,
                         vec3.fromValues(view.from.x, view.from.y, view.from.z),
                         vec3.fromValues(view.to.x, view.to.y, view.to.z)
                     );
                     break;
                 case "ortho":
+
+                    var y_vector = vec3.fromValues(0, 1, 0);
+
+                    var look_vector = vec3.create();
+                    vec3.subtract(look_vector, vec3.fromValues(view.to.x, view.to.y, view.to.z), vec3.fromValues(view.from.x, view.from.y, view.from.y));
+
+                    var side_vector = vec3.create();
+                    vec3.cross(side_vector, y_vector, look_vector);
+
+                    var up_vector = vec3.create();
+                    vec3.cross(up_vector, look_vector, side_vector);
+
+                    vec3.normalize(up_vector, up_vector);
+
+                    if(up_vector.len < 0.1)
+                        look_vector[1] > 0 ? up_vector = vec3.fromValues(1, 0, 0) : up_vector = vec3.fromValues(-1, 0, 0);
+
                     camera = new CGFcameraOrtho(
-                        view.left, view.right, view.bottom, view.top,
-                        view.near, view.far,
+                        view.left, view.right, view.bottom, view.top, view.near, view.far,
                         vec3.fromValues(view.from.x, view.from.y, view.from.z),
                         vec3.fromValues(view.to.x, view.to.y, view.to.z),
-                        vec3.fromValues(0, 1, 0)
+                        up_vector
                     );
                     break;
             }
@@ -173,7 +189,7 @@ class XMLscene extends CGFscene {
             this.lights[i].setSpecular(light.specular.r, light.specular.g, light.specular.b, light.specular.a);
 
             if(light.type == "spot") {
-                this.lights[i].setSpotCutOff(light.angle);
+                this.lights[i].setSpotCutOff(light.angle * DEGREE_TO_RAD);
                 this.lights[i].setSpotExponent(light.exponent);
                 this.lights[i].setSpotDirection(light.target.x, light.target.y, light.target.z);
             }

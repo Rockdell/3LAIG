@@ -3,15 +3,16 @@
     <scene root="bedroom" axis_length="2.0" />
 
     <views default="perspective">
-        <perspective id="perspective" near="0.1" far="500.0" angle="0.4">
-            <from x="20.0" y="30.0" z="30.0" />
+        <perspective id="perspective" near="0.1" far="500.0" angle="60">
+            <from x="10.0" y="10.0" z="10.0" />
             <to x="0.0" y="0.0" z="0.0" />
         </perspective>
-           
-        <ortho id="ortho" near="0.1" far="500.0" left="5.0" right="5.0" top="5.0" bottom="5.0">
-            <from x="20.0" y="20.0" z="20.0" />
+
+        <ortho id="oview02" near="0.1" far="100.0" left="0.0" right="10.0" top="10.0" bottom="0.0">
+            <from x="10.0" y="10.0" z="10.0" />
             <to x="0.0" y="0.0" z="0.0" />
         </ortho>
+           
     </views>
 
     <ambient>
