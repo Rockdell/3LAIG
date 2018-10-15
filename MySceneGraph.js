@@ -74,6 +74,31 @@ class MySceneGraph {
     }
 
     /**
+	 * Binds the components with the respective materials
+	 */
+	bindCompMat() {
+
+		this.compMat = {};
+
+		for(var tmp in this.parsedXML.components) {
+			var tmpC = this.parsedXML.components[tmp];
+			
+			var obj = {};
+			obj.currMat = 0;
+			obj.mats = [];
+
+			//console.log(tmpC);
+			for(var tmp2 in tmpC.materials.list) {
+				obj.mats.push(tmp2);
+			}
+
+			this.compMat[tmpC.id] = obj;
+		}
+
+		console.log("Binded Components and Primitives.");
+	}
+
+    /**
      * Creates primitives from parsed data.
      */
     createPrimitives() {
@@ -172,6 +197,7 @@ class MySceneGraph {
         this.processNode(false, this.parsedXML.scene.root, this.scene.getMatrix());
         this.scene.popMatrix();
 
+        this.changeMaterial = false;
     }
 
     /**
@@ -201,10 +227,12 @@ class MySceneGraph {
 
             let currentComp = components[id];
 
-            //TODO alter later to multiple materials
             // Adjust material
-            let newMat = currentComp.materials.list[0].id !== 'inherit' ? currentComp.materials.list[0].id : mat;
-
+			if(this.changeMaterial)
+                this.compMat[id].currMat + 1 >= currentComp.materials.list.length ? this.compMat[id].currMat = 0 : this.compMat[id].currMat++;
+            
+            let newMat = currentComp.materials.list[this.compMat[id].currMat].id != "inherit" ? currentComp.materials.list[this.compMat[id].currMat].id : mat;
+            
             // Adjust texture
             let newText = tex;
             let newLs = ls;

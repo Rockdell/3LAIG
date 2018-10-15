@@ -51,6 +51,9 @@ class XMLscene extends CGFscene {
      */
     onGraphLoaded() {
 
+        // Bind Components with materials
+        this.graph.bindCompMat();
+        
         // Create primitives
         this.graph.createPrimitives();
 
