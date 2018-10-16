@@ -8,9 +8,19 @@
             <to x="0.0" y="0.0" z="0.0" />
         </perspective>
 
-        <ortho id="oview02" near="0.1" far="100.0" left="0.0" right="10.0" top="10.0" bottom="0.0">
-            <from x="10.0" y="10.0" z="10.0" />
-            <to x="0.0" y="0.0" z="0.0" />
+        <ortho id="oview02" near="0.1" far="100.0" left="-6" right="6" top="6.5" bottom="-2.5">
+            <from x="2.5" y="2" z="10" />
+            <to x="2.5" y="2" z="0" />
+        </ortho>
+
+        <ortho id="oview03" near="0.1" far="100.0" left="-6.0" right="6.0" top="5.0" bottom="-3.0">
+            <from x="10" y="2" z="3" />
+            <to x="0" y="2" z="3" />
+        </ortho>
+   
+        <ortho id="oview04" near="0.1" far="70" left="-7" right="7" top="7" bottom="-7">
+            <from x="10" y="10" z="10" />
+            <to x="0" y="0" z="0" />
         </ortho>
            
     </views>
@@ -28,28 +38,21 @@
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
         </omni>
 		
-		 <omni id="light2" enabled="0">
-            <location x="6.0" y="6.0" z="6.0" w="1.0" />
-            <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
-            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
-            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
-        </omni>
-		
-		 <omni id="light3" enabled="1">
+		 <omni id="light2" enabled="1">
             <location x="0.0" y="6.0" z="6.0" w="1.0" />
             <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
         </omni>
 		
-		<omni id="light4" enabled="1">
+		<omni id="light3" enabled="1">
             <location x="-6.0" y="6.0" z="0.0" w="1.0" />
             <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
         </omni>
 
-        <spot id="light5" enabled="0" angle="35" exponent="0.1">
+        <spot id="light4" enabled="0" angle="35" exponent="0.1">
             <location x="-6.0" y="3.0" z="3.0" w="1.0" />
             <target x="0.0" y="3.0" z="3.0" />
             <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
@@ -59,8 +62,21 @@
     </lights>
 
     <textures>
-        <texture id="cube_texture" file="./images/bank.jpg" />
         <texture id="testText" file="./images/testTexture.jpg" />
+        <texture id="cube_texture" file="./images/bank.jpg" />
+        <texture id="lamp" file="./images/lamp.jpg" />
+        <texture id="lights" file="./images/lights.jpg" />
+        <texture id="sky" file="./images/sky.png" />
+        <texture id="wood" file="./images/wood.jpg" />
+        <texture id="trunk" file="./images/trunk-image.jpg" />
+        <texture id="blackMetal" file="./images/blackMetal.jpg" />
+        <texture id="mattress" file="./images/mattress.jpg" />
+        <texture id="vidal" file="./images/vidal.jpg" />
+        <texture id="bank" file="./images/bank.jpg" />
+        <texture id="window" file="./images/window.jpg" />
+        <texture id="leftWP" file="./images/leftWP.png" />
+        <texture id="rightWP" file="./images/rightWP.png" />
+         <texture id="donut" file="./images/donut.jpg" />
     </textures>
 
     <materials>
@@ -85,56 +101,32 @@
             <specular r="0.6" g="0.6" b="0.6" a="1.0" />
         </material>
 
-        <material id="torus_material" shininess="0.2">
+        <material id="reflective" shininess="0.2">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-            <diffuse r="0.7" g="0.0" b="0.0" a="1.0" />
-            <specular r="0.7" g="0.0" b="0.0" a="1.0" />
+            <diffuse r="0.3" g="0.3" b="0.3" a="1.0" />
+            <specular r="0.8" g="0.8" b="0.8" a="1.0" />
         </material>
 
-        <material id="sphere_material" shininess="0.2">
+        <material id="mat1" shininess="0.2">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-            <diffuse r="0.0" g="0.0" b="0.8" a="1.0" />
-            <specular r="0.0" g="0.0" b="0.8" a="1.0" />
-        </material>
-		
-		<material id="painting_material" shininess="1.0">
-            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-            <diffuse r="0.5" g="0.6" b="0.2" a="1.0" />
-            <specular r="0.5" g="0.6" b="0.2" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="0.3" a="1.0" />
+            <specular r="0.8" g="0.8" b="0.3" a="1.0" />
         </material>
 
-        <material id="painting_material2" shininess="0.2">
-            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="0.6" g="0.0" b="0.0" a="1.0" />
-            <diffuse r="0.0" g="0.1" b="0.9" a="1.0" />
-            <specular r="0.1" g="1.0" b="0.8" a="1.0" />
-        </material>
-         <material id="painting_material3" shininess="0.2">
-            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="1.0" g="0.0" b="0.0" a="1.0" />
-            <diffuse r="1.0" g="1.0" b="0.0" a="1.0" />
-            <specular r="0.1" g="0.2" b="0.0" a="1.0" />
-        </material>
-         <material id="painting_material4" shininess="0.2">
+        <material id="mat2" shininess="0.2">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-            <diffuse r="0.7" g="0.8" b="0.6" a="1.0" />
-            <specular r="0.1" g="0.32" b="0.6" a="1.0" />
+            <diffuse r="0.0" g="0.0" b="1.0" a="1.0" />
+            <specular r="0.0" g="0.0" b="1.0" a="1.0" />
         </material>
-         <material id="painting_material5" shininess="0.2">
+
+        <material id="mat3" shininess="0.2">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-            <diffuse r="0.1" g="0.8" b="0.0" a="1.0" />
-            <specular r="0.1" g="0.8" b="0.0" a="1.0" />
-        </material>
-         <material id="painting_material6" shininess="0.2">
-            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="0.9" g="0.9" b="0.0" a="1.0" />
-            <diffuse r="0.1" g="0.8" b="0.0" a="1.0" />
-            <specular r="0.1" g="0.1" b="0.1" a="1.0" />
+            <diffuse r="1.0" g="0.0" b="0.2" a="1.0" />
+            <specular r="1.0" g="0.0" b="0.2" a="1.0" />
         </material>
 
 
@@ -142,7 +134,7 @@
 
     <transformations>
         <transformation id="test_transl">
-            <translate x="0.0" y="2.5" z="0.0" />
+            <translate x="0.0" y="2.5" z="0.3" />
         </transformation>
     </transformations>
 
@@ -152,21 +144,25 @@
         </primitive>
 
         <primitive id="painting_prim">
-            <triangle x1="0" y1="6" z1="0"
-                      x2="3" y2="6" z2="0"
-                      x3="1.5" y3="8" z3="0" />
+            <triangle x1="1.5" y1="8" z1="0"
+                      x2="0" y2="6" z2="0"
+                      x3="3" y3="6" z3="0" />
         </primitive>
 
         <primitive id="torus_prim">
-            <torus inner="0.2" outer="0.5" slices="20" loops="20" />
+            <torus inner="0.2" outer="0.5" slices="30" loops="30" />
         </primitive>
 
         <primitive id="sphere_prim">
             <sphere radius="1" slices ="30" stacks="30" />
         </primitive>
 
-        <primitive id="table_leg_prim">
+        <primitive id="cylinder_prim">
             <cylinder base="1" top="1" height="3" slices="30" stacks="30" />
+        </primitive>
+
+        <primitive id="cylinder_lamp">
+            <cylinder base="0.5" top="0.2" height="0.75" slices="30" stacks="30" />
         </primitive>
 
     </primitives>
@@ -184,44 +180,48 @@
             <texture id="none" length_s="1.0" length_t="1.0" />
 
             <children>
-                <componentref id="artifact" />
+                <componentref id="lamp" />
 				<componentref id="bed" />
 				<componentref id="table" />
 				<componentref id="painting" />
+                <componentref id="walls" />
+                <componentref id="ceiling_lamp" />
             </children>
 		
 		</component>
 
-        <component id="artifact">
+        <component id="ceiling_lamp">
 
             <transformation>
-                <translate x="4.5" y="1.9" z="0.85" />
+              
             </transformation>
 
             <materials>
-                <material id="torus_material" />
+                <material id="cube_material" />
             </materials>
 
             <texture id="none" length_s="1.0" length_t="1.0" />
 
             <children>
-                <componentref id="artifact_sphere" />
-                <componentref id="artifact_torus" />
+                <componentref id="ceiling_light" />
+                <componentref id="cords" />
             </children>
 
         </component>
 
-        <component id="artifact_torus">
+        <component id="ceiling_light">
 
             <transformation>
-                <rotate axis="x" angle="-90" />
+                <rotate axis="x" angle="90" />
+                <translate x="2" y="5" z="-7" />
+                <scale x="2" y="2" z="2" />
             </transformation>
 
             <materials>
-                <material id="inherit" />
+                <material id="reflective" />
             </materials>
 
-            <texture id="none" length_s="1.0" length_t="1.0" />
+            <texture id="lights" length_s="1.0" length_t="1.0" />
 
             <children>
                 <primitiveref id="torus_prim" />
@@ -229,25 +229,262 @@
 
         </component>
 
-        <component id="artifact_sphere">
+        <component id="cords">
 
             <transformation>
-	            <scale x="0.3" y="0.3" z="0.3" />
-			</transformation>
+              
+            </transformation>
 
             <materials>
-                <material id="sphere_material" />
-                <material id="painting_material" />
-                <material id="painting_material2" />
-                <material id="painting_material3" />
-                <material id="painting_material5" />
-                <material id="painting_material4" />
+                <material id="reflective" />
+            </materials>
+
+            <texture id="blackMetal" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="cord1" />
+                <componentref id="cord2" />
+                <componentref id="cord3" />
+            </children>
+
+        </component>
+
+         <component id="cord1">
+
+            <transformation>
+                <translate x="2" y="8.7" z="5" />
+                <rotate axis="x" angle="50" />
+                <scale x="0.05" y="0.05" z="0.6" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="cylinder_prim" />
+            </children>
+
+        </component>
+
+         <component id="cord2">
+
+            <transformation>
+                <translate x="2" y="8.7" z="5" />
+                <rotate axis="y" angle="120" />
+                <rotate axis="x" angle="50" />
+                <scale x="0.05" y="0.05" z="0.6" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="cylinder_prim" />
+            </children>
+
+        </component>
+
+         <component id="cord3">
+
+            <transformation>
+                <translate x="2" y="8.7" z="5" />
+                <rotate axis="y" angle="240" />
+                <rotate axis="x" angle="50" />
+                <scale x="0.05" y="0.05" z="0.6" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="cylinder_prim" />
+            </children>
+
+        </component>
+
+        <component id="walls">
+
+            <transformation>
+              
+            </transformation>
+
+            <materials>
+                <material id="cube_material" />
             </materials>
 
             <texture id="none" length_s="1.0" length_t="1.0" />
 
             <children>
+                <componentref id="leftWall" />
+                <componentref id="rightWall" />
+                <componentref id="ceiling" />
+            </children>
+
+        </component>
+
+        <component id="leftWall">
+
+            <transformation>
+                <rotate axis="y" angle="90" />
+                <translate x="-4" y="4.25" z="-1" />
+                <scale x="8" y="8.5" z="1" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="leftWP" length_s="1" length_t="1" />
+
+            <children>
+                <primitiveref id="cube_face" />
+            </children>
+
+        </component>
+
+        <component id="rightWall">
+
+            <transformation>
+                <translate x="3" y="4.25" z="0" />
+                <scale x="8" y="8.5" z="1" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="rightWP" length_s="1" length_t="1" />
+
+            <children>
+                <primitiveref id="cube_face" />
+            </children>
+
+        </component>
+
+        <component id="ceiling">
+
+            <transformation>
+                <rotate axis="x" angle="90" />
+                <translate x="3" y="4" z="-8.5" />
+                <scale x="8" y="8" z="1" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="sky" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="cube_face" />
+            </children>
+
+        </component>
+
+        <component id="lamp">
+
+            <transformation>
+                <translate x="4.5" y="1.9" z="0.85" />
+            </transformation>
+
+            <materials>
+                <material id="reflective" />
+            </materials>
+
+            <texture id="none" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="lampCylinder" />
+                <componentref id="support_lamp" />
+                <componentref id="support_lamp2" />
+                <componentref id="support_lamp3" />
+            </children>
+
+        </component>
+
+        <component id="lampCylinder">
+
+            <transformation>
+                <rotate axis="x" angle="-90" />
+                <translate x="0.0" y="0" z="0.4" />
+            </transformation>
+
+            <materials>
+                <material id="reflective" />
+            </materials>
+
+            <texture id="lamp" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="cylinder_lamp" />
+            </children>
+
+        </component>
+
+        <component id="support_lamp">
+
+            <transformation>
+                <rotate axis="x" angle="-90" />
+                <translate x="0.0" y="0.0" z="-0.3" />
+                <scale x="0.1" y="0.1" z="0.4" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="blackMetal" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="cylinder_prim" />
+            </children>
+
+        </component>
+
+        <component id="support_lamp2">
+
+            <transformation>
+                <translate x="0.0" y="-0.15" z="0.0" />
+                <scale x="0.2" y="0.2" z="0.2" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="blackMetal" length_s="1.0" length_t="1.0" />
+
+            <children>
                 <primitiveref id="sphere_prim" />
+            </children>
+
+        </component>
+
+        <component id="support_lamp3">
+
+            <transformation>
+                <rotate axis="x" angle="-120" />
+                <translate x="0.0" y="0.0" z="-0.05" />
+                <scale x="0.5" y="0.5" z="0.5" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="donut" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="torus_prim" />
             </children>
 
         </component>
@@ -281,14 +518,12 @@
 
             <materials>
                 <material id="bed_material" />
-                <material id="painting_material" />
-                <material id="painting_material4" />
             </materials>
 
-            <texture id="none" length_s="1.0" length_t="1.0" />
+            <texture id="blackMetal" length_s="1.0" length_t="1.0" />
 
             <children>
-                <primitiveref id="table_leg_prim" />
+                <primitiveref id="cylinder_prim" />
             </children>
 
         </component>
@@ -304,7 +539,7 @@
                 <material id="bed_material" />
             </materials>
 
-            <texture id="none" length_s="1.0" length_t="1.0" />
+            <texture id="wood" length_s="1.0" length_t="1.0" />
 
             <children>
                 <componentref id="cube" />
@@ -314,18 +549,18 @@
 
         <component id="painting">
 
-            <transformation> </transformation>
+            <transformation>
+                <translate x="0" y="0" z="0.1" />
+            </transformation>
 
             <materials>
-                <material id="painting_material" />
-                <material id="painting_material2" />
-                <material id="painting_material3" />
-                <material id="painting_material4" />
-                <material id="painting_material5" />
-                <material id="painting_material6" />
+                <material id="cube_material" />
+                <material id="mat1" />
+                <material id="mat2" />
+                <material id="mat3" />
             </materials>
 
-            <texture id="none" length_s="1.0" length_t="1.0" />
+            <texture id="vidal" length_s="0.5" length_t="0.5" />
 
             <children>
                 <primitiveref id="painting_prim" />
@@ -343,7 +578,7 @@
                 <material id="bed_material" />
             </materials>
 
-            <texture id="none" length_s="1.0" length_t="1.0" />
+            <texture id="wood" length_s="1.0" length_t="1.0" />
 
             <children>
                 <componentref id="top_left_bed_leg" />
@@ -367,7 +602,7 @@
                 <material id="inherit" />
             </materials>
 
-            <texture id="none" length_s="1.0" length_t="1.0" />
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
 
             <children>
                 <componentref id="cube" />
@@ -384,10 +619,9 @@
 
             <materials>
                 <material id="inherit" />
-                <material id="painting_material2" />
             </materials>
 
-            <texture id="none" length_s="1.0" length_t="1.0" />
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
 
             <children>
                 <componentref id="cube" />
@@ -404,10 +638,9 @@
 
             <materials>
                 <material id="inherit" />
-                <material id="painting_material3" />
             </materials>
 
-            <texture id="none" length_s="1.0" length_t="1.0" />
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
 
             <children>
                 <componentref id="cube" />
@@ -426,7 +659,7 @@
                 <material id="inherit" />
             </materials>
 
-            <texture id="none" length_s="1.0" length_t="1.0" />
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
 
             <children>
                 <componentref id="cube" />
@@ -443,11 +676,9 @@
 
             <materials>
                 <material id="inherit" />
-                <material id="painting_material3" />
-                <material id="painting_material6" />
             </materials>
 
-            <texture id="none" length_s="1.0" length_t="1.0" />
+            <texture id="inherit" length_s="1.0" length_t="1.0" />
 
             <children>
                 <componentref id="cube" />
@@ -464,12 +695,9 @@
 
             <materials>
                 <material id="inherit" />
-                <material id="painting_material3" />
-                <material id="painting_material2" />
-                <material id="painting_material5" />
             </materials>
 
-            <texture id="none" length_s="1.0" length_t="1.0" />
+            <texture id="trunk" length_s="1.0" length_t="1.0" />
 
             <children>
                 <componentref id="cube" />
@@ -486,11 +714,12 @@
 
             <materials>
                 <material id="mattress_material" />
-                <material id="painting_material2" />
-                <material id="painting_material6" />
+                <material id="mat1" />
+                <material id="mat2" />
+                <material id="mat3" />
             </materials>
 
-            <texture id="none" length_s="1.0" length_t="1.0" />
+            <texture id="mattress" length_s="1.0" length_t="1.0" />
 
             <children>
                 <componentref id="cube" />

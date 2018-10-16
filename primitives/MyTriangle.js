@@ -43,47 +43,30 @@ class MyTriangle extends CGFobject {
         //Calculate Normal to plane
         /*
         --> Vectors 
-        (a1, b1, c1) -> B
-        (a2, b2, c2) -> A
+            (a2, b2, c2) -> A
+            (a1, b1, c1) -> B
+            (a3, b3, c3) -> C
         */
-        let a1 = this.x2 - this.x1;
-        let b1 = this.y2 - this.y1;
-        let c1 = this.z2 - this.z1;
-
-        let a2 = this.x3 - this.x1;
-        let b2 = this.y3 - this.y1;
-        let c2 = this.z3 - this.z1;
+        let a = vec3.fromValues(this.x2 - this.x1, this.y2 - this.y1, this.z2 - this.z1);
+        let b = vec3.fromValues(this.x3 - this.x1, this.y3 - this.y1, this.z3 - this.z1);
+        let c = vec3.fromValues(this.x3 - this.x2, this.y3 - this.y2, this.z3 - this.z2);
 
         //Cross product of these vectors equals the plane's normal
-        let a = b1 * c2 - b2 * c1;
-        let b = a2 * c1 - a1 * c2;
-        let c = a1 * b2 - b1 * a2;
+        let cp = vec3.create();
+        vec3.cross(cp, a, b);
 
         //Turn into versor (length = 1)
-        let length = Math.sqrt(a * a + b * b + c * c);
-        a /= length;
-        b /= length;
-        c /= length;
+        vec3.normalize(cp, cp);
 
-        this.normals = [
-            a, b, c,
-            a, b, c,
-            a, b, c,
-            a, b, c
-        ];
+        this.normals = [];
+        for(let i = 0; i < 4; i++) {
+            this.normals.push(cp[0], cp[1], cp[2]);
+        }
 
         //TextCoords calculations
-        /*
-        --> Missing Vector
-        (a3, b3, c3) -> C
-        */
-        let a3 = this.x3 - this.x2;
-        let b3 = this.y3 - this.y2;
-        let c3 = this.z3 - this.z2;
-
-        let lengthA = Math.sqrt(a2 * a2 + b2 * b2 + c2 * c2);
-        let lengthB = Math.sqrt(a1 * a1 + b1 * b1 + c1 * c1);
-        let lengthC = Math.sqrt(a3 * a3 + b3 * b3 + c3 * c3);
+        let lengthA = vec3.length(a);
+        let lengthB = vec3.length(b);
+        let lengthC = vec3.length(c);
 
         //cos(beta)
         let cosb = (lengthA * lengthA - lengthB * lengthB + lengthC * lengthC) / (2.0 * lengthA * lengthC);
@@ -105,10 +88,6 @@ class MyTriangle extends CGFobject {
             this.p2u, this.p2v
         ];
 
-        // console.log(this.p0u + " - " + this.p0v);
-        // console.log(this.p1u + " - " + this.p1v);
-        // console.log(this.p2u + " - " + this.p2v);
-
         this.primitiveType = this.scene.gl.TRIANGLES;
         this.initGLBuffers();
     }
@@ -118,9 +97,9 @@ class MyTriangle extends CGFobject {
         this.v = lt;
 
         this.texCoords = [
-            this.p0u * ls, this.p0v * lt,
-            this.p1u * ls, this.p1v * lt,
-            this.p2u * ls, this.p2v * lt
+            this.p0u / ls, this.p0v / lt,
+            this.p1u / ls, this.p1v / lt,
+            this.p2u / ls, this.p2v / lt
         ];
 
         this.updateTexCoordsGLBuffers();

@@ -87,7 +87,6 @@ class MySceneGraph {
 			
 			let obj = {};
 			obj.currMat = 0;
-			obj.mats = component.materials.list;
 
 			this.compMat[componentKey] = obj;
 		}
@@ -213,7 +212,7 @@ class MySceneGraph {
             if (tex) {
                 if (primitives[id].list[0].type === 'rectangle' || primitives[id].list[0].type === 'triangle')
                     this.displayPrimitives[id].updateTextST(ls, lt);
-
+                    
                 this.displayTextures[tex].apply();
             }
 
