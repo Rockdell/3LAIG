@@ -82,10 +82,10 @@ class MySceneGraph {
 
 		this.compMat = {};
 
-		for(var componentKey in components) {
-			var component = components[componentKey];
+		for(let componentKey in components) {
+			let component = components[componentKey];
 			
-			var obj = {};
+			let obj = {};
 			obj.currMat = 0;
 			obj.mats = component.materials.list;
 
