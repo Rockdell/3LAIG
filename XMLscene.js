@@ -219,6 +219,7 @@ class XMLscene extends CGFscene {
      * Displays the scene.
      */
     display() {
+
         // ---- BEGIN Background, camera and axis setup
 
         // Clear image and depth buffer everytime we update the scene
@@ -241,9 +242,11 @@ class XMLscene extends CGFscene {
 
             this.materialDefault.apply();
 
+            // Update camera;
             this.camera = this.cameras[this.currentCamera];
             this.interface.setActiveCamera(this.camera);
 
+            // Update lights
             let i = 0;
             for (let key in this.lightValues) {
 
@@ -261,7 +264,7 @@ class XMLscene extends CGFscene {
                 ++i;
             }
 
-            // Displays the scene (MySceneGraph function).
+            // Display scene
             this.graph.displayScene();
         }
         else {

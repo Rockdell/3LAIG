@@ -78,24 +78,21 @@ class MySceneGraph {
 	 */
 	bindCompMat() {
 
+        const { components } = this.parsedXML;
+
 		this.compMat = {};
 
-		for(var tmp in this.parsedXML.components) {
-			var tmpC = this.parsedXML.components[tmp];
+		for(var componentKey in components) {
+			var component = components[componentKey];
 			
 			var obj = {};
 			obj.currMat = 0;
-			obj.mats = [];
+			obj.mats = component.materials.list;
 
-			//console.log(tmpC);
-			for(var tmp2 in tmpC.materials.list) {
-				obj.mats.push(tmp2);
-			}
-
-			this.compMat[tmpC.id] = obj;
+			this.compMat[componentKey] = obj;
 		}
 
-		console.log("Binded Components and Primitives.");
+		this.log('Binded components and primitives.');
 	}
 
     /**
@@ -133,7 +130,7 @@ class MySceneGraph {
             }
         }
 
-        console.log('Loaded Primitives.');
+        console.log('Loaded primitives.');
     }
 
     /**
@@ -161,7 +158,7 @@ class MySceneGraph {
             this.displayMaterials[matID] = mat;
         }
 
-        console.log('Loaded Materials.');
+        console.log('Loaded materials.');
     }
 
     /**
@@ -185,7 +182,7 @@ class MySceneGraph {
             this.displayTextures[texID] = tex;
         }
 
-        console.log('Loaded Textures.');
+        console.log('Loaded textures.');
     }
 
     /**
@@ -231,7 +228,7 @@ class MySceneGraph {
 			if(this.changeMaterial)
                 this.compMat[id].currMat + 1 >= currentComp.materials.list.length ? this.compMat[id].currMat = 0 : this.compMat[id].currMat++;
             
-            let newMat = currentComp.materials.list[this.compMat[id].currMat].id != "inherit" ? currentComp.materials.list[this.compMat[id].currMat].id : mat;
+            let newMat = currentComp.materials.list[this.compMat[id].currMat].id !== 'inherit' ? currentComp.materials.list[this.compMat[id].currMat].id : mat;
             
             // Adjust texture
             let newText = tex;
@@ -556,18 +553,24 @@ class MySceneGraph {
         }
 
         // Check order of attributes
+
+        // Create a new list, so that method include() works
+        let attributesList = [];
+        for(let i = 0; i < attributes.length; ++i)
+            attributesList.push(attributes[i][0])
+
         for (let i = 0; i < element.attributes.length; ++i) {
 
             let attributeName = element.attributes[i].name;
 
-            if (attributeName !== attributes[i][0]) {
+            if (attributeName !== attributesList[i]) {
 
-                if (!attributes.includes(attributeName)) {
+                if (!attributesList.includes(attributeName)) {
                     this.onXMLError(`Attribute \"${attributeName}\" is not expected (at \"${element.nodeName}\").`);
                     return 1;
                 }
-                else if (!element.hasAttribute(attributes[i])) {
-                    this.onXMLError(`Attribute \"${attributes[i]}\" is missing (at \"${element.nodeName}\").`);
+                else if (!element.hasAttribute(attributesList[i])) {
+                    this.onXMLError(`Attribute \"${attributesList[i]}\" is missing (at \"${element.nodeName}\").`);
                     return 1;
                 }
                 else
@@ -823,35 +826,6 @@ class MySceneGraph {
             this.onXMLError('Found a cycle in graph.');
             return 1;
         }
-
-        /*
-        let stack = [];
-
-        stack.push(scene.root);
-
-        while(stack.length > 0) {
-
-            let node = stack.pop();
-
-            if(!visited[node]) {
-                visited[node] = true;
-
-                console.log(`Processed ${node}.`);
-
-                for(let child in components[node].children) {
-                    if(components[node].children[child].type === 'primitiveref') continue;
-
-                    if(!stack.includes(child))
-                        stack.push(child);
-
-                    if(visited[child] && stack.includes(child)) {
-                        this.onXMLError(`Cycle detected in the graph (at \"${node}\").`);
-                        return 1;
-                    }
-                }
-            }
-        }
-        */
 
         return 0;
     }

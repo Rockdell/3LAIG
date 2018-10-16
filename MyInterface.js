@@ -27,13 +27,13 @@ class MyInterface extends CGFinterface {
 
     addViewsGroup(views) {
 
-        var group = this.gui.addFolder("Cameras");
+        let group = this.gui.addFolder('Cameras');
         group.open();
 
-        var i = 0;
-        for(var key in views) {
+        let i = 0;
+        for(let key in views) {
 
-            if(key == "default")  continue;
+            if(key === 'default')  continue;
 
             this.scene.viewValues[key] = i;
             ++i;
@@ -48,21 +48,15 @@ class MyInterface extends CGFinterface {
      */
     addLightsGroup(lights) {
 
-        var group = this.gui.addFolder("Lights");
+        let group = this.gui.addFolder('Lights');
         group.open();
 
         // add two check boxes to the group. The identifiers must be members variables of the scene initialized in scene.init as boolean
         // e.g. this.option1=true; this.option2=false;
 
-        for (var key in lights) {
-
+        for (let key in lights) {
             this.scene.lightValues[key] = lights[key].enabled;
             group.add(this.scene.lightValues, key);
-
-            // if (lights[key)) {
-            //     this.scene.lightValues[key] = lights[key].enabled;
-            //     group.add(this.scene.lightValues, key);
-            // }
         }
     }
 
@@ -94,9 +88,7 @@ class MyInterface extends CGFinterface {
         if (event.keyCode == 77 || event.keyCode == 109) {
             this.scene.graph.changeMaterial = true;
             
-            console.log("Materials Switched!");
+            console.log('Materials switched.');
         }
-       
-    };
-
+    }
 }
