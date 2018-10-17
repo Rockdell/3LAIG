@@ -57,9 +57,6 @@ class XMLscene extends CGFscene {
         // Create primitives
         this.graph.createPrimitives();
 
-        // Create materials
-        this.graph.createMaterials();
-
         // Create textures
         this.graph.createTextures();
 
@@ -199,7 +196,7 @@ class XMLscene extends CGFscene {
             if (light.type === 'spot') {
                 this.lights[i].setSpotCutOff(light.angle * DEGREE_TO_RAD);
                 this.lights[i].setSpotExponent(light.exponent);
-                this.lights[i].setSpotDirection(light.target.x, light.target.y, light.target.z);
+                this.lights[i].setSpotDirection(light.target.x - light.location.x, light.target.y - light.location.y, light.target.z - light.location.z);
             }
 
             if (light.enabled)

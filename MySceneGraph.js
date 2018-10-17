@@ -133,34 +133,6 @@ class MySceneGraph {
     }
 
     /**
-     * Create materials from parsed data.
-     */
-    createMaterials() {
-
-        const { materials } = this.parsedXML;
-
-        this.displayMaterials = {};
-
-        for (let matID in materials) {
-
-            if (!materials.hasOwnProperty(matID)) continue;
-
-            let currMat = materials[matID];
-
-            let mat = new CGFappearance(this.scene);
-            mat.setAmbient(currMat.ambient.r, currMat.ambient.g, currMat.ambient.b, currMat.ambient.a);
-            mat.setDiffuse(currMat.diffuse.r, currMat.diffuse.g, currMat.diffuse.b, currMat.diffuse.a);
-            mat.setSpecular(currMat.specular.r, currMat.specular.g, currMat.specular.b, currMat.specular.a);
-            mat.setEmission(currMat.emission.r, currMat.emission.g, currMat.emission.b, currMat.emission.a);
-            mat.setShininess(currMat.shininess);
-
-            this.displayMaterials[matID] = mat;
-        }
-
-        console.log('Loaded materials.');
-    }
-
-    /**
      * Create textures from parsed data.
      */
     createTextures() {
@@ -174,9 +146,7 @@ class MySceneGraph {
             if (!textures.hasOwnProperty(texID)) continue;
 
             let currTex = textures[texID];
-
-            let tex = new CGFappearance(this.scene);
-            tex.loadTexture(`../scenes${currTex.file.substring(1)}`);
+            let tex = new CGFtexture(this.scene, `../scenes${currTex.file.substring(1)}`);
 
             this.displayTextures[texID] = tex;
         }
@@ -205,17 +175,24 @@ class MySceneGraph {
 
         if (prim) {
 
-            // Apply material
-            this.displayMaterials[mat].apply();
+            let appearance = new CGFappearance(this.scene);
 
-            // Apply texture
-            if (tex) {
+            let currMat = this.parsedXML.materials[mat];
+            appearance.setAmbient(currMat.ambient.r, currMat.ambient.g, currMat.ambient.b, currMat.ambient.a);
+            appearance.setDiffuse(currMat.diffuse.r, currMat.diffuse.g, currMat.diffuse.b, currMat.diffuse.a);
+            appearance.setSpecular(currMat.specular.r, currMat.specular.g, currMat.specular.b, currMat.specular.a);
+            appearance.setEmission(currMat.emission.r, currMat.emission.g, currMat.emission.b, currMat.emission.a);
+            appearance.setShininess(currMat.shininess);
+
+            if(tex) {
                 if (primitives[id].list[0].type === 'rectangle' || primitives[id].list[0].type === 'triangle')
                     this.displayPrimitives[id].updateTextST(ls, lt);
-                    
-                this.displayTextures[tex].apply();
+
+                appearance.setTexture(this.displayTextures[tex]);
             }
 
+            appearance.apply();
+            
             // Draw element
             this.displayPrimitives[id].display();
         }

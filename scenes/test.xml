@@ -219,6 +219,9 @@
 
             <materials>
                 <material id="reflective" />
+                <material id="mat1" />
+                <material id="mat2" />
+                <material id="mat3" />
             </materials>
 
             <texture id="lights" length_s="1.0" length_t="1.0" />
@@ -420,6 +423,8 @@
 
             <materials>
                 <material id="reflective" />
+                <material id="mat1" />
+                <material id="mat3" />
             </materials>
 
             <texture id="lamp" length_s="1.0" length_t="1.0" />
@@ -555,9 +560,6 @@
 
             <materials>
                 <material id="cube_material" />
-                <material id="mat1" />
-                <material id="mat2" />
-                <material id="mat3" />
             </materials>
 
             <texture id="vidal" length_s="0.5" length_t="0.5" />
@@ -714,9 +716,6 @@
 
             <materials>
                 <material id="mattress_material" />
-                <material id="mat1" />
-                <material id="mat2" />
-                <material id="mat3" />
             </materials>
 
             <texture id="mattress" length_s="1.0" length_t="1.0" />
