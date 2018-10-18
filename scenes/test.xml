@@ -62,21 +62,17 @@
     </lights>
 
     <textures>
-        <texture id="testText" file="./images/testTexture.jpg" />
-        <texture id="cube_texture" file="./images/bank.jpg" />
-        <texture id="lamp" file="./images/lamp.jpg" />
-        <texture id="lights" file="./images/lights.jpg" />
-        <texture id="sky" file="./images/sky.png" />
-        <texture id="wood" file="./images/wood.jpg" />
-        <texture id="trunk" file="./images/trunk-image.jpg" />
-        <texture id="blackMetal" file="./images/blackMetal.jpg" />
-        <texture id="mattress" file="./images/mattress.jpg" />
-        <texture id="vidal" file="./images/vidal.jpg" />
-        <texture id="bank" file="./images/bank.jpg" />
-        <texture id="window" file="./images/window.jpg" />
-        <texture id="leftWP" file="./images/leftWP.png" />
-        <texture id="rightWP" file="./images/rightWP.png" />
-         <texture id="donut" file="./images/donut.jpg" />
+        <texture id="testText" file="images/testTexture.jpg" />
+        <texture id="cube_texture" file="images/bank.jpg" />
+        <texture id="lights" file="images/lights.jpg" />
+        <texture id="wood" file="images/wood.jpg" />
+        <texture id="blackMetal" file="images/blackMetal.jpg" />
+        <texture id="mattress" file="images/mattress.jpg" />
+        <texture id="vidal" file="images/vidal.jpg" />
+        <texture id="bank" file="images/bank.jpg" />
+        <texture id="leftWP" file="images/leftWP.png" />
+        <texture id="rightWP" file="images/rightWP.png" />
+        <texture id="donut" file="images/donut.jpg" />
     </textures>
 
     <materials>
@@ -111,8 +107,8 @@
         <material id="mat1" shininess="0.2">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-            <diffuse r="1.0" g="1.0" b="0.3" a="1.0" />
-            <specular r="0.8" g="0.8" b="0.3" a="1.0" />
+            <diffuse r="1.0" g="0.0" b="0.0" a="1.0" />
+            <specular r="1.0" g="0.0" b="0.0" a="1.0" />
         </material>
 
         <material id="mat2" shininess="0.2">
@@ -125,8 +121,8 @@
         <material id="mat3" shininess="0.2">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-            <diffuse r="1.0" g="0.0" b="0.2" a="1.0" />
-            <specular r="1.0" g="0.0" b="0.2" a="1.0" />
+            <diffuse r="0.0" g="1.0" b="0.0" a="1.0" />
+            <specular r="0.0" g="1.0" b="0.0" a="1.0" />
         </material>
 
 
@@ -385,7 +381,7 @@
                 <material id="inherit" />
             </materials>
 
-            <texture id="sky" length_s="1.0" length_t="1.0" />
+            <texture id="bank" length_s="1.0" length_t="1.0" />
 
             <children>
                 <primitiveref id="cube_face" />
@@ -427,7 +423,7 @@
                 <material id="mat3" />
             </materials>
 
-            <texture id="lamp" length_s="1.0" length_t="1.0" />
+            <texture id="lights" length_s="1.0" length_t="1.0" />
 
             <children>
                 <primitiveref id="cylinder_lamp" />
@@ -699,7 +695,7 @@
                 <material id="inherit" />
             </materials>
 
-            <texture id="trunk" length_s="1.0" length_t="1.0" />
+            <texture id="blackMetal" length_s="1.0" length_t="1.0" />
 
             <children>
                 <componentref id="cube" />

@@ -45,16 +45,21 @@ class MyRectangle extends CGFobject {
 			0, 0, 1,
 			0, 0, 1
 		];
-
+		
+		this.v0 = this.y2 - this.y1;
+		this.u1 = this.x2 - this.x1;
+		this.v1 = this.y2 - this.y1;
+		this.u3 = this.x2 - this.x1;
+		
 		this.texCoords = [
 			//Left lower
-			0, this.lt,
+			0, this.v0,
 			//Right lower
-			this.ls, this.lt,
+			this.u1, this.v1,
 			//Left upper
 			0, 0,
 			//Rigth upper
-			this.ls, 0
+			this.u3, 0
 		];
 
 		this.primitiveType = this.scene.gl.TRIANGLES;
@@ -63,17 +68,20 @@ class MyRectangle extends CGFobject {
 
 	updateTextST(ls, lt) {
 
+		this.ls = ls;
+		this.lt = lt;
+	
 		this.texCoords = [
 			//Left lower
-			0, 1/lt,
+			0, this.v0/lt,
 			//Right lower
-			1/ls, 1/lt,
+			this.u1/ls, this.v1/lt,
 			//Left upper
 			0, 0,
 			//Rigth upper
-			1/ls, 0
+			this.u3/ls, 0
 		];
-
+		
 		this.updateTexCoordsGLBuffers();
 	}
 }

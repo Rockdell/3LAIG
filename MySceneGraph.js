@@ -146,7 +146,7 @@ class MySceneGraph {
             if (!textures.hasOwnProperty(texID)) continue;
 
             let currTex = textures[texID];
-            let tex = new CGFtexture(this.scene, `../scenes${currTex.file.substring(1)}`);
+            let tex = new CGFtexture(this.scene, `../scenes/${currTex.file}`);
 
             this.displayTextures[texID] = tex;
         }
