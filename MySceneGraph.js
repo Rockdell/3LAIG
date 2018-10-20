@@ -555,25 +555,25 @@ class MySceneGraph {
             if(element.attributes[i] === undefined) {
 
                 if(attributeCode === undefined || attributeCode !== "#") {
-                    this.onXMLError(`Attribute \"${attributeName}\" is missing (at \"${element.nodeName}\").`);
+                    this.onXMLError(`Attribute \"${attributeName}\" is missing (at ${element.nodeName}).`);
                     return 1;
                 }
             }
             else if (attributeName !== element.attributes[i].name) {
 
                 if (!attributesList.includes(element.attributes[i].name)) {
-                    this.onXMLError(`Attribute \"${element.attributes[i].name}\" is not expected (at \"${element.nodeName}\").`);
+                    this.onXMLError(`Attribute \"${element.attributes[i].name}\" is not expected (at ${element.nodeName}).`);
                     return 1;
                 }
                 else if (!element.hasAttribute(attributeName)) {
 
                     if(attributeCode === "#") continue;
 
-                    this.onXMLError(`Attribute \"${attributeName}\" is missing (at \"${element.nodeName}\").`);
+                    this.onXMLError(`Attribute \"${attributeName}\" is missing (at ${element.nodeName}).`);
                     return 1;
                 }
                 else
-                    this.onXMLMinorError(`Attribute \"${attributeName}\" is out of order (at \"${element.nodeName}\").`);
+                    this.onXMLMinorError(`Attribute \"${attributeName}\" is out of order (at ${element.nodeName}).`);
             }
         }
 
@@ -586,6 +586,10 @@ class MySceneGraph {
                 return 1;
             }
 
+            let childrenList = [];
+            for(let i = 0; i < element.children.length; ++i)
+                childrenList.push(element.children[i].nodeName)
+
             // Check order of children
             for (let i = 0; i < element.children.length; ++i) {
 
@@ -597,7 +601,7 @@ class MySceneGraph {
                         this.onXMLError(`Element \"${childName}\" is not expected (at \"${element.nodeName}\").`);
                         return 1;
                     }
-                    else if (!element.hasOwnProperty(tags[i])) {
+                    else if (!childrenList.includes(tags[i])) {
                         this.onXMLError(`Element \"${tags[i]}\" is missing (at \"${element.nodeName}\").`);
                         return 1;
                     }
