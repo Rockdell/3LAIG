@@ -220,7 +220,7 @@ function makeYasStructure() {
                         }
                     },
                     texture: {
-                        attributes: [["id", "ss"], ["length_s", "ff"], ["length_t", "ff"]],
+                        attributes: [["id", "ss"], ["length_s", "ff", "#"], ["length_t", "ff", "#"]],
                         options: []
                     },
                     children: {

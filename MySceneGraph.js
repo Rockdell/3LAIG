@@ -218,8 +218,11 @@ class MySceneGraph {
                     newLt = null;
                     break;
                 case 'inherit':
-                    newLs = currentComp.texture.length_s;
-                    newLt = currentComp.texture.length_t;
+                    if(currentComp.texture["length_s"])
+                        newLs = currentComp.texture.length_s;
+                    
+                    if(currentComp.texture["length_t"])
+                        newLt = currentComp.texture.length_t;
                     break;
                 default:
                     newText = currentComp.texture.id;
@@ -434,6 +437,15 @@ class MySceneGraph {
      */
     parseBlock(element, structure) {
 
+        let getAttrType = function(array, attr) {
+
+            for(let i = 0; i < array.length; ++i) {
+                if(array[i][0] === attr)
+                    return array[i][1];
+            }
+            return null;
+        };
+
         const { attributes, options } = structure;
 
         // Create new object
@@ -443,17 +455,20 @@ class MySceneGraph {
         if (this.validateBlock(element, structure))
             return null;
 
-        // Iterate through attributes
-        for (let i = 0; i < attributes.length; ++i) {
+        for(let i = 0; i < element.attributes.length; ++i) {
 
-            let attributeName = attributes[i][0];
-            let attributeType = attributes[i][1];
+            let attributeName = element.attributes[i].name;
 
-            let value = this.parseAttribute(element, attributeName, attributeType);
+            let attributeType = getAttrType(attributes, attributeName);
+            
+            if(element.hasAttribute(attributeName)) {
 
-            if (value == null) return null;
+                let value = this.parseAttribute(element, attributeName, attributeType);
 
-            obj[attributeName] = value;
+                if (value == null) return null;
+    
+                obj[attributeName] = value;
+            }
         }
 
         // Check "type" option
@@ -523,30 +538,38 @@ class MySceneGraph {
         }
 
         // Check number of attributes
-        if (element.attributes.length !== attributes.length) {
+        if (element.attributes.length > attributes.length) {
             this.onXMLError(`Element \"${element.nodeName}\" has wrong number of attributes.`);
             return 1;
         }
 
-        // Check order of attributes
-
-        // Create a new list, so that method include() works
         let attributesList = [];
         for(let i = 0; i < attributes.length; ++i)
-            attributesList.push(attributes[i][0])
+                attributesList.push(attributes[i][0])
 
-        for (let i = 0; i < element.attributes.length; ++i) {
+        for (let i = 0; i < attributes.length; ++i) {
 
-            let attributeName = element.attributes[i].name;
+            let attributeName = attributes[i][0];
+            let attributeCode = attributes[i][2];
 
-            if (attributeName !== attributesList[i]) {
+            if(element.attributes[i] === undefined) {
 
-                if (!attributesList.includes(attributeName)) {
-                    this.onXMLError(`Attribute \"${attributeName}\" is not expected (at \"${element.nodeName}\").`);
+                if(attributeCode === undefined || attributeCode !== "#") {
+                    this.onXMLError(`Attribute \"${attributeName}\" is missing (at \"${element.nodeName}\").`);
                     return 1;
                 }
-                else if (!element.hasAttribute(attributesList[i])) {
-                    this.onXMLError(`Attribute \"${attributesList[i]}\" is missing (at \"${element.nodeName}\").`);
+            }
+            else if (attributeName !== element.attributes[i].name) {
+
+                if (!attributesList.includes(element.attributes[i].name)) {
+                    this.onXMLError(`Attribute \"${element.attributes[i].name}\" is not expected (at \"${element.nodeName}\").`);
+                    return 1;
+                }
+                else if (!element.hasAttribute(attributeName)) {
+
+                    if(attributeCode === "#") continue;
+
+                    this.onXMLError(`Attribute \"${attributeName}\" is missing (at \"${element.nodeName}\").`);
                     return 1;
                 }
                 else
@@ -717,10 +740,20 @@ class MySceneGraph {
             // Check reference to texture
             const texture = component.texture.id;
 
-            if (texture !== 'none' && texture !== 'inherit' && !textures[texture]) {
-                this.onXMLError(`Texture \"${texture}\" does not exist (at \"${componentKey}\").`);
-                return 1;
+            if (texture !== 'none' && texture !== 'inherit') {
+                
+                if(!textures[texture]) {
+                    this.onXMLError(`Texture \"${texture}\" does not exist (at \"${componentKey}\").`);
+                    return 1;
+                }
+
+                if(!component.texture["length_s"] || !component.texture["length_t"]) {
+                    this.onXMLError(`Texture \"${texture}\" has no length_s/length_t defined (at \"${componentKey}\").`);
+                    return 1;
+                }
             }
+
+            if(texture !== 'none' )
 
             // Check minimum amount of children
             if (Object.keys(component.children).length < 1) {
