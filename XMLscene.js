@@ -125,25 +125,25 @@ class XMLscene extends CGFscene {
 
                     let y_vector = vec3.fromValues(0, 1, 0);
 
-                    let look_vector = vec3.create();
-                    vec3.subtract(look_vector, vec3.fromValues(view.to.x, view.to.y, view.to.z), vec3.fromValues(view.from.x, view.from.y, view.from.y));
+                    // let look_vector = vec3.create();
+                    // vec3.subtract(look_vector, vec3.fromValues(view.to.x, view.to.y, view.to.z), vec3.fromValues(view.from.x, view.from.y, view.from.y));
 
-                    let side_vector = vec3.create();
-                    vec3.cross(side_vector, y_vector, look_vector);
+                    // let side_vector = vec3.create();
+                    // vec3.cross(side_vector, y_vector, look_vector);
 
-                    let up_vector = vec3.create();
-                    vec3.cross(up_vector, look_vector, side_vector);
+                    // let up_vector = vec3.create();
+                    // vec3.cross(up_vector, look_vector, side_vector);
 
-                    vec3.normalize(up_vector, up_vector);
+                    // vec3.normalize(up_vector, up_vector);
 
-                    if (up_vector.len < 0.1)
-                        look_vector[1] > 0 ? up_vector = vec3.fromValues(1, 0, 0) : up_vector = vec3.fromValues(-1, 0, 0);
+                    // if (up_vector.len < 0.1)
+                    //     look_vector[1] > 0 ? up_vector = vec3.fromValues(1, 0, 0) : up_vector = vec3.fromValues(-1, 0, 0);
 
                     camera = new CGFcameraOrtho(
                         view.left, view.right, view.bottom, view.top, view.near, view.far,
                         vec3.fromValues(view.from.x, view.from.y, view.from.z),
                         vec3.fromValues(view.to.x, view.to.y, view.to.z),
-                        up_vector
+                        y_vector
                     );
                     break;
             }
