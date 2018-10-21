@@ -1,8 +1,11 @@
 
+/**
+ * MyParser class, representing the parser.
+ */
 class MyParser {
 
     /**
-     * Constructor.
+     * @constructor
      * @param sceneGraph Scene graph
      */
     constructor(sceneGraph) {
@@ -453,10 +456,13 @@ class MyParser {
                     return 1;
                 }
 
-                if (!component.texture["length_s"] || !component.texture["length_t"]) {
+                if (!component.texture.hasOwnProperty("length_s") || !component.texture.hasOwnProperty("length_t")) {
                     this.sceneGraph.onXMLError(`Texture \"${texture}\" has no length_s/length_t defined (at \"${componentKey}\").`);
                     return 1;
                 }
+
+                if(component.texture.length_s === 0 || component.texture.length_t === 0)
+                    this.sceneGraph.onXMLMinorError(`Texture \"${texture}\" has length_s/length_t with value 0.0 (at \"${componentKey}\").`);
             }
 
             if (texture !== 'none')

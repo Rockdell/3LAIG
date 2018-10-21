@@ -1,4 +1,7 @@
 
+/**
+ * Factory function that creates the Yas structure to be used by the parser.
+ */
 function makeYasStructure() {
 
     return {

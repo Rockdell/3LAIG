@@ -3,11 +3,9 @@
  * @param gl {WebGLRenderingContext}
  * @constructor
  */
+class MyCylinder extends CGFobject {
 
-class MyCylinder extends CGFobject
-{
-	constructor(scene, base, top, height, slices, stacks)
-	{
+	constructor(scene, base, top, height, slices, stacks) {
 		super(scene);
 		this.base = base;
 		this.top = top;
@@ -15,10 +13,9 @@ class MyCylinder extends CGFobject
 		this.slices = slices;
 		this.stacks = stacks;
 		this.initBuffers();
-	};
+	}
 
-	initBuffers() 
-	{
+	initBuffers() {
 		this.vertices = [];
 
 		this.indices = [];
@@ -28,27 +25,24 @@ class MyCylinder extends CGFobject
 		this.texCoords = [];
 
 		this.drawFace();
-			
-		this.primitiveType=this.scene.gl.TRIANGLES;
+
+		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
-	};
+	}
 
 	//Tube
-	drawFace()
-	{
+	drawFace() {
 		var alpha = (2 * Math.PI) / this.slices;
 		var stackRadiusInc = (this.top - this.base) / this.stacks;
 		var stackHeight = this.height / this.stacks;
 		var sliceHeight = 1.0 / this.slices;
 		var ind = 0;
-	
-		for (let j = 0; j < this.stacks; j++)
-		{
+
+		for (let j = 0; j < this.stacks; j++) {
 			let stackRadius = this.base + j * stackRadiusInc;
 			let stackRadiusNext = this.base + (j + 1) * stackRadiusInc;
 
-			for (let i = 0; i < this.slices; i++)
-			{
+			for (let i = 0; i < this.slices; i++) {
 				//Vertices
 				var vx1 = stackRadius * Math.cos(i * alpha);
 				var vx2 = stackRadius * Math.cos((i + 1) * alpha);
@@ -70,9 +64,9 @@ class MyCylinder extends CGFobject
 
 				//Indexes
 				this.indices.push(this.height > 0 ? ind : ind + 2, ind + 1, this.height > 0 ? ind + 2 : ind);
-				this.indices.push(this.height > 0 ? ind + 3 : ind + 1, ind + 2, this.height > 0 ? ind + 1 : ind + 3);	
+				this.indices.push(this.height > 0 ? ind + 3 : ind + 1, ind + 2, this.height > 0 ? ind + 1 : ind + 3);
 				ind += 4;
-	
+
 				//Normals
 				this.normals.push(vx1, vy1, 0);
 				this.normals.push(vx2, vy2, 0);
@@ -80,7 +74,7 @@ class MyCylinder extends CGFobject
 				this.normals.push(vx2, vy2, 0);
 
 				//Texture Coordinates
-				this.texCoords.push(sliceHeight * i, stackHeight * j);		
+				this.texCoords.push(sliceHeight * i, stackHeight * j);
 				this.texCoords.push(sliceHeight * (i + 1), stackHeight * j);
 				this.texCoords.push(sliceHeight * i, stackHeight * (j + 1));
 				this.texCoords.push(sliceHeight * (i + 1), stackHeight * (j + 1));
@@ -92,8 +86,8 @@ class MyCylinder extends CGFobject
 		this.normals.push(0.0, 0.0, 1.0);
 		this.texCoords.push(0.5, 0.5);
 
-		for(var i = 0; i < this.slices; i++) {
-		
+		for (var i = 0; i < this.slices; i++) {
+
 			var vx = this.top * Math.cos(i * alpha);
 			var vy = this.top * Math.sin(i * alpha);
 
@@ -102,12 +96,12 @@ class MyCylinder extends CGFobject
 
 			//Normals
 			this.normals.push(0.0, 0.0, 1.0);
-			
+
 			//TexCoords
-			this.texCoords.push(0.5 + 0.5 * vx, 0.5 - 0.5 * vy);	
+			this.texCoords.push(0.5 + 0.5 * vx, 0.5 - 0.5 * vy);
 		}
 
-		for(var i = 1; i <= this.slices; i++) {
+		for (var i = 1; i <= this.slices; i++) {
 			//Indices
 			this.indices.push(i == this.slices ? ind + 1 : (ind + i + 1), ind, ind + i);
 		}
@@ -119,8 +113,8 @@ class MyCylinder extends CGFobject
 		this.normals.push(0.0, 0.0, 1.0);
 		this.texCoords.push(0.5, 0.5);
 
-		for(var i = 0; i < this.slices; i++) {
-		
+		for (var i = 0; i < this.slices; i++) {
+
 			var vx = this.base * Math.cos(i * alpha);
 			var vy = this.base * Math.sin(i * alpha);
 
@@ -129,16 +123,15 @@ class MyCylinder extends CGFobject
 
 			//Normals
 			this.normals.push(0.0, 0.0, -1.0);
-			
+
 			//TexCoords
-			this.texCoords.push(0.5 + 0.5 * vx, 0.5 - 0.5 * vy);	
+			this.texCoords.push(0.5 + 0.5 * vx, 0.5 - 0.5 * vy);
 		}
 
-		for(var i = 1; i <= this.slices; i++) {
+		for (var i = 1; i <= this.slices; i++) {
 			//Indices
 			this.indices.push(ind + i, ind, i == this.slices ? ind + 1 : (ind + i + 1));
 		}
 
-	};
-
-};
+	}
+}

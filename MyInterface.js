@@ -25,6 +25,10 @@ class MyInterface extends CGFinterface {
         return true;
     }
 
+    /**
+     * Adds a folder containing the active camera and a list of available cameras.
+     * @param {array} views
+     */
     addViewsGroup(views) {
 
         let group = this.gui.addFolder('Cameras');
