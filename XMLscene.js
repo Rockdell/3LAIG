@@ -212,6 +212,33 @@ class XMLscene extends CGFscene {
         console.log('Initialized lights.');
     }
 
+    updateCamera() {
+        // Update camera;
+        this.camera = this.cameras[this.currentCamera];
+        this.interface.setActiveCamera(this.camera);
+    }
+
+    updateLights() {   
+
+        // Update lights
+        let i = 0;
+        for (let key in this.lightValues) {
+
+            if (this.lightValues[key]) {
+                this.lights[i].setVisible(true);
+                this.lights[i].enable();
+            }
+            else {
+                this.lights[i].setVisible(false);
+                this.lights[i].disable();
+            }
+
+            this.lights[i].update();
+
+            ++i;
+        }
+    }
+
     /**
      * Displays the scene.
      */
@@ -239,27 +266,9 @@ class XMLscene extends CGFscene {
 
             this.materialDefault.apply();
 
-            // Update camera;
-            this.camera = this.cameras[this.currentCamera];
-            this.interface.setActiveCamera(this.camera);
+            this.updateCamera();
 
-            // Update lights
-            let i = 0;
-            for (let key in this.lightValues) {
-
-                if (this.lightValues[key]) {
-                    this.lights[i].setVisible(true);
-                    this.lights[i].enable();
-                }
-                else {
-                    this.lights[i].setVisible(false);
-                    this.lights[i].disable();
-                }
-
-                this.lights[i].update();
-
-                ++i;
-            }
+            this.updateLights();
 
             // Display scene
             this.graph.displayScene();
