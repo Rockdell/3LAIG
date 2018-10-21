@@ -74,30 +74,11 @@ class MyTorus extends CGFobject {
                 ind += 4;
 
                 //Normals
-                var v = new vec3.fromValues(this.r * Math.cos(teta * i) * Math.cos(delta * j),
-                    this.r * Math.sin(teta * i),
-                    this.r * Math.cos(teta * i) * Math.sin(delta * j));
-                vec3.normalize(v, v);
-                this.normals.push(v[0], v[1], v[2]);
-
-                v = new vec3.fromValues(this.r * Math.cos(teta * (i + 1)) * Math.cos(delta * j),
-                    this.r * Math.sin(teta * (i + 1)),
-                    this.r * Math.cos(teta * (i + 1)) * Math.sin(delta * j));
-                vec3.normalize(v, v);
-                this.normals.push(v[0], v[1], v[2]);
-
-                v = new vec3.fromValues(this.r * Math.cos(teta * i) * Math.cos(delta * (j + 1)),
-                    this.r * Math.sin(teta * i),
-                    this.r * Math.cos(teta * i) * Math.sin(delta * (j + 1)));
-                vec3.normalize(v, v);
-                this.normals.push(v[0], v[1], v[2]);
-
-                v = new vec3.fromValues(this.r * Math.cos(teta * (i + 1)) * Math.cos(delta * (j + 1)),
-                    this.r * Math.sin(teta * (i + 1)),
-                    this.r * Math.cos(teta * (i + 1)) * Math.sin(delta * (j + 1)));
-                vec3.normalize(v, v);
-                this.normals.push(v[0], v[1], v[2]);
-
+                this.normals.push(vx1 - (this.R * Math.cos(j * delta)), vy1 - (this.R * Math.sin(j * delta)), vz1);
+                this.normals.push(vx2 - (this.R * Math.cos(j * delta)), vy2 - (this.R * Math.sin(j * delta)), vz2);
+                this.normals.push(vx3 - (this.R * Math.cos((j + 1) * delta)), vy3 - (this.R * Math.sin((j + 1) * delta)), vz1);
+                this.normals.push(vx4 - (this.R * Math.cos((j + 1) * delta)), vy4 - (this.R * Math.sin((j + 1) * delta)), vz2);
+               
                 //Texture Coordinates
                 this.texCoords.push(sliceHeight * j, loopHeight * i);
                 this.texCoords.push(sliceHeight * j, loopHeight * (i + 1));
