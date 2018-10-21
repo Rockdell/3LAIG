@@ -47,8 +47,9 @@ class MyTriangle extends CGFobject {
             (a1, b1, c1) -> B
             (a3, b3, c3) -> C
         */
-        let a = vec3.fromValues(this.x2 - this.x1, this.y2 - this.y1, this.z2 - this.z1);
-        let b = vec3.fromValues(this.x3 - this.x1, this.y3 - this.y1, this.z3 - this.z1);
+    
+        let a = vec3.fromValues(this.x1 - this.x3, this.y1 - this.y3, this.z1 - this.z3);
+        let b = vec3.fromValues(this.x2 - this.x1, this.y2 - this.y1, this.z2 - this.z1);
         let c = vec3.fromValues(this.x3 - this.x2, this.y3 - this.y2, this.z3 - this.z2);
 
         //Cross product of these vectors equals the plane's normal
@@ -74,13 +75,13 @@ class MyTriangle extends CGFobject {
 
         //Texture Coordinates -> P0, P1, P2
         this.p0u = lengthC - lengthA * cosb;
-        this.p0v = this.v - lengthA * sinb;
+        this.p0v = 0;
 
         this.p1u = 0;
-        this.p1v = this.v;
+        this.p1v = lengthA * sinb;
 
         this.p2u = lengthC;
-        this.p2v = this.v;
+        this.p2v = lengthA * sinb;
 
         this.texCoords = [
             this.p0u, this.p0v,
