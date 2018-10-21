@@ -232,6 +232,12 @@ class MyParser {
      */
     validateBlock(element, { attributes, tags, options }) {
 
+        // Check parse error
+        if (element.children.length > 0 && element.children[0].nodeName === "parsererror") {
+            this.sceneGraph.onXMLError('Document is not a valid XML file.');
+            return 1;
+        }
+
         // Check "id" option
         if (options.includes('id') && !element.hasAttribute('id')) {
             this.sceneGraph.onXMLError(`Element \"${element.nodeName}\" has no ID to be used.`);
@@ -456,7 +462,7 @@ class MyParser {
                     return 1;
                 }
 
-                if (!component.texture.hasOwnProperty("length_s") || !component.texture.hasOwnProperty("length_t")) {
+                if (!component.texture.hasOwnProperty('length_s') || !component.texture.hasOwnProperty('length_t')) {
                     this.sceneGraph.onXMLError(`Texture \"${texture}\" has no length_s/length_t defined (at \"${componentKey}\").`);
                     return 1;
                 }
