@@ -213,9 +213,12 @@ class XMLscene extends CGFscene {
     }
 
     updateCamera() {
+        
         // Update camera;
         this.camera = this.cameras[this.currentCamera];
-        this.interface.setActiveCamera(this.camera);
+
+        if(this.camera instanceof CGFcamera)
+            this.interface.setActiveCamera(this.camera);
     }
 
     updateLights() {   
