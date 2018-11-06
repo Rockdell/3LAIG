@@ -7,7 +7,7 @@ function makeYasStructure() {
     return {
         yas: {
             attributes: [],
-            tags: ["scene", "views", "ambient", "lights", "textures", "materials", "transformations", "primitives", "components"],
+            tags: ["scene", "views", "ambient", "lights", "textures", "materials", "transformations", "animations", "primitives", "components"],
             options: ["order"],
             scene: {
                 attributes: [["root", "ss"], ["axis_length", "ff"]],
@@ -159,10 +159,27 @@ function makeYasStructure() {
                     }
                 }
             },
+            animations: {
+                attributes: [],
+                options: ["log"],
+                linear: {
+                    attributes: [["id", "ss"], ["span", "ff"]],
+                    options: ["id", "type"],
+                    controlpoint: {
+						attributes: [["x", "ff"], ["y", "ff"], ["z", "ff"]],
+						options: ["list"]
+                    }
+                },
+                circular: {
+					// TODO change xyz
+                    attributes: [["id", "ss"], ["span", "ff"], ["x", "ff"], ["y", "ff"], ["z", "ff"], ["radius", "ff"], ["startang", "ff"], ["rotang", "ff"]],
+                    options: ["id", "type"]
+                }
+            },
             primitives: {
                 attributes: [],
                 options: ["log"],
-                primitive: {
+                primitive: {	
                     attributes: [["id", "ss"]],
                     options: ["id", "list"],
                     rectangle: {
@@ -184,7 +201,35 @@ function makeYasStructure() {
                     torus: {
                         attributes: [["inner", "ff"], ["outer", "ff"], ["slices", "ii"], ["loops", "ii"]],
                         options: ["type"]
-                    }
+					},
+					plane: {
+						attributes: [["npartsU", "ii"], ["npartsV", "ii"]],
+						options: ["type"]
+					},
+					patch: {
+						attributes: [["npointsU", "ii"], ["npointsV", "ii"], ["npartsU", "ii"], ["npartsV", "ii"]],
+						options: ["type"],
+						controlpoint: {
+							attributes: [["x", "ff"], ["y", "ff"], ["z", "ff"]],
+							options: ["list"]
+						}
+					},
+					vehicle: {
+						attributes: [],
+						options: []
+					},
+					cylinder2: {
+						attributes: [["base", "ff"], ["top", "ff"], ["height", "ff"], ["slices", "ii"], ["stacks", "ii"]],
+						options: ["type"]
+					},
+					terrain: {
+						attributes: [["idtexture", "ss"], ["idheightmap", "ss"], ["parts", "ii"], ["heightscale", "ff"]],
+						options: ["type"]
+					},
+					water: {
+						attributes: [["idtexture", "ss"], ["idwavemap", "ss"], ["parts", "ii"], ["heightscale", "ff"], ["texscale", "ff"]],
+						options: ["type"]
+					}
                 }
             },
             components: {
@@ -192,7 +237,7 @@ function makeYasStructure() {
                 options: ["log"],
                 component: {
                     attributes: [["id", "ss"]],
-                    tags: ["transformation", "materials", "texture", "components"],
+                    tags: ["transformation", "animations", "materials", "texture", "components"],
                     options: ["id"],
                     transformation: {
                         attributes: [],
@@ -213,13 +258,21 @@ function makeYasStructure() {
                             attributes: [["x", "ff"], ["y", "ff"], ["z", "ff"]],
                             options: ["type"]
                         }
-                    },
+					},
+					animations: {
+						attributes: [],
+						options: ["list"],
+						animationref: {
+							attributes: [["id", "ss"]],
+							options: []
+						}
+					},
                     materials: {
                         attributes: [],
                         options: ["list"],
                         material: {
                             attributes: [["id", "ss"]],
-                            options: ["id"]
+                            options: []
                         }
                     },
                     texture: {
