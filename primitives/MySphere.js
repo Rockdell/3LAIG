@@ -1,7 +1,5 @@
 /**
  * MySphere
- * @param gl {WebGLRenderingContext}
- * @constructor
  */
 class MySphere extends CGFobject {
 

@@ -85,12 +85,12 @@ class MySceneGraph {
 		this.compMat = {};
 
 		for(let componentKey in components) {
-			let component = components[componentKey];
+			//let component = components[componentKey];
 			
-			let obj = {};
-			obj.currMat = 0;
+			//let obj = {};
+			//obj.currMat = 0;
 
-			this.compMat[componentKey] = obj;
+			this.compMat[componentKey] = 0;
 		}
 
 		console.log('Binded components and primitives.');
@@ -135,6 +135,34 @@ class MySceneGraph {
     }
 
     /**
+     * Create materials from parsed data.
+     */
+    createMaterials() {
+
+        const { materials } = this.parsedXML;
+
+        this.displayMaterials = {};
+
+        for (let matID in materials) {
+
+            if (!materials.hasOwnProperty(matID)) continue;
+
+            let appearance = new CGFappearance(this.scene);
+            let mat = materials[matID];
+            appearance.setAmbient(mat.ambient.r, mat.ambient.g, mat.ambient.b, mat.ambient.a);
+            appearance.setDiffuse(mat.diffuse.r, mat.diffuse.g, mat.diffuse.b, mat.diffuse.a);
+            appearance.setSpecular(mat.specular.r, mat.specular.g, mat.specular.b, mat.specular.a);
+            appearance.setEmission(mat.emission.r, mat.emission.g, mat.emission.b, mat.emission.a);
+            appearance.setShininess(mat.shininess);
+
+            this.displayMaterials[matID] = appearance;
+        }
+
+        console.log('Loaded materials.');
+
+    }
+
+    /**
      * Create textures from parsed data.
      */
     createTextures() {
@@ -165,6 +193,15 @@ class MySceneGraph {
      */
     displayScene() {
 
+        // Adjust material
+        if(this.changeMaterial) {
+            for(let id in this.parsedXML.components) {
+                this.compMat[id] + 1 >=  this.parsedXML.components[id].materials.list.length ? this.compMat[id] = 0 : this.compMat[id]++;
+                //console.log(id + " : " + this.compMat[id]);
+                //TODO Remove console.log
+            }
+        }
+
         this.scene.pushMatrix();
         this.processNode(false, this.parsedXML.scene.root, this.scene.getMatrix());
         this.scene.popMatrix();
@@ -181,14 +218,8 @@ class MySceneGraph {
 
         if (prim) {
 
-            let appearance = new CGFappearance(this.scene);
-
-            let currMat = this.parsedXML.materials[mat];
-            appearance.setAmbient(currMat.ambient.r, currMat.ambient.g, currMat.ambient.b, currMat.ambient.a);
-            appearance.setDiffuse(currMat.diffuse.r, currMat.diffuse.g, currMat.diffuse.b, currMat.diffuse.a);
-            appearance.setSpecular(currMat.specular.r, currMat.specular.g, currMat.specular.b, currMat.specular.a);
-            appearance.setEmission(currMat.emission.r, currMat.emission.g, currMat.emission.b, currMat.emission.a);
-            appearance.setShininess(currMat.shininess);
+            //Apply Materials and Textures
+            let appearance = this.displayMaterials[mat];
 
             if(tex) {
                 if (primitives[id].list[0].type === 'rectangle' || primitives[id].list[0].type === 'triangle')
@@ -196,6 +227,8 @@ class MySceneGraph {
 
                 appearance.setTexture(this.displayTextures[tex]);
             }
+            else
+                appearance.setTexture(null);
 
             appearance.apply();
             
@@ -206,11 +239,7 @@ class MySceneGraph {
 
             let currentComp = components[id];
 
-            // Adjust material
-			if(this.changeMaterial)
-                this.compMat[id].currMat + 1 >= currentComp.materials.list.length ? this.compMat[id].currMat = 0 : this.compMat[id].currMat++;
-            
-            let newMat = currentComp.materials.list[this.compMat[id].currMat].id !== 'inherit' ? currentComp.materials.list[this.compMat[id].currMat].id : mat;
+            let newMat = currentComp.materials.list[this.compMat[id]].id !== 'inherit' ? currentComp.materials.list[this.compMat[id]].id : mat;
             
             // Adjust texture
             let newText = tex;

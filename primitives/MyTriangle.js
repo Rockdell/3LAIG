@@ -1,9 +1,6 @@
 /**
  * MyTriangle
- * @param gl {WebGLRenderingContext}
- * @constructor
  */
-
 class MyTriangle extends CGFobject {
 
     constructor(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3, lengthS, lengthT) {
@@ -55,6 +52,7 @@ class MyTriangle extends CGFobject {
         //Cross product of these vectors equals the plane's normal
         let cp = vec3.create();
         vec3.cross(cp, a, b);
+        //TODO SEE LATER!!!
 
         //Turn into versor (length = 1)
         vec3.normalize(cp, cp);

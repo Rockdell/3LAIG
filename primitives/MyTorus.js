@@ -1,9 +1,6 @@
 /**
  * MyTorus
- * @param gl {WebGLRenderingContext}
- * @constructor
  */
-
 class MyTorus extends CGFobject {
 
     constructor(scene, inner, outer, loops, slices) {

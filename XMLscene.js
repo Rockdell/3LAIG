@@ -43,6 +43,9 @@ class XMLscene extends CGFscene {
         this.materialDefault.setDiffuse(0, 0.5, 0.5, 1);
         this.materialDefault.setSpecular(0.2, 0.2, 0.2, 1);
         this.materialDefault.setShininess(10);
+
+        this.fps = 60;
+        this.setUpdatePeriod(1000/this.fps);
     }
 
     /**
@@ -56,6 +59,9 @@ class XMLscene extends CGFscene {
         
         // Create primitives
         this.graph.createPrimitives();
+
+        // Create materials
+        this.graph.createMaterials();
 
         // Create textures
         this.graph.createTextures();
@@ -283,5 +289,11 @@ class XMLscene extends CGFscene {
 
         this.popMatrix();
         // ---- END Background, camera and axis setup
-    }
+    };
+
+    update(currTime) {
+
+        //console.log(currTime);
+
+    };
 }

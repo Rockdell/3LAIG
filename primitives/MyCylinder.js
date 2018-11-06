@@ -1,7 +1,5 @@
 /**
  * MyCylinder
- * @param gl {WebGLRenderingContext}
- * @constructor
  */
 class MyCylinder extends CGFobject {
 
