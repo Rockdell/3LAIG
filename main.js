@@ -23,6 +23,8 @@ serialInclude([
     '../primitives/MyCylinder.js',
     '../primitives/MySphere.js',
     '../primitives/MyTorus.js',
+    '../primitives/MyPlane.js',
+    '../primitives/MyPatch.js',
     'Animation.js',
     'LinearAnimation.js',
     'CircularAnimation.js',
