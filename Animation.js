@@ -5,7 +5,7 @@ class Animation {
 
 	constructor(scene) {
         this.scene = scene;
-        this.transfMatrix = null;
+        this.transfMatrix = mat4.create();
     }
     
     update(tm) {

@@ -66,6 +66,9 @@ class XMLscene extends CGFscene {
         // Create textures
         this.graph.createTextures();
 
+        // Create animations
+        this.graph.createAnimations();
+
         // Initialize axis
         this.initAxis();
 

@@ -78,23 +78,23 @@ class MySceneGraph {
     /**
 	 * Binds the components with the respective materials
 	 */
-	bindCompMat() {
+    bindCompMat() {
 
         const { components } = this.parsedXML;
 
-		this.compMat = {};
+        this.compMat = {};
 
-		for(let componentKey in components) {
-			//let component = components[componentKey];
-			
-			//let obj = {};
-			//obj.currMat = 0;
+        for (let componentKey in components) {
+            //let component = components[componentKey];
 
-			this.compMat[componentKey] = 0;
-		}
+            //let obj = {};
+            //obj.currMat = 0;
 
-		console.log('Binded components and primitives.');
-	}
+            this.compMat[componentKey] = 0;
+        }
+
+        console.log('Binded components and primitives.');
+    }
 
     /**
      * Creates primitives from parsed data.
@@ -176,10 +176,10 @@ class MySceneGraph {
             if (!textures.hasOwnProperty(texID)) continue;
 
             let currTex = textures[texID];
-			let path = currTex.file;
-			let important = path.split('/');
-			important = important.pop();
-			important = "../scenes/images/" + important;
+            let path = currTex.file;
+            let important = path.split('/');
+            important = important.pop();
+            important = "../scenes/images/" + important;
             let tex = new CGFtexture(this.scene, important);
 
             this.displayTextures[texID] = tex;
@@ -189,14 +189,36 @@ class MySceneGraph {
     }
 
     /**
+    * Create animations from parsed data.
+    */
+    createAnimations() {
+
+        const { animations } = this.parsedXML;
+
+        this.displayAnimations = {};
+
+        for (let animID in animations) {
+
+            let currAnim = animations[animID];
+
+            if (currAnim.type == "linear") {
+                console.log("Linear animation created! : " + currAnim.controlpoint);
+                this.displayAnimations[animID] = new LinearAnimation(this.scene, currAnim.span, currAnim.controlpoint);
+            }
+        }
+
+        console.log('Loaded animations.');
+    }
+
+    /**
      * Displays the scene, processing each node, starting in the root node.
      */
     displayScene() {
 
         // Adjust material
-        if(this.changeMaterial) {
-            for(let id in this.parsedXML.components) {
-                this.compMat[id] + 1 >=  this.parsedXML.components[id].materials.list.length ? this.compMat[id] = 0 : this.compMat[id]++;
+        if (this.changeMaterial) {
+            for (let id in this.parsedXML.components) {
+                this.compMat[id] + 1 >= this.parsedXML.components[id].materials.list.length ? this.compMat[id] = 0 : this.compMat[id]++;
                 //console.log(id + " : " + this.compMat[id]);
                 //TODO Remove console.log
             }
@@ -221,7 +243,7 @@ class MySceneGraph {
             //Apply Materials and Textures
             let appearance = this.displayMaterials[mat];
 
-            if(tex) {
+            if (tex) {
                 if (primitives[id].list[0].type === 'rectangle' || primitives[id].list[0].type === 'triangle')
                     this.displayPrimitives[id].updateTextST(ls, lt);
 
@@ -231,7 +253,7 @@ class MySceneGraph {
                 appearance.setTexture(null);
 
             appearance.apply();
-            
+
             // Draw element
             this.displayPrimitives[id].display();
         }
@@ -240,7 +262,7 @@ class MySceneGraph {
             let currentComp = components[id];
 
             let newMat = currentComp.materials.list[this.compMat[id]].id !== 'inherit' ? currentComp.materials.list[this.compMat[id]].id : mat;
-            
+
             // Adjust texture
             let newText = tex;
             let newLs = ls;
@@ -253,10 +275,10 @@ class MySceneGraph {
                     newLt = null;
                     break;
                 case 'inherit':
-                    if(currentComp.texture["length_s"])
+                    if (currentComp.texture["length_s"])
                         newLs = currentComp.texture.length_s;
-                    
-                    if(currentComp.texture["length_t"])
+
+                    if (currentComp.texture["length_t"])
                         newLt = currentComp.texture.length_t;
                     break;
                 default:
