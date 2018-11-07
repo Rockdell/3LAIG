@@ -46,6 +46,9 @@ class XMLscene extends CGFscene {
 
         this.fps = 60;
         this.setUpdatePeriod(1000/this.fps);
+
+        this.lastTime = null;
+        this.deltaTime = null;
     }
 
     /**
@@ -296,7 +299,21 @@ class XMLscene extends CGFscene {
 
     update(currTime) {
 
-        //console.log(currTime);
+        if (this.lastTime == null) {
+            this.lastTime = currTime;
+            return;
+        }
 
+        this.deltaTime = currTime - this.lastTime;
+        this.lastTime = currTime;
+
+        if (!this.sceneInited)
+            return;
+
+        for(let anim in this.graph.displayAnimations) {
+            this.graph.displayAnimations[anim].update(this.deltaTime/1000.0);
+        }
+
+        //console.log(this.deltaTime);
     };
 }

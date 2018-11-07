@@ -52,7 +52,6 @@ class MyTriangle extends CGFobject {
         //Cross product of these vectors equals the plane's normal
         let cp = vec3.create();
         vec3.cross(cp, a, b);
-        //TODO SEE LATER!!!
 
         //Turn into versor (length = 1)
         vec3.normalize(cp, cp);

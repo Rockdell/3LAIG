@@ -8,11 +8,12 @@ class Animation {
         this.transfMatrix = mat4.create();
     }
     
-    update(tm) {
+    /* update(tm) {
         this.transfMatrix = tm;
-    }
+    } */
 
     apply() {
+        console.log("Transf Matrix: " + this.transfMatrix);
         this.scene.multMatrix(this.transfMatrix);
     }
     

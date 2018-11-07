@@ -164,10 +164,10 @@ function makeYasStructure() {
                 options: ["log"],
                 linear: {
                     attributes: [["id", "ss"], ["span", "ff"]],
-                    options: ["id", "type"],
+                    options: ["id", "type", "list"],
                     controlpoint: {
 						attributes: [["x", "ff"], ["y", "ff"], ["z", "ff"]],
-						options: ["list"]
+						options: []
                     }
                 },
                 circular: {

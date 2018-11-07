@@ -202,8 +202,8 @@ class MySceneGraph {
             let currAnim = animations[animID];
 
             if (currAnim.type == "linear") {
-                console.log("Linear animation created! : " + currAnim.controlpoint);
-                this.displayAnimations[animID] = new LinearAnimation(this.scene, currAnim.span, currAnim.controlpoint);
+                console.log("Linear animation created! : " + animID);
+                this.displayAnimations[animID] = new LinearAnimation(this.scene, currAnim.span, currAnim.list);
             }
         }
 
@@ -293,6 +293,9 @@ class MySceneGraph {
             //Adjust transformation matrix
             this.adjustMatrix(currentComp);
 
+            //Apply Animations
+            this.applyAnimations(currentComp);
+
             for (let childID in currentComp.children) {
 
                 if (!currentComp.children.hasOwnProperty(childID)) continue;
@@ -313,7 +316,7 @@ class MySceneGraph {
     adjustMatrix(component) {
 
         // Checks if it has any transformations
-        if (!component.transformation.list[0])
+        if (component.transformation.list.length == 0)
             return;
 
         // Checks if it's a transformation reference or a new transformation
@@ -359,6 +362,17 @@ class MySceneGraph {
                         break;
                 }
                 break;
+        }
+    }
+
+    applyAnimations(currentComp) {
+
+        if(!currentComp.animations)
+            return;
+
+        for (let i = 0; i < currentComp.animations.list.length; i++) {
+            //console.log(currentComp.animations.list[i].id);
+            this.displayAnimations[currentComp.animations.list[i].id].apply();
         }
     }
 
