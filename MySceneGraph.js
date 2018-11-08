@@ -372,7 +372,9 @@ class MySceneGraph {
 
         for (let i = 0; i < currentComp.animations.list.length; i++) {
             //console.log(currentComp.animations.list[i].id);
+            console.log("F: " + this.displayAnimations[currentComp.animations.list[i].id].transfMatrix);
             this.displayAnimations[currentComp.animations.list[i].id].apply();
+            console.log("S: " + this.displayAnimations[currentComp.animations.list[i].id].transfMatrix);
         }
     }
 

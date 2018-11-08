@@ -26,6 +26,10 @@ class LinearAnimation extends Animation {
         //In RADIANS!
         this.vector_angles = [];
 
+        //Create Initial Matrix
+        this.transfMatrix = mat4.create();
+        mat4.translate(this.transfMatrix, this.transfMatrix, vec3.fromValues(this.control_points[0][0], this.control_points[0][1], this.control_points[0][2]));
+   
         this.calculate();     
         
         console.log("***********************************");
