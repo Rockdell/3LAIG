@@ -13,7 +13,6 @@ class Animation {
     } */
 
     apply() {
-        console.log("Transf Matrix: " + this.transfMatrix);
         this.scene.multMatrix(this.transfMatrix);
     }
     

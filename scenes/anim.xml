@@ -1,6 +1,6 @@
 <yas>
 
-    <scene root="cube" axis_length="2.0" />
+    <scene root="root" axis_length="2.0" />
 
     <views default="perspective">
         <perspective id="perspective" near="0.1" far="500.0" angle="60">
@@ -137,8 +137,19 @@
 
     <animations>
         <linear id="anim1" span="5" >
-            <controlpoint x="-1" y="0" z="0" />
-            <controlpoint x="5" y="2" z="9" />
+            <controlpoint x="0" y="0" z="0" />
+            <controlpoint x="5" y="5" z="0" />
+            <controlpoint x="5" y="0" z="5" />
+            <controlpoint x="0" y="5" z="5" />
+            <controlpoint x="0" y="0" z="0" />
+        </linear>
+
+         <linear id="anim2" span="5" >
+            <controlpoint x="0" y="0" z="0" />
+            <controlpoint x="5" y="5" z="0" />
+            <!-- <controlpoint x="5" y="0" z="5" />
+            <controlpoint x="0" y="5" z="5" />
+            <controlpoint x="0" y="0" z="0" /> -->
         </linear>
     </animations>
 
@@ -150,9 +161,53 @@
 
     <components>
 
+        <component id="root">
+
+            <transformation> </transformation>
+
+            <materials>
+                <material id="cube_material" />
+            </materials>
+
+            <texture id="none" />
+
+            <children>
+                <componentref id="cube" />
+                <componentref id="cube2" />
+            </children>
+        </component>
+
+        <component id="cube2">
+ 
+            <transformation> 
+                 <translate x="5.0" y="0.0" z="5.0" />
+            </transformation>
+
+            <animations>
+
+            </animations>
+
+            <materials>
+                <material id="cube_material" />
+            </materials>
+
+            <texture id="none" />
+
+            <children>
+                <componentref id="cube_front_face" />
+                <componentref id="cube_back_face" />
+                <componentref id="cube_top_face" />
+                <componentref id="cube_bottom_face" />
+                <componentref id="cube_right_face" />
+                <componentref id="cube_left_face" />
+            </children>
+        </component>
+
         <component id="cube">
  
-            <transformation> </transformation>
+            <transformation>
+                <translate x="1.0" y="0.0" z="0.0" /> 
+            </transformation>
 
             <animations>/
                 <animationref id="anim1" />
@@ -162,7 +217,7 @@
                 <material id="cube_material" />
             </materials>
 
-            <texture id="none" />
+            <texture id="testText" length_s="1" length_t="1" />
 
             <children>
                 <componentref id="cube_front_face" />
