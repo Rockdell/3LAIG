@@ -194,8 +194,6 @@ class MySceneGraph {
         
         for (let componentKey in components) {
 
-            let aux_anim = [];
-
             let currComp = components[componentKey];
    
             //If it contains the animations section
@@ -204,7 +202,9 @@ class MySceneGraph {
                 
             //And if that section contains any animations
             if(currComp.animations.list.length == 0)
-                continue;         
+                continue;    
+                
+            let aux_anim = [];
 
             for (let i = 0; i < currComp.animations.list.length; i++) {
                 let currAnimID = currComp.animations.list[i].id;
@@ -225,9 +225,7 @@ class MySceneGraph {
             //Tells the first animation to activate
             aux_anim[0].animating = true;
 
-            let obj = {};
-            obj['animations'] = aux_anim;
-            obj['animIndex'] = 0;
+            let obj = { anims: aux_anim, animIndex: 0 };
 
             this.componentsAnimations[componentKey] = obj;
         }
@@ -414,9 +412,21 @@ class MySceneGraph {
         if (currentComp.animations.list.length == 0)
             return;
 
-        let componentAnimations = this.componentsAnimations[currentComp.id];
+        let obj = this.componentsAnimations[currentComp.id];
 
-        for (let i = 0; i < componentAnimations.length; i++) {
+        
+
+        if (!obj.anims[obj.animIndex].animating) {
+            if (obj.animIndex + 1 < obj.anims.length) {
+                obj.animIndex++;
+                obj.anims[obj.animIndex].animating = true;
+                obj.anims[obj.animIndex].update(this.scene.deltaTime / 1000.0);
+            }
+        }  
+
+        obj.anims[obj.animIndex].apply();
+
+      /*   for (let i = 0; i < componentAnimations.length; i++) {
             componentAnimations[i].apply();
             console.log("YEAHHHHH - " + componentAnimations[i + 1].finalMatrixApplied);
             if (componentAnimations[i].finalMatrixApplied) {
@@ -425,7 +435,7 @@ class MySceneGraph {
                     componentAnimations[i + 1].animating = true;
                 }
             }
-        }
+        } */
     }
 
     /**

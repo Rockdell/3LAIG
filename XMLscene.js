@@ -274,10 +274,10 @@ class XMLscene extends CGFscene {
 
         this.pushMatrix();
 
-        if (this.sceneInited) {
+        // Draw axis
+        this.axis.display();
 
-            // Draw axis
-            this.axis.display();
+        if (this.sceneInited) {
 
             this.materialDefault.apply();
 
@@ -287,10 +287,6 @@ class XMLscene extends CGFscene {
 
             // Display scene
             this.graph.displayScene();
-        }
-        else {
-            // Draw axis
-            this.axis.display();
         }
 
         this.popMatrix();
@@ -312,14 +308,10 @@ class XMLscene extends CGFscene {
 
         for (let compKey in this.graph.componentsAnimations) {
 
-            let anim = this.graph.componentsAnimations[compKey]["animations"];
-            console.log("update: " + anim[animations]);
-            anim.update(this.deltaTime / 1000.0);
-          
-            /* for (let i = 0; i < anims.length; i++)
-                anims[i].update(this.deltaTime / 1000.0); */
+            let obj = this.graph.componentsAnimations[compKey];
 
-            //this.graph.displayAnimations[anim].update(this.deltaTime/1000.0);
+            for (let i = 0; i < obj.anims.length; i++)
+                obj.anims[i].update(this.deltaTime / 1000.0);
         }
 
         //console.log(this.deltaTime);

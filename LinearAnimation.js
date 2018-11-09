@@ -95,8 +95,10 @@ class LinearAnimation extends Animation {
         }
 
         //Apply the first rotation for the first segment
-        if (this.total_time == 0)
+        if (this.total_time == 0) {
+            this.translateMatrix(this.transfMatrix, vec3.fromValues(this.control_points[0][0], this.control_points[0][1], this.control_points[0][2]));
             this.rotateYMatrix(this.transfMatrix, this.vector_angles[this.current_segment]);
+        }
 
         this.total_time += secondsElapsed;
 

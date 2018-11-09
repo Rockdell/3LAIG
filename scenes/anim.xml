@@ -137,12 +137,11 @@
 
     <animations>
         <linear id="anim1" span="5" >
-            <controlpoint x="0" y="0" z="0" />
-            <controlpoint x="5" y="5" z="0" />
-            <controlpoint x="5" y="0" z="5" />
-            <controlpoint x="0" y="5" z="5" />
-            <controlpoint x="0" y="0" z="0" />
-            <controlpoint x="5" y="0" z="0" />
+            <controlpoint x="-7" y="0" z="-7" />
+            <controlpoint x="7" y="3" z="-7" />
+            <controlpoint x="7" y="0" z="7" />
+            <controlpoint x="-7" y="3" z="7" />
+            <controlpoint x="-7" y="0" z="-7" />
         </linear>
 
          <linear id="anim2" span="5" >
@@ -153,7 +152,9 @@
             <controlpoint x="0" y="0" z="0" /> -->
         </linear>
 
-        <circular id="circ1" span="5" x="0" y="0" z="0" radius="5" startang="0" rotang="270" />
+        <circular id="circ1" span="10" x="0" y="0" z="0" radius="3" startang="0" rotang="-3600" />
+        <circular id="circ2" span="10" x="0" y="0" z="0" radius="5" startang="0" rotang="3600" />
+        <circular id="circ3" span="5" x="0" y="0" z="0" radius="9.8995" startang="-225" rotang="-720" />
     </animations>
 
     <primitives>
@@ -177,24 +178,52 @@
             <children>
                 <componentref id="cube" />
                 <componentref id="cube2" />
+                <componentref id="cube3" />
             </children>
         </component>
 
-        <component id="cube2">
+        <component id="cube3">
  
             <transformation> 
-                 <translate x="5.0" y="0.0" z="5.0" />
+                 <!-- <translate x="5.0" y="0.0" z="5.0" /> -->
             </transformation>
 
             <animations>
-
+                <animationref id="anim1" />
+                <animationref id="circ3" />
             </animations>
 
             <materials>
                 <material id="cube_material" />
             </materials>
 
-            <texture id="none" />
+            <texture id="testText" length_s="1" length_t="1" />
+
+            <children>
+                <componentref id="cube_front_face" />
+                <componentref id="cube_back_face" />
+                <componentref id="cube_top_face" />
+                <componentref id="cube_bottom_face" />
+                <componentref id="cube_right_face" />
+                <componentref id="cube_left_face" />
+            </children>
+        </component>
+
+        <component id="cube2">
+ 
+            <transformation> 
+                 <!-- <translate x="5.0" y="0.0" z="5.0" /> -->
+            </transformation>
+
+            <animations>
+                <animationref id="circ2" />
+            </animations>
+
+            <materials>
+                <material id="cube_material" />
+            </materials>
+
+            <texture id="testText" length_s="1" length_t="1" />
 
             <children>
                 <componentref id="cube_front_face" />
@@ -213,7 +242,7 @@
             </transformation>
 
             <animations>
-                <animationref id="anim1" />
+                <!-- <animationref id="anim1" /> -->
                 <animationref id="circ1" />
             </animations>
 
