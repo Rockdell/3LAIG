@@ -5,31 +5,22 @@ class CircularAnimation extends Animation {
 
 	constructor(scene, span, center, radius, startang, rotang) {
 
-        super(scene);
-        this.span = span;
+        super(scene, span);
         this.center = center;
         this.radius = radius;
-        this.startang = startang;
-        this.rotang = rotang;
 
-        this.animtaing = true;
-        this.total_time = 0;
+        //Converted to Radians
+        this.startang = startang * (Math.PI / 180.0);
+        this.rotang = rotang * (Math.PI / 180.0);
 
-        this.angularVelocity = rotang / span;
-
-        let startMatrix = mat4.create();
-        mat4.translate(startMatrix, startMatrix, vec3.fromValues(center.x, center.y, center.z));
-        mat4.rotateY(startMatrix, startMatrix, (startang * Math.PI) / 180.0);
-        
-        this.transfMatrix = startMatrix;
+        //In RAD/S
+        this.angularVelocity = (rotang * (Math.PI / 180.0)) / span;
 
     }
     
     update(secondsElapsed) {
 
-        console.log("Total time: " + this.total_time);
-
-        //mat4.translate(this.transfMatrix, this.transfMatrix, vec3.fromValues(0.1,0,0));
+        console.log("Total time CIRCULAR: " + this.total_time + " - time elapsed: " + secondsElapsed);
 
         if (!this.animating)
             return;
@@ -37,13 +28,17 @@ class CircularAnimation extends Animation {
         if (this.total_time + secondsElapsed >= this.span) {
             //Calculates the time it takes to fully complete the animation and not go beyond the last control point
             secondsElapsed = this.span - this.total_time;
-            this.total_time = this.span;
             this.animating = false;
         }
 
         this.total_time += secondsElapsed;
 
+        let nextMatrix = mat4.create();
+        this.translateMatrix(nextMatrix, vec3.fromValues(this.center[0], this.center[1], this.center[2]));
+        this.rotateYMatrix(nextMatrix, (this.startang + this.angularVelocity * this.total_time));
+        this.translateMatrix(nextMatrix, vec3.fromValues(this.radius, 0, 0));
 
+        this.transfMatrix = nextMatrix;
     }
 
 }

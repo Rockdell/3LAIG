@@ -58,7 +58,7 @@ class XMLscene extends CGFscene {
     onGraphLoaded() {
 
         // Bind Components with materials
-        this.graph.bindCompMat();
+        this.graph.bindComponentsMaterials();
         
         // Create primitives
         this.graph.createPrimitives();
@@ -70,7 +70,7 @@ class XMLscene extends CGFscene {
         this.graph.createTextures();
 
         // Create animations
-        this.graph.createAnimations();
+        this.graph.createBindComponentsAnimations();
 
         // Initialize axis
         this.initAxis();
@@ -310,8 +310,16 @@ class XMLscene extends CGFscene {
         if (!this.sceneInited)
             return;
 
-        for(let anim in this.graph.displayAnimations) {
-            this.graph.displayAnimations[anim].update(this.deltaTime/1000.0);
+        for (let compKey in this.graph.componentsAnimations) {
+
+            let anim = this.graph.componentsAnimations[compKey]["animations"];
+            console.log("update: " + anim[animations]);
+            anim.update(this.deltaTime / 1000.0);
+          
+            /* for (let i = 0; i < anims.length; i++)
+                anims[i].update(this.deltaTime / 1000.0); */
+
+            //this.graph.displayAnimations[anim].update(this.deltaTime/1000.0);
         }
 
         //console.log(this.deltaTime);

@@ -78,20 +78,14 @@ class MySceneGraph {
     /**
 	 * Binds the components with the respective materials
 	 */
-    bindCompMat() {
+    bindComponentsMaterials() {
 
         const { components } = this.parsedXML;
 
         this.compMat = {};
 
-        for (let componentKey in components) {
-            //let component = components[componentKey];
-
-            //let obj = {};
-            //obj.currMat = 0;
-
+        for (let componentKey in components)
             this.compMat[componentKey] = 0;
-        }
 
         console.log('Binded components and primitives.');
     }
@@ -191,13 +185,54 @@ class MySceneGraph {
     /**
     * Create animations from parsed data.
     */
-    createAnimations() {
+    createBindComponentsAnimations() {
 
         const { animations } = this.parsedXML;
+        const { components } = this.parsedXML;
+        
+        this.componentsAnimations = {};
+        
+        for (let componentKey in components) {
 
-        this.displayAnimations = {};
+            let aux_anim = [];
 
-        for (let animID in animations) {
+            let currComp = components[componentKey];
+   
+            //If it contains the animations section
+            if(!currComp.animations)
+                continue;
+                
+            //And if that section contains any animations
+            if(currComp.animations.list.length == 0)
+                continue;         
+
+            for (let i = 0; i < currComp.animations.list.length; i++) {
+                let currAnimID = currComp.animations.list[i].id;
+                let currAnim = animations[currAnimID];
+
+                //console.log(currAnimID.id);
+                if (currAnim.type == "linear") {
+                    console.log("Linear animation created! : " + currAnimID);
+                    aux_anim.push(new LinearAnimation(this.scene, currAnim.span, currAnim.list));
+                }
+                else if(currAnim.type == "circular") {
+                    console.log("Circular animation created! : " + currAnimID);
+                    aux_anim.push(new CircularAnimation(this.scene, currAnim.span, vec3.fromValues(currAnim.x, currAnim.y, currAnim.z), currAnim.radius, currAnim.startang, currAnim.rotang));
+                }
+            }
+            //console.log(aux_anim);
+
+            //Tells the first animation to activate
+            aux_anim[0].animating = true;
+
+            let obj = {};
+            obj['animations'] = aux_anim;
+            obj['animIndex'] = 0;
+
+            this.componentsAnimations[componentKey] = obj;
+        }
+
+        /* for (let animID in animations) {
 
             let currAnim = animations[animID];
 
@@ -205,9 +240,13 @@ class MySceneGraph {
                 console.log("Linear animation created! : " + animID);
                 this.displayAnimations[animID] = new LinearAnimation(this.scene, currAnim.span, currAnim.list);
             }
-        }
+            else if(currAnim.type == "circular") {
+                console.log("Circular animation created! : " + animID);
+                this.displayAnimations[animID] = new CircularAnimation(this.scene, currAnim.span, vec3.fromValues(currAnim.x, currAnim.y, currAnim.z), currAnim.radius, currAnim.startang, currAnim.rotang);
+            }
+        } */
 
-        console.log('Loaded animations.');
+        console.log('Loaded animations and binded them with their respectives components.');
     }
 
     /**
@@ -367,14 +406,25 @@ class MySceneGraph {
 
     applyAnimations(currentComp) {
 
-        if(!currentComp.animations)
+        //If it contains the animations section
+        if (!currentComp.animations)
             return;
 
-        for (let i = 0; i < currentComp.animations.list.length; i++) {
-            //console.log(currentComp.animations.list[i].id);
-            console.log("F: " + this.displayAnimations[currentComp.animations.list[i].id].transfMatrix);
-            this.displayAnimations[currentComp.animations.list[i].id].apply();
-            console.log("S: " + this.displayAnimations[currentComp.animations.list[i].id].transfMatrix);
+        //And if that section contains any animations
+        if (currentComp.animations.list.length == 0)
+            return;
+
+        let componentAnimations = this.componentsAnimations[currentComp.id];
+
+        for (let i = 0; i < componentAnimations.length; i++) {
+            componentAnimations[i].apply();
+            console.log("YEAHHHHH - " + componentAnimations[i + 1].finalMatrixApplied);
+            if (componentAnimations[i].finalMatrixApplied) {
+                if (i + 1 < componentAnimations.length) {
+                    console.log("YEAH - " + componentAnimations[i + 1].finalMatrixApplied);
+                    componentAnimations[i + 1].animating = true;
+                }
+            }
         }
     }
 
