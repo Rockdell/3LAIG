@@ -25,9 +25,9 @@ serialInclude([
     '../primitives/MyTorus.js',
     '../primitives/MyPlane.js',
     '../primitives/MyPatch.js',
-    'Animation.js',
-    'LinearAnimation.js',
-    'CircularAnimation.js',
+    '../animations/Animation.js',
+    '../animations/LinearAnimation.js',
+    '../animations/CircularAnimation.js',
 
     main = function () {
 

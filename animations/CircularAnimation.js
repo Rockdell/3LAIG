@@ -20,7 +20,7 @@ class CircularAnimation extends Animation {
     
     update(secondsElapsed) {
 
-        console.log("Total time CIRCULAR: " + this.total_time + " - time elapsed: " + secondsElapsed);
+        //console.log("Total time CIRCULAR: " + this.total_time + " - time elapsed: " + secondsElapsed);
 
         if (!this.animating)
             return;

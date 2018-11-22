@@ -7,6 +7,8 @@ class MyPlane extends CGFobject {
         this.scene = scene;
         this.npartsU = npartsU;
         this.npartsV = npartsV;
+
+        this.nurbs = null;
         
         this.initNurbs();
     }
@@ -39,7 +41,7 @@ class MyPlane extends CGFobject {
         return new CGFnurbsSurface(index1, index2, controlVertexes);
     }
 
-    drawFace() {
+    display() {
         this.nurbs.display();
     }
 }
