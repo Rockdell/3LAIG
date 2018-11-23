@@ -122,6 +122,18 @@ class MySceneGraph {
                 case 'torus':
                     this.displayPrimitives[primID] = new MyTorus(this.scene, currPrim.inner, currPrim.outer, currPrim.slices, currPrim.loops);
                     break;
+                case 'plane':
+                    this.displayPrimitives[primID] = new MyPlane(this.scene, currPrim.npartsU, currPrim.npartsV);
+                    break;
+                case 'patch':
+                    this.displayPrimitives[primID] = new MyPatch(this.scene, currPrim.npointsU, currPrim.npointsV, currPrim.npartsU, currPrim.npartsV, currPrim.list);
+                    break;
+                case 'terrain':
+                    this.displayPrimitives[primID] = new MyTerrain(this.scene, currPrim.idtexture, currPrim.idheightmap, currPrim.parts, currPrim.heightscale);
+                    break;
+                case 'water':
+                    this.displayPrimitives[primID] = new MyWater(this.scene, currPrim.idtexture, currPrim.idwavemap, currPrim.parts, currPrim.heightscale, currPrim.texscale);
+                    break;
             }
         }
 
@@ -289,7 +301,8 @@ class MySceneGraph {
             else
                 appearance.setTexture(null);
 
-            appearance.apply();
+            if (!(primitives[id].type === 'terrain' || primitives[id].type === 'water'))
+                appearance.apply();
 
             // Draw element
             this.displayPrimitives[id].display();

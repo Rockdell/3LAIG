@@ -20,19 +20,21 @@ class MyPatch extends CGFobject {
 
     generateSurface() {
 
+        let index = 0;
+
         let controlVertexes = [];
 
         for(let u = 0; u < this.npointsU; u++) {
             let tmp = [];
 
-            for(let v = 0; v < this.npointsV; u++) {
-                let cp = this.controlPoints[u][v];
+            for(let v = 0; v < this.npointsV; v++) {
+                let cp = this.controlPoints[index++];
                 tmp.push([cp.x, cp.y, cp.z, 1])
             }
 
             controlVertexes.push(tmp);
         }
-
+        
         return new CGFnurbsSurface(this.npointsU - 1, this.npointsV - 1, controlVertexes);
     }
 

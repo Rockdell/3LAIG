@@ -208,10 +208,10 @@ function makeYasStructure() {
 					},
 					patch: {
 						attributes: [["npointsU", "ii"], ["npointsV", "ii"], ["npartsU", "ii"], ["npartsV", "ii"]],
-						options: ["type"],
+						options: ["type", "list"],
 						controlpoint: {
 							attributes: [["x", "ff"], ["y", "ff"], ["z", "ff"]],
-							options: ["list"]
+							options: []
 						}
 					},
 					vehicle: {

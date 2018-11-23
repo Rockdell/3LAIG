@@ -1,29 +1,31 @@
-
-//idtexture, idheightmap, parts heightscale
-
 class MyTerrain extends MyPlane {
 
-    constructor(scene, idTexture, idHeightMap, parts, heigthScale) {
+    constructor(scene, idTexture, idHeightMap, parts, heightScale) {
         super(scene, parts, parts);
 
         this.idTexture = idTexture;
         this.idHeightMap = idHeightMap
-        this.heigthScale = heigthScale;
+        this.heightScale = heightScale;
 
-        this.texture = scene.displayTextures[idTexture];
+        this.texture = scene.graph.displayTextures[idTexture];
+        this.heightmap = scene.graph.displayTextures[idHeightMap];
         this.shader = null;
 
         this.initShaders();
     }
 
-    initShader() {
-        this.shader = new CGFshader(this.gl, ".vert", ".frag");
-        this.shader.setUniformsValues({uSampler2: this.heigthScale});
+    initShaders() {
+        this.shader = new CGFshader(this.scene.gl, "../shaders/terrain.glsl", "../shaders/fragment.glsl");
+        this.shader.setUniformsValues({uSampler2: 1, uHeightScale: this.heightScale});
     }
 
     display() {
+        this.texture.bind();
+        this.heightmap.bind(1);
         this.scene.setActiveShader(this.shader);
-        this.nurbs.display();            
-        this.scene.setActiveShader(this.defaultShader);
+
+        this.nurbs.display();
+        
+        this.scene.setActiveShader(this.scene.defaultShader);
     }
 }

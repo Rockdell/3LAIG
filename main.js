@@ -25,6 +25,8 @@ serialInclude([
     '../primitives/MyTorus.js',
     '../primitives/MyPlane.js',
     '../primitives/MyPatch.js',
+    '../primitives/MyTerrain.js',
+    '../primitives/MyWater.js',
     '../animations/Animation.js',
     '../animations/LinearAnimation.js',
     '../animations/CircularAnimation.js',
@@ -46,7 +48,7 @@ serialInclude([
         // get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
         // or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
 
-        let filename = getUrlVars()['file'] || 'anim.xml';
+        let filename = getUrlVars()['file'] || 'shaders.xml';
 
         // create and load graph, and associate it to scene. 
         // Check console for loading errors

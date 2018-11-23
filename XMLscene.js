@@ -59,15 +59,15 @@ class XMLscene extends CGFscene {
 
         // Bind Components with materials
         this.graph.bindComponentsMaterials();
-        
-        // Create primitives
-        this.graph.createPrimitives();
 
         // Create materials
         this.graph.createMaterials();
 
         // Create textures
         this.graph.createTextures();
+
+        // Create primitives
+        this.graph.createPrimitives();
 
         // Create animations
         this.graph.createBindComponentsAnimations();

@@ -1,0 +1,104 @@
+<yas>
+
+    <scene root="root" axis_length="2.0" />
+
+    <views default="perspective">
+        <perspective id="perspective" near="0.1" far="500.0" angle="60">
+            <from x="10.0" y="10.0" z="10.0" />
+            <to x="0.0" y="0.0" z="0.0" />
+        </perspective>
+    </views>
+
+    <ambient>
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
+        <background r="0.0" g="0.75" b="1.0" a="1.0" />
+    </ambient>
+
+    <lights>
+        <omni id="light" enabled="1">
+            <location x="6.0" y="6.0" z="1.0" w="1.0" />
+            <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+        </omni>
+		
+		 <omni id="light2" enabled="1">
+            <location x="3.5" y="6.0" z="6.0" w="1.0" />
+            <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+        </omni>
+	
+        <omni id="light3" enabled="1">
+            <location x="0.1" y="8.0" z="1.0" w="1.0" />
+            <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+        </omni>
+
+        <spot id="light4" enabled="0" angle="35" exponent="0.1">
+            <location x="-6.0" y="3.0" z="3.0" w="1.0" />
+            <target x="0.0" y="3.0" z="3.0" />
+            <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+        </spot>
+    </lights>
+
+    <textures>
+        <texture id="test" file="images/testTexture.jpg" />>
+        <texture id="terrainmap" file="images/terrainmap.jpg" />
+        <!-- <texture id="waves" file="images/wavemap.jpg" /> -->
+    </textures>
+
+    <materials>
+        <material id="cube_material" shininess="1.0">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="0.4" g="0.4" b="0.4" a="1.0" />
+            <diffuse r="0.4" g="0.4" b="0.4" a="1.0" />
+            <specular r="0.0" g="0.0" b="0.0" a="1.0" />
+        </material>
+    </materials>
+
+    <transformations>
+        <transformation id="test_transl">
+            <translate x="0.0" y="2.5" z="0.3" />
+        </transformation>
+    </transformations>
+
+    <animations> </animations>
+
+    <primitives>
+        <primitive id="terrain_prim">
+            <!-- <terrain idtexture="test" idheightmap="terrainmap" parts="50" heightscale="1" /> -->
+            <!-- <plane npartsU="20" npartsV="20" /> -->
+            <!-- <water idtexture="test" idwavemap="terrainmap" parts="50" heightscale="1" texscale="1" />> -->
+            <patch npointsU="3" npointsV="2" npartsU="20" npartsV="20">
+                <controlpoint x="-4" y="0" z="4" />
+                <controlpoint x="-4" y="0" z="-4" />
+                <controlpoint x="0" y="2" z="4" />
+                <controlpoint x="0" y="2" z="-4" />
+                <controlpoint x="4" y="0" z="4" />
+                <controlpoint x="4" y="0" z="-4" />
+            </patch>
+        </primitive>
+    </primitives>
+
+    <components>
+        <component id="root">
+
+            <transformation> </transformation>
+
+            <materials>
+                <material id="cube_material" />
+            </materials>
+
+            <texture id="none" />
+
+            <children>
+                <primitiveref id="terrain_prim" />
+            </children>
+        </component>
+    </components>
+
+</yas>
