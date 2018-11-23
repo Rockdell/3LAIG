@@ -216,7 +216,7 @@ function makeYasStructure() {
 					},
 					vehicle: {
 						attributes: [],
-						options: []
+						options: ["type"]
 					},
 					cylinder2: {
 						attributes: [["base", "ff"], ["top", "ff"], ["height", "ff"], ["slices", "ii"], ["stacks", "ii"]],

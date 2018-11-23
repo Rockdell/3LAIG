@@ -8,13 +8,7 @@ class MyPlane extends CGFobject {
         this.npartsU = npartsU;
         this.npartsV = npartsV;
 
-        this.nurbs = null;
-        
-        this.initNurbs();
-    }
-
-    initNurbs() {
-        this.nurbs = new CGFnurbsObject(this.scene, this.npartsU, this.npartsV, this.generateSurface(1, 1));
+        this.nurbs = new CGFnurbsObject(this.scene, this.npartsU, this.npartsV, this.generateSurface());
     }
 
     generateSurface() {

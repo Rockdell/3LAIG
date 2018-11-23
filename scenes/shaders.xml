@@ -46,9 +46,10 @@
     </lights>
 
     <textures>
-        <texture id="test" file="images/testTexture.jpg" />>
+        <texture id="test" file="images/testTexture.jpg" />
         <texture id="terrainmap" file="images/terrainmap.jpg" />
-        <!-- <texture id="waves" file="images/wavemap.jpg" /> -->
+        <texture id="waves" file="images/wavemap.jpg" />
+        <texture id="soviet" file="images/mesh.png" />
     </textures>
 
     <materials>
@@ -70,17 +71,19 @@
 
     <primitives>
         <primitive id="terrain_prim">
-            <!-- <terrain idtexture="test" idheightmap="terrainmap" parts="50" heightscale="1" /> -->
+            <!-- <terrain idtexture="test" idheightmap="soviet" parts="100" heightscale="1" /> -->
             <!-- <plane npartsU="20" npartsV="20" /> -->
-            <!-- <water idtexture="test" idwavemap="terrainmap" parts="50" heightscale="1" texscale="1" />> -->
-            <patch npointsU="3" npointsV="2" npartsU="20" npartsV="20">
+            <!-- <water idtexture="test" idwavemap="soviet" parts="100" heightscale="1" texscale="1" /> -->
+            <!-- <patch npointsU="3" npointsV="2" npartsU="20" npartsV="20">
                 <controlpoint x="-4" y="0" z="4" />
                 <controlpoint x="-4" y="0" z="-4" />
                 <controlpoint x="0" y="2" z="4" />
                 <controlpoint x="0" y="2" z="-4" />
                 <controlpoint x="4" y="0" z="4" />
                 <controlpoint x="4" y="0" z="-4" />
-            </patch>
+            </patch> -->
+            <vehicle/>
+            <!-- <cylinder base="2" top="1" height="6" slices="10" stacks="10" />> -->
         </primitive>
     </primitives>
 
@@ -93,7 +96,7 @@
                 <material id="cube_material" />
             </materials>
 
-            <texture id="none" />
+            <texture id="test" length_s="1" length_t="1" />
 
             <children>
                 <primitiveref id="terrain_prim" />

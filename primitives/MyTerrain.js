@@ -11,10 +11,6 @@ class MyTerrain extends MyPlane {
         this.heightmap = scene.graph.displayTextures[idHeightMap];
         this.shader = null;
 
-        this.initShaders();
-    }
-
-    initShaders() {
         this.shader = new CGFshader(this.scene.gl, "../shaders/terrain.glsl", "../shaders/fragment.glsl");
         this.shader.setUniformsValues({uSampler2: 1, uHeightScale: this.heightScale});
     }

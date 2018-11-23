@@ -25,6 +25,7 @@ serialInclude([
     '../primitives/MyTorus.js',
     '../primitives/MyPlane.js',
     '../primitives/MyPatch.js',
+    '../primitives/MyVehicle.js',
     '../primitives/MyTerrain.js',
     '../primitives/MyWater.js',
     '../animations/Animation.js',

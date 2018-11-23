@@ -13,10 +13,6 @@ class MyWater extends MyPlane {
         this.initialTime = Date.now();
         this.shader = null;
 
-        this.initShaders();
-    }
-
-    initShaders() {
         this.shader = new CGFshader(this.scene.gl, "../shaders/water.glsl", "../shaders/fragment.glsl");
         this.shader.setUniformsValues({uSampler2: 1, uHeightScale: this.heigthScale, uTexScale: this.texScale});
     }

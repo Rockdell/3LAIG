@@ -11,10 +11,6 @@ class MyPatch extends CGFobject {
         this.npartsV = npartsV;
         this.controlPoints =  controlPoints;
 
-        this.initNurbs();
-    }
-
-    initNurbs() {
         this.nurbs = new CGFnurbsObject(this.scene, this.npartsU, this.npartsV, this.generateSurface());
     }
 
