@@ -33,6 +33,7 @@ class MyCylinder extends CGFobject {
 		var alpha = (2 * Math.PI) / this.slices;
 		var stackRadiusInc = (this.top - this.base) / this.stacks;
 		var stackHeight = this.height / this.stacks;
+		var texStackHeight = 1.0 / this.stacks;
 		var sliceHeight = 1.0 / this.slices;
 		var ind = 0;
 
@@ -72,10 +73,10 @@ class MyCylinder extends CGFobject {
 				this.normals.push(vx2, vy2, 0);
 
 				//Texture Coordinates
-				this.texCoords.push(sliceHeight * i, stackHeight * j);
-				this.texCoords.push(sliceHeight * (i + 1), stackHeight * j);
-				this.texCoords.push(sliceHeight * i, stackHeight * (j + 1));
-				this.texCoords.push(sliceHeight * (i + 1), stackHeight * (j + 1));
+				this.texCoords.push(sliceHeight * i, -texStackHeight * j);
+				this.texCoords.push(sliceHeight * (i + 1), -texStackHeight * j);
+				this.texCoords.push(sliceHeight * i, -texStackHeight * (j + 1));
+				this.texCoords.push(sliceHeight * (i + 1), -texStackHeight * (j + 1));
 			}
 		}
 

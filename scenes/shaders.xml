@@ -84,6 +84,11 @@
             </patch> -->
             <vehicle/>
             <!-- <cylinder base="2" top="1" height="6" slices="10" stacks="10" />> -->
+            <!-- <cylinder2 base="2" top="1" height="6.0" slices="10" stacks="10" /> -->
+        </primitive>
+
+        <primitive id="cylinder">
+            <cylinder base="2" top="1" height="6.0" slices="10" stacks="10" />
         </primitive>
     </primitives>
 
@@ -96,10 +101,28 @@
                 <material id="cube_material" />
             </materials>
 
-            <texture id="test" length_s="1" length_t="1" />
+            <texture id="test" length_s="1.0" length_t="1.0" />
 
             <children>
+                <componentref id="hi" />
                 <primitiveref id="terrain_prim" />
+            </children>
+        </component>
+
+         <component id="hi">
+
+            <transformation> 
+                <translate x="5.0" y="0.0" z="0.0" />
+            </transformation>
+
+            <materials>
+                <material id="cube_material" />
+            </materials>
+
+            <texture id="test" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="cylinder" />
             </children>
         </component>
     </components>

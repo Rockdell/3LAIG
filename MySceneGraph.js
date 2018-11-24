@@ -128,6 +128,9 @@ class MySceneGraph {
                 case 'patch':
                     this.displayPrimitives[primID] = new MyPatch(this.scene, currPrim.npointsU, currPrim.npointsV, currPrim.npartsU, currPrim.npartsV, currPrim.list);
                     break;
+                case 'cylinder2':
+                    this.displayPrimitives[primID] = new MyCylinder2(this.scene, currPrim.base, currPrim.top, currPrim.height, currPrim.slices, currPrim.stacks);
+                    break;
                 case 'vehicle':
                     this.displayPrimitives[primID] = new MyVehicle(this.scene);
                     break;

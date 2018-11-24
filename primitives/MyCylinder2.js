@@ -1,5 +1,5 @@
 
-class MyCilinder2 {
+class MyCylinder2 extends CGFobject {
 
     constructor(scene, base, top, height, slices, stacks) {
         super(scene);
@@ -14,42 +14,58 @@ class MyCilinder2 {
     }
 
     initNurbs() {
-        this.nurbs = new CGFnurbsObject();
+        this.nurbs = new CGFnurbsObject(this.scene, this.slices, this.stacks, this.generateSurface());
     }
 
     generateSurface() {
 
-        var alpha = (2 * Math.PI) / this.slices;
-        var stackRadiusInc = (this.top - this.base) / this.stacks;
-        var stackHeight = this.height / this.stacks;
+        let controlVertexes = [
 
-        for (let j = 0; j < this.stacks; j++) {
-			let stackRadius = this.base + j * stackRadiusInc;
-			let stackRadiusNext = this.base + (j + 1) * stackRadiusInc;
+			[[0, this.top, this.height, 1], [0, this.base, 0, 1]],
 
-			for (let i = 0; i < this.slices; i++) {
-				//Vertices
-				var vx1 = stackRadius * Math.cos(i * alpha);
-				var vx2 = stackRadius * Math.cos((i + 1) * alpha);
-				var vx3 = stackRadiusNext * Math.cos(i * alpha);
-				var vx4 = stackRadiusNext * Math.cos((i + 1) * alpha);
+			[[this.top, this.top, this.height, 1], [this.base, this.base, 0, 1]],
 
-				var vy1 = stackRadius * Math.sin(i * alpha);
-				var vy2 = stackRadius * Math.sin((i + 1) * alpha);
-				var vy3 = stackRadiusNext * Math.sin(i * alpha);
-				var vy4 = stackRadiusNext * Math.sin((i + 1) * alpha);
+			[[this.top, 0, this.height, 1], [this.base, 0, 0, 1]],
 
-				var vz1 = j * stackHeight;
-				var vz2 = (j + 1) * stackHeight;
+			// [ [this.top, -this.top, this.height, 1], [this.base, -this.base, 0, 1]],
 
-				this.vertices.push(vx1, vy1, vz1);
-				this.vertices.push(vx2, vy2, vz1);
-				this.vertices.push(vx3, vy3, vz2);
-				this.vertices.push(vx4, vy4, vz2);
-			}
-		}
+			// [[0, -this.top, this.height, 1], [0, -this.base, 0, 1]],
 
+			// [[-this.top, -this.top, this.height, 1], [-this.base, -this.base, 0, 1]],
 
+			// [[-this.top, 0, this.height, 1], [-this.base, 0, 0, 1]],
+
+			// [[-this.top, this.top, this.height, 1], [-this.base, this.base, 0, 1]],
+
+			// [[0, this.top, this.height, 1], [0, this.base, 0, 1]]
+		];
+
+        // var alpha = (2 * Math.PI) / this.slices;
+        // var stackRadiusInc = (this.top - this.base) / this.stacks;
+        // var stackHeight = this.height / this.stacks;
+
+		// for (let i = 0; i <= this.slices; i++) {
+
+		// 	let partU = [];
+
+		// 	let vx = Math.cos(i * alpha);
+		// 	let vy = Math.sin(i * alpha);
+				
+		// 	for (let j = 0; j <= this.stacks; j++) {
+
+		// 		let stackRadius = this.base + j * stackRadiusInc;
+
+		// 		let vx1 = vx * stackRadius;
+		// 		let vy1 = vy * stackRadius;
+		// 		let vz1 = j * stackHeight;
+
+		// 		partU.push([vx1, vy1, vz1, 1]);
+		// 	}
+
+		// 	controlVertexes.push(partU);
+		// }
+
+		return new CGFnurbsSurface(2, 1, controlVertexes);
     }
 
     display() {
