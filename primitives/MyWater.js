@@ -1,11 +1,11 @@
 class MyWater extends MyPlane {
 
-    constructor(scene, idTexture, idWaveMap, parts, heigthScale, texScale) {
+    constructor(scene, idTexture, idWaveMap, parts, heightScale, texScale) {
         super(scene, parts, parts);
 
         this.idTexture = idTexture;
         this.idHeightMap = idWaveMap
-        this.heigthScale = heigthScale;
+        this.heightScale = heightScale;
         this.texScale = texScale;
 
         this.texture = scene.graph.displayTextures[idTexture];
@@ -14,7 +14,7 @@ class MyWater extends MyPlane {
         this.shader = null;
 
         this.shader = new CGFshader(this.scene.gl, "../shaders/water.glsl", "../shaders/fragment.glsl");
-        this.shader.setUniformsValues({uSampler2: 1, uHeightScale: this.heigthScale, uTexScale: this.texScale});
+        this.shader.setUniformsValues({uSampler2: 1, uHeightScale: this.heightScale, uTexScale: this.texScale});
     }
 
     display() {

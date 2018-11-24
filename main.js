@@ -16,7 +16,7 @@ serialInclude([
     'XMLscene.js',
     'MySceneGraph.js',
     'MyInterface.js',
-    'MyYasModel.js',
+    'MyYasSchema.js',
     'MyParser.js',
     '../primitives/MyTriangle.js',
     '../primitives/MyRectangle.js',
@@ -50,7 +50,7 @@ serialInclude([
         // get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
         // or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
 
-        let filename = getUrlVars()['file'] || 'shaders.xml';
+        let filename = getUrlVars()['file'] || 'test.xml';
 
         // create and load graph, and associate it to scene. 
         // Check console for loading errors
@@ -59,5 +59,4 @@ serialInclude([
         // start
         app.run();
     }
-
 ]);

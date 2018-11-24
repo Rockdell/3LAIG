@@ -152,9 +152,9 @@
             <controlpoint x="0" y="0" z="0" /> -->
         </linear>
 
-        <circular id="circ1" span="10" x="0" y="0" z="0" radius="3" startang="0" rotang="-3600" />
-        <circular id="circ2" span="10" x="0" y="0" z="0" radius="5" startang="0" rotang="3600" />
-        <circular id="circ3" span="5" x="0" y="0" z="0" radius="9.8995" startang="-225" rotang="-720" />
+        <circular id="circ1" span="10" center="0 0 0" radius="3" startang="0" rotang="-3600" />
+        <circular id="circ2" span="10" center="0 0 0" radius="5" startang="0" rotang="3600" />
+        <circular id="circ3" span="5" center="0 0 0" radius="9.8995" startang="-225" rotang="-720" />
     </animations>
 
     <primitives>

@@ -8,7 +8,6 @@ class MyVehicle extends CGFobject {
         this.npartsU = 50;
         this.npartsV = 50;
 
-
         // Top Disk
         let bottom = vec3.fromValues(-1, 0, 0);
         let middle = vec3.fromValues(-0.75, 0.2, 0);

@@ -135,6 +135,8 @@
         </transformation>
     </transformations>
 
+    <animations></animations>
+
     <primitives>
         <primitive id="cube_face">
             <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5" />
@@ -234,6 +236,10 @@
             <transformation>
               
             </transformation>
+
+            <animations>
+
+            </animations>
 
             <materials>
                 <material id="reflective" />

@@ -16,8 +16,8 @@ class MySceneGraph {
         this.scene = scene;
         scene.graph = this;
 
-        // XML structure of the YAS file, including, order of attributes/elements, variable types and save options
-        this.structure = makeYasStructure();
+        // XML schema of the YAS file, including, order of attributes/elements, variable types and save options
+        this.schema = makeYasSchema();
 
         // Parsed XML
         this.parsedXML = null;
@@ -62,7 +62,7 @@ class MySceneGraph {
 
         let parser = new MyParser(this);
 
-        this.parsedXML = parser.parseBlock(rootElement, this.structure.yas);
+        this.parsedXML = parser.parseBlock(rootElement, this.schema.yas);
 
         if (this.parsedXML == null)
             return;
@@ -72,7 +72,7 @@ class MySceneGraph {
 
         this.loadedOk = true;
 
-        this.log('Parsed and checked XML document.');
+        console.log('Parsed and checked XML document.');
     }
 
     /**
@@ -171,7 +171,6 @@ class MySceneGraph {
         }
 
         console.log('Loaded materials.');
-
     }
 
     /**
@@ -228,17 +227,11 @@ class MySceneGraph {
                 let currAnimID = currComp.animations.list[i].id;
                 let currAnim = animations[currAnimID];
 
-                //console.log(currAnimID.id);
-                if (currAnim.type == "linear") {
-                    console.log("Linear animation created! : " + currAnimID);
+                if (currAnim.type == "linear")
                     aux_anim.push(new LinearAnimation(this.scene, currAnim.span, currAnim.list));
-                }
-                else if(currAnim.type == "circular") {
-                    console.log("Circular animation created! : " + currAnimID);
-                    aux_anim.push(new CircularAnimation(this.scene, currAnim.span, vec3.fromValues(currAnim.x, currAnim.y, currAnim.z), currAnim.radius, currAnim.startang, currAnim.rotang));
-                }
+                else if(currAnim.type == "circular")
+                    aux_anim.push(new CircularAnimation(this.scene, currAnim.span, vec3.fromValues(currAnim.center.x, currAnim.center.y, currAnim.center.z), currAnim.radius, currAnim.startang, currAnim.rotang));
             }
-            //console.log(aux_anim);
 
             //Tells the first animation to activate
             aux_anim[0].animating = true;
@@ -262,7 +255,7 @@ class MySceneGraph {
             }
         } */
 
-        console.log('Loaded animations and binded them with their respectives components.');
+        console.log('Binded animations and components.');
     }
 
     /**
@@ -274,8 +267,6 @@ class MySceneGraph {
         if (this.changeMaterial) {
             for (let id in this.parsedXML.components) {
                 this.compMat[id] + 1 >= this.parsedXML.components[id].materials.list.length ? this.compMat[id] = 0 : this.compMat[id]++;
-                //console.log(id + " : " + this.compMat[id]);
-                //TODO Remove console.log
             }
         }
 

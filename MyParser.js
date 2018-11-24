@@ -29,6 +29,9 @@ class MyParser {
             case 'ff':
                 value = this.parseFloat(element, attribute);
                 break;
+            case 'ff ff ff':
+                value = this.parseSetFloat(element, attribute);
+                break;
             case 'ss':
                 value = this.parseString(element, attribute);
                 break;
@@ -86,6 +89,19 @@ class MyParser {
         return value;
     }
 
+    parseSetFloat(element, attribute) {
+
+        let floats = this.sceneGraph.reader.getString(element, attribute, false).split(' ');
+
+        let value = {
+            x: floats[0],
+            y: floats[1],
+            z: floats[2]
+        };
+
+        return value;
+    }
+
     /**
      * Parses a string.
      * @param element Element of the attribute.
@@ -112,7 +128,7 @@ class MyParser {
 
         let value = this.sceneGraph.reader.getString(element, attribute, false);
 
-        if (value == null || (value !== "x" && value !== "y" && value !== "z")) {
+        if (value == null || (value !== 'x' && value !== 'y' && value !== 'z')) {
             this.sceneGraph.onXMLError(`Attribute \"${attribute}\" is not a char (at \"${element.nodeName}\").`);
             return null;
         }
@@ -138,92 +154,67 @@ class MyParser {
     }
 
     /**
-     * Parses a block of XML, according to the defined structure.
+     * Parses a block of XML, according to the defined schema.
      * @param element Element to be parsed.
-     * @param structure Defined structure of the element.
+     * @param schema Defined schema of the element.
      */
-    parseBlock(element, structure) {
+    parseBlock(element, schema) {
 
-        const getAttrType = function (array, attr) {
+        const { attributes, options } = schema;
 
-            for (let i = 0; i < array.length; ++i) {
-                if (array[i][0] === attr)
-                    return array[i][1];
-            }
-            return null;
-        };
-
-        const { attributes, options } = structure;
-
-        // Create new object
         let obj = {};
 
-        // Check attribute order
-        if (this.validateBlock(element, structure))
+        if (this.validateBlock(element, schema) != 0)
             return null;
 
-        for (let i = 0; i < element.attributes.length; ++i) {
+        if (options.includes(opt.SAVE_TYPE)) obj['type'] = element.nodeName;
+        if (options.includes(opt.SAVE_LIST)) obj['list'] = [];
 
-            let attributeName = element.attributes[i].name;
+        for (let i = 0; i < element.attributes.length; i++) {
+            let attribute = element.attributes[i];
+            let name = attribute.name;
+            let type = attributes.find(function(a) { if(a.name === name) return a; }).type;
+            let value = this.parseAttribute(element, name, type)
 
-            let attributeType = getAttrType(attributes, attributeName);
+            if (value == null) return null;
 
-            if (element.hasAttribute(attributeName)) {
-
-                let value = this.parseAttribute(element, attributeName, attributeType);
-
-                if (value == null) return null;
-
-                obj[attributeName] = value;
-            }
+            obj[name] = value;
         }
 
-        // Check "type" option
-        if (options.includes('type'))
-            obj.type = element.nodeName;
-
-        // Check "list" option
-        if (options.includes('list'))
-            obj.list = [];
-
-        // Iterate through children
-        for (let i = 0; i < element.children.length; ++i) {
-
+        for (let i = 0; i < element.children.length; i++) {
             let child = element.children[i];
-            let childStructure = structure[child.nodeName];
-            let childBlock = this.parseBlock(child, childStructure);
+            let childSchema = schema[child.nodeName];
+            let childBlock = this.parseBlock(child, childSchema);
 
-            if (childStructure == null || childBlock == null)
+            if (childBlock == null || childSchema == null)
                 return null;
 
-            // Check "list" option
-            if (options.includes('list')) {
-                obj.list.push(childBlock);
+            if (options.includes(opt.SAVE_LIST)) {
+                obj['list'].push(childBlock);
             }
-            // Check "id" option
-            else if (childStructure.options.includes('id')) {
+            else if (childSchema.options.includes(opt.SAVE_ID)) {
 
-                // Check for existing ID
                 if (obj[childBlock.id]) {
                     this.sceneGraph.onXMLError(`Element with ID \"${childBlock.id}\" already exists (at \"${element.nodeName}\").`);
                     return null;
                 }
-                else
+                else {
                     obj[childBlock.id] = childBlock;
+                }
             }
-            else
+            else {
                 obj[child.nodeName] = childBlock;
+            }
         }
 
-        // Check "log" option
-        if (options.includes('log'))
+        if (options.includes(opt.LOG_TAG))
             this.sceneGraph.log(`Parsed element \"${element.nodeName}\".`);
 
         return obj;
     }
 
     /**
-     * Validates a block of XML, according to the defined structure.
+     * Validates a block of XML, according to the defined schema.
      * @param element Element to be validated
      * @param attributes Ordered list of the element's attributes.
      * @param tags Ordered list of the element's tags.
@@ -232,20 +223,20 @@ class MyParser {
      */
     validateBlock(element, { attributes, tags, options }) {
 
-        // Check parse error
+        // Check "parsererror"
         if (element.children.length > 0 && element.children[0].nodeName === "parsererror") {
             this.sceneGraph.onXMLError('Document is not a valid XML file.');
             return 1;
         }
 
         // Check "id" option
-        if (options.includes('id') && !element.hasAttribute('id')) {
+        if (options.includes(opt.SAVE_ID) && !element.hasAttribute('id')) {
             this.sceneGraph.onXMLError(`Element \"${element.nodeName}\" has no ID to be used.`);
             return 1;
         }
 
         // Check "order" option
-        if (options.includes('order') && tags.length === 0) {
+        if (options.includes(opt.ORDER_TAG) && tags.length === 0) {
             this.sceneGraph.onXMLError(`Element \"${element.nodeName}\" needs to define order of children.`);
             return 1;
         }
@@ -256,125 +247,162 @@ class MyParser {
             return 1;
         }
 
-        let attributesList = [];
-        for (let i = 0; i < attributes.length; ++i)
-            attributesList.push(attributes[i][0])
+        if (this.validateAttributes(element, attributes) != 0)
+            return 1;
 
-        for (let i = 0; i < attributes.length; ++i) {
 
-            let attributeName = attributes[i][0];
-            let attributeCode = attributes[i][2];
+        if (this.validateTags(element, tags, options) != 0)
+            return 1;
 
-            if (element.attributes[i] === undefined) {
+        return 0;
+    }
 
-                if (attributeCode === undefined || attributeCode !== "#") {
-                    this.sceneGraph.onXMLError(`Attribute \"${attributeName}\" is missing (at \"${element.nodeName}\").`);
-                    return 1;
-                }
+    validateAttributes(element, attributes) {
+
+        // Check if required attributes are present
+        let not_required = 0;
+
+        for (let i in attributes) {
+            let attribute = attributes[i];
+
+            if (element.hasAttribute(attribute.name)) {
+                if (element.attributes[i - not_required] == undefined || element.attributes[i - not_required].name != attribute.name)
+                    this.sceneGraph.onXMLMinorError(`Attribute \"${attribute.name}\" is out of order (at \"${element.nodeName}\").`);
             }
-            else if (attributeName !== element.attributes[i].name) {
-
-                if (!attributesList.includes(element.attributes[i].name)) {
-                    this.sceneGraph.onXMLError(`Attribute \"${element.attributes[i].name}\" is not expected (at \"${element.nodeName}\").`);
-                    return 1;
+            else {
+                if (!attribute.required) {
+                    not_required++;
+                    continue;
                 }
-                else if (!element.hasAttribute(attributeName)) {
 
-                    if (attributeCode === "#") continue;
-
-                    this.sceneGraph.onXMLError(`Attribute \"${attributeName}\" is missing (at \"${element.nodeName}\").`);
-                    return 1;
-                }
-                else
-                    this.sceneGraph.onXMLMinorError(`Attribute \"${attributeName}\" is out of order (at \"${element.nodeName}\").`);
+                this.sceneGraph.onXMLError(`Attribute \"${attribute.name}\" is missing (at \"${element.nodeName}\").`);
+                return 1;
             }
         }
 
-        // Check "order" option
-        if (options.includes('order')) {
+        // Check for unexpected attributes
+        for (let i = 0; i < element.attributes.length; i++) {
 
-            // Check number of children
-            if (element.children.length !== tags.length) {
-                this.sceneGraph.onXMLError(`Element \"${element.nodeName}\" has wrong number of children.`);
+            let attribute = element.attributes[i];
+
+            if (attributes.find(function (a) { if (a.name == attribute.name) return a; }) == undefined) {
+                this.sceneGraph.onXMLError(`Attribute \"${attribute.name}\" is not expected (at \"${element.nodeName}\").`)
                 return 1;
-            }
-
-            let childrenList = [];
-            for (let i = 0; i < element.children.length; ++i)
-                childrenList.push(element.children[i].nodeName)
-
-            // Check order of children
-            for (let i = 0; i < element.children.length; ++i) {
-
-                let childName = element.children[i].nodeName;
-
-                if (childName !== tags[i]) {
-
-                    if (!tags.includes(childName)) {
-                        this.sceneGraph.onXMLError(`Element \"${childName}\" is not expected (at \"${element.nodeName}\").`);
-                        return 1;
-                    }
-                    else if (!childrenList.includes(tags[i])) {
-                        this.sceneGraph.onXMLError(`Element \"${tags[i]}\" is missing (at \"${element.nodeName}\").`);
-                        return 1;
-                    }
-                    else
-                        this.sceneGraph.onXMLMinorError(`Tag \"${childName}\" is out of order (at \"${element.nodeName}\").`);
-                }
             }
         }
 
         return 0;
     }
 
-    /**
-     * Check YAS constraints on parsed data.
-     */
+    validateTags(element, tags, options) {
+
+        const hasTag = function(element, tag) {
+            for (let i = 0; i < element.children.length; i++) {
+                if (element.children[i].nodeName == tag.name)
+                    return true;
+            }
+            return false;
+        }
+
+        // Check if required tags are present
+        let not_required = 0;
+
+        for (let i in tags) {
+            let tag = tags[i];
+
+            if (hasTag(element, tag)) {
+                if (!options.includes(opt.ORDER_TAG)) continue;
+
+                if (element.children[i - not_required] == undefined || element.children[i - not_required].nodeName != tag.name)
+                    this.sceneGraph.onXMLMinorError(`Tag \"${tag.name}\" is out of order (at \"${element.nodeName}\").`);
+            }
+            else {
+                if (!tag.required) {
+                    not_required++;
+                    continue;
+                }
+
+                this.sceneGraph.onXMLError(`Tag \"${tag.name}\" is missing (at \"${element.nodeName}\").`);
+                return 1;
+            }
+        }
+
+        // Check for unexpected tags
+        for (let i = 0; i < element.children.length; i++) {
+            let tag = element.children[i];
+
+            if (tags.find(function (t) { if (t.name == tag.nodeName) return t; }) == undefined) {
+                this.sceneGraph.onXMLError(`Tag \"${tag.nodeName}\" is not expected (at \"${element.nodeName}\").`);
+                return 1;
+            }
+        }
+
+        return 0;
+    }
+
     checkConstraints(parsedXML) {
 
-        const { scene, views, lights, textures, materials, transformations, primitives, components } = parsedXML;
+        if (this.checkViews(parsedXML) != 0 || this.checkLights(parsedXML) != 0 || this.checkTextures(parsedXML) != 0
+            || this.checkMaterials(parsedXML) != 0 || this.checkTransformations(parsedXML) != 0 
+            || this.checkAnimations(parsedXML) != 0 || this.checkPrimitives(parsedXML) != 0 || this.checkComponents(parsedXML) != 0)
+            return 1;
 
-        // <views>
+        return 0;
+    }
+
+    checkViews({ views }) {
 
         // Check minimum number of views
         if (Object.keys(views).length < 2) {
-            this.sceneGraph.onXMLError('Need at least one view.');
+            this.sceneGraph.onXMLError(`Need at least one view.`);
             return 1;
         }
 
         // Check reference to default view
         if (!views[views.default])
-            this.sceneGraph.onXMLMinorError('Default view does not exist. Using another.'); 
+            this.sceneGraph.onXMLMinorError(`Default view does not exist. Using another.`); 
 
-        // <lights>
+        return 0;
+    }
+
+    checkLights({ lights }) {
 
         // Check minimum number of lights
         if (Object.keys(lights).length < 1) {
-            this.sceneGraph.onXMLError('Need at least one light.');
+            this.sceneGraph.onXMLError(`Need at least one light.`);
             return 1;
         }
 
-        // <textures>
+        return 0;
+    }
+
+    checkTextures({ textures }) {
 
         // Check minimum number of textures
         if (Object.keys(textures).length < 1) {
-            this.sceneGraph.onXMLError('Need at least one texture.');
+            this.sceneGraph.onXMLError(`Need at least one texture.`);
             return 1;
         }
 
-        // <materials
+        return 0;        
+    }
+
+    checkMaterials({ materials }) {
 
         // Check minimum number of materials
         if (Object.keys(materials).length < 1) {
-            this.sceneGraph.onXMLError('Need at least one material.');
+            this.sceneGraph.onXMLError(`Need at least one material.`);
             return 1;
         }
 
-        // <transformations>
+        return 0;
+    }
+
+    checkTransformations({ transformations }) {
 
         // Check minimum number of complex transformations
         if (Object.keys(transformations).length < 1) {
-            this.sceneGraph.onXMLError('Need at least one complex transformation.');
+            this.sceneGraph.onXMLError(`Need at least one complex transformation.`);
             return 1;
         }
 
@@ -386,27 +414,59 @@ class MyParser {
             }
         }
 
-        //<primitives>
+        return 0;
+    }
+
+    checkAnimations({ animations }) {
+
+        for (let key in animations) {
+
+            const animation = animations[key];
+
+            if (animation.type === 'linear' && animation.list.length < 2) {
+                this.sceneGraph.onXMLError(`Need at least two control points (at \"${key}\").`);
+                return 1;
+            }
+        }
+
+        return 0;
+    }
+
+    checkPrimitives({ primitives }) {
 
         // Check minimum number of primitives
         if (Object.keys(primitives).length < 1) {
-            this.sceneGraph.onXMLError('Need at least one primitive.');
+            this.sceneGraph.onXMLError(`Need at least one primitive.`);
             return 1;
         }
 
         // Check unique primitive type
         for (let key in primitives) {
+
             if (primitives[key].list.length !== 1) {
                 this.sceneGraph.onXMLError(`Can only have one primitive type (at \"${key}\").`);
                 return 1;
             }
+
+            const primitive = primitives[key].list[0];
+
+            if (primitive.type === 'patch' && primitive.list.length != primitive.npointsU * primitive.npointsV) {
+                this.scene.onXMLError(`Patch has wrong number of control points (at \"${key}\").`);
+                return 1;
+            }
         }
 
-        //<components>
+        return 0;
+    }
+
+    /**
+     * Check YAS constraints on parsed data.
+     */
+    checkComponents({ scene, textures, materials, animations, transformations, primitives, components }) {
 
         // Check minimum number of components
         if (Object.keys(components).length < 1) {
-            this.sceneGraph.onXMLError('Need at least one component.');
+            this.sceneGraph.onXMLError(`Need at least one component.`);
             return 1;
         }
 
@@ -432,6 +492,19 @@ class MyParser {
                 if (!transformations[transf]) {
                     this.sceneGraph.onXMLError(`Transformation \"${transf}\" does not exist (at \"${componentKey}\").`);
                     return 1;
+                }
+            }
+
+            // Check references to animations, if there are any
+            if (component.animations != undefined) {
+                for (let i = 0; i < component.animations.list.length; ++i) {
+
+                    const animation = component.animations.list[i].id;
+
+                    if (!animations[animation]) {
+                        this.sceneGraph.onXMLError(`Animation \"${animation}\" does not exist (at \"${componentKey}\").`);
+                        return 1;
+                    }
                 }
             }
 
@@ -471,13 +544,11 @@ class MyParser {
                     this.sceneGraph.onXMLMinorError(`Texture \"${texture}\" has length_s/length_t with value 0.0 (at \"${componentKey}\").`);
             }
 
-            if (texture !== 'none')
-
-                // Check minimum amount of children
-                if (Object.keys(component.children).length < 1) {
-                    this.sceneGraph.onXMLError(`Need at least one child per component (at \"${componentKey}\").`);
-                    return 1;
-                }
+            // Check minimum amount of children
+            if (Object.keys(component.children).length < 1) {
+                this.sceneGraph.onXMLError(`Need at least one child per component (at \"${componentKey}\").`);
+                return 1;
+            }
 
             // Check references to children
             for (let childKey in component.children) {
@@ -505,7 +576,7 @@ class MyParser {
 
         // Check reference to root
         if (!components[root]) {
-            this.sceneGraph.onXMLError('Component root does not exist.');
+            this.sceneGraph.onXMLError(`Component root does not exist.`);
             return 1;
         }
 
@@ -513,14 +584,14 @@ class MyParser {
         for (let i = 0; i < components[root].materials.list.length; ++i) {
 
             if (components[root].materials.list[i].id === 'inherit') {
-                this.sceneGraph.onXMLError('Component root cannot inherit a material (at \"${root}\").');
+                this.sceneGraph.onXMLError(`Component root cannot inherit a material (at \"${root}\").`);
                 return 1;
             }
         }
 
         // Check if root inherits texture
         if (components[root].texture.id === 'inherit') {
-            this.sceneGraph.onXMLError('Component root cannot inherit a texture (at \"${root}\").');
+            this.sceneGraph.onXMLError(`Component root cannot inherit a texture (at \"${root}\").`);
             return 1;
         }
 
@@ -550,7 +621,7 @@ class MyParser {
         };
 
         if (checkCyclicGraph(scene.root)) {
-            this.sceneGraph.onXMLError('Found a cycle in graph.');
+            this.sceneGraph.onXMLError(`Found a cycle in graph.`);
             return 1;
         }
 
