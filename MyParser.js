@@ -104,7 +104,7 @@ class MyParser {
             z: parseFloat(floats[2])
         };
 
-        if (value.x == NaN || value.y == NaN || value.z == NaN) {
+        if (isNaN(value.x) || isNaN(value.y) || isNaN(value.z)) {
             this.sceneGraph.onXMLError(`Attribute \"${attribute}\" is not a float (at \"${element.nodeName}\").`);
             return null;
         }

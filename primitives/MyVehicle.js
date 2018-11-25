@@ -12,28 +12,36 @@ class MyVehicle extends CGFobject {
         let bottom = vec3.fromValues(-1, 0, 0);
         let middle = vec3.fromValues(-0.75, 0.2, 0);
         let top = vec3.fromValues(-0.5, 0.2, 0);
-        this.topDisk = new CGFnurbsObject(this.scene, this.npartsU, this.npartsV, this.generateSurface(bottom, middle, top));
+
+        this.topDiskVertexes = this.generateControlVertexes(bottom, middle, top);
+        this.topDisk = new MyPatch(scene, this.topDiskVertexes.length / 3, 3, 50, 50, this.topDiskVertexes);
 
         // Bot disk
         bottom = vec3.fromValues(-0.5, -0.2, 0);
         middle = vec3.fromValues(-0.75, -0.2, 0);
         top = vec3.fromValues(-1, 0, 0);
-        this.botDisk = new CGFnurbsObject(this.scene, this.npartsU, this.npartsV, this.generateSurface(bottom, middle, top));
+
+        this.botDiskVertexes = this.generateControlVertexes(bottom, middle, top);
+        this.botDisk = new MyPatch(scene, this.botDiskVertexes.length / 3, 3, 50, 50, this.botDiskVertexes);
 
         // Top sphere
         bottom = vec3.fromValues(-0.5, 0.2, 0);
         middle = vec3.fromValues(-0.5, 0.7, 0);
         top = vec3.fromValues(0, 0.7, 0);
-        this.topSphere = new CGFnurbsObject(this.scene, this.npartsU, this.npartsV, this.generateSurface(bottom, middle, top));
 
-        // Bot sphere (replace with cylinder2)
+        this.topSphereVertexes = this.generateControlVertexes(bottom, middle, top);
+        this.topSphere = new MyPatch(scene, this.topSphereVertexes.length / 3, 3, 50, 50, this.topSphereVertexes);
+
+        // Bot sphere
         bottom = vec3.fromValues(0, -0.3, 0);
         middle = vec3.fromValues(-0.5, -0.3, 0);
-        top = vec3.fromValues(-0.5, -0.2, 0);        
-        this.botSphere = new CGFnurbsObject(this.scene, this.npartsU, this.npartsV, this.generateSurface(bottom, middle, top));
+        top = vec3.fromValues(-0.5, -0.2, 0);       
+        
+        this.botSphereVertexes = this.generateControlVertexes(bottom, middle, top);
+        this.botSphere = new MyPatch(scene, this.botSphereVertexes.length / 3, 3, 50, 50, this.botSphereVertexes);
     }
 
-    generateSurface(bottom, middle, top) {
+    generateControlVertexes(bottom, middle, top) {
 
         let controlVertexes = [];
 
@@ -41,13 +49,9 @@ class MyVehicle extends CGFobject {
         let anglePerLine = Math.PI / 24;
 
         do {
-            let nextControlPoint = [
-                [bottom[0], bottom[1], bottom[2], 1],
-                [middle[0], middle[1], middle[2], 1],
-                [top[0], top[1], top[2], 1]
-            ];
-
-            controlVertexes.push(nextControlPoint)
+            controlVertexes.push({ x: bottom[0], y: bottom[1], z: bottom[2] });
+            controlVertexes.push({ x: middle[0], y: middle[1], z: middle[2] });
+            controlVertexes.push({ x: top[0], y: top[1], z: top[2] });
 
             bottom = this.rotateY(bottom, anglePerLine);
             middle = this.rotateY(middle, anglePerLine);
@@ -57,7 +61,7 @@ class MyVehicle extends CGFobject {
 
         } while (currAngle < 2 * Math.PI);
         
-        return new CGFnurbsSurface(controlVertexes.length - 1, 2, controlVertexes);
+        return controlVertexes;
     }
 
     rotateY(vector, angle) {
