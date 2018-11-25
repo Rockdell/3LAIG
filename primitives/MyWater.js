@@ -22,7 +22,7 @@ class MyWater extends MyPlane {
         this.wavemap.bind(1);
         this.scene.setActiveShader(this.shader);
 
-        let currentTime = (Date.now() - this.initialTime) / (1000 * 5);
+        let currentTime = (Date.now() - this.initialTime) / (1000 * 10);
         this.shader.setUniformsValues({uTimeScale: currentTime});
         this.nurbs.display();
         

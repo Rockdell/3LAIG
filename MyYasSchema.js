@@ -265,7 +265,7 @@ function makeYasSchema() {
                     options: [opt.SAVE_ID, opt.SAVE_TYPE, opt.SAVE_LIST],
 
                     controlpoint: {
-                        attributes: [a("x", "ff"), a("y", "ff"), a("z", "ff")],
+                        attributes: [a("xx", "ff"), a("yy", "ff"), a("zz", "ff")],
                         tags: [],
 						options: []
                     }
@@ -340,7 +340,7 @@ function makeYasSchema() {
                         options: [opt.SAVE_TYPE, opt.SAVE_LIST],
                         
 						controlpoint: {
-                            attributes: [a("x", "ff"), a("y", "ff"), a("z", "ff")],
+                            attributes: [a("xx", "ff"), a("yy", "ff"), a("zz", "ff")],
                             tags: [],
 							options: []
 						}
