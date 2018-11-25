@@ -93,11 +93,21 @@ class MyParser {
 
         let floats = this.sceneGraph.reader.getString(element, attribute, false).split(' ');
 
+        if (floats == null) {
+            this.sceneGraph.onXMLError(`Attribute \"${attribute}\" is not a float (at \"${element.nodeName}\").`);
+            return null;
+        }
+
         let value = {
-            x: floats[0],
-            y: floats[1],
-            z: floats[2]
+            x: parseFloat(floats[0]),
+            y: parseFloat(floats[1]),
+            z: parseFloat(floats[2])
         };
+
+        if (value.x == NaN || value.y == NaN || value.z == NaN) {
+            this.sceneGraph.onXMLError(`Attribute \"${attribute}\" is not a float (at \"${element.nodeName}\").`);
+            return null;
+        }
 
         return value;
     }
