@@ -7,6 +7,7 @@ class Animation {
         this.scene = scene;
         this.span = span;
         this.animating = false;
+        this.isEnd = false;
         this.total_time = 0;
         this.transfMatrix = mat4.create();
     }
@@ -29,8 +30,8 @@ class Animation {
 
     apply() {
 
-        // if (!this.animating)
-        //     return;
+        if (this.isEnd)
+            return;
 
         this.scene.multMatrix(this.transfMatrix);
     }

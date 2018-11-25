@@ -89,6 +89,11 @@ class MyParser {
         return value;
     }
 
+    /**
+     * Parses a set of floats
+     * @param element Element of the attribute.
+     * @param attribute Name of the attribute.
+     */
     parseSetFloat(element, attribute) {
 
         let floats = this.sceneGraph.reader.getString(element, attribute, false).split(' ');
@@ -267,6 +272,11 @@ class MyParser {
         return 0;
     }
 
+    /**
+     * Validates the attributes of an element.
+     * @param element Element of the attributes to validate.
+     * @param attributes Attributes of the schema.
+     */
     validateAttributes(element, attributes) {
 
         // Check if required attributes are present
@@ -304,6 +314,12 @@ class MyParser {
         return 0;
     }
 
+    /**
+     * Validates the tags of an element.
+     * @param element Element of the tags to validate.
+     * @param tags Tags of the schema.
+     * @param options Options of the schema.
+     */
     validateTags(element, tags, options) {
 
         const hasTag = function(element, tag) {
@@ -350,6 +366,10 @@ class MyParser {
         return 0;
     }
 
+    /**
+     * Checks constraints of parsed XML.
+     * @param parsedXML Parsed XML.
+     */
     checkConstraints(parsedXML) {
 
         if (this.checkViews(parsedXML) != 0 || this.checkLights(parsedXML) != 0 || this.checkTextures(parsedXML) != 0
@@ -360,6 +380,10 @@ class MyParser {
         return 0;
     }
 
+    /**
+     * Checks views.
+     * @param views Views of parsed XML.
+     */
     checkViews({ views }) {
 
         // Check minimum number of views
@@ -375,6 +399,10 @@ class MyParser {
         return 0;
     }
 
+    /**
+     * Checks lights.
+     * @param lights Lights of parsed XML.
+     */
     checkLights({ lights }) {
 
         // Check minimum number of lights
@@ -386,6 +414,10 @@ class MyParser {
         return 0;
     }
 
+    /**
+     * Checks textures.
+     * @param textures Textures of parsed XML.
+     */
     checkTextures({ textures }) {
 
         // Check minimum number of textures
@@ -397,6 +429,10 @@ class MyParser {
         return 0;        
     }
 
+    /**
+     * Checks materials.
+     * @param materials Materials of parsed XML.
+     */
     checkMaterials({ materials }) {
 
         // Check minimum number of materials
@@ -408,6 +444,10 @@ class MyParser {
         return 0;
     }
 
+    /**
+     * Checks transformations.
+     * @param transformations Transformations of parsed XML.
+     */
     checkTransformations({ transformations }) {
 
         // Check minimum number of complex transformations
@@ -427,6 +467,10 @@ class MyParser {
         return 0;
     }
 
+    /**
+     * Checks animations.
+     * @param animations Animations of parsed XML.
+     */
     checkAnimations({ animations }) {
 
         for (let key in animations) {
@@ -442,6 +486,10 @@ class MyParser {
         return 0;
     }
 
+    /**
+     * Checks primitives.
+     * @param primitives Primitives of parsed XML.
+     */
     checkPrimitives({ primitives }) {
 
         // Check minimum number of primitives
@@ -470,7 +518,14 @@ class MyParser {
     }
 
     /**
-     * Check YAS constraints on parsed data.
+     * Checks components.
+     * @param scene Scene of parsed XML.
+     * @param textures Textures of parsed XML.
+     * @param materials Materials of parsed XML.
+     * @param animations Animations of parsed XML.
+     * @param transformations Transformations of parsed XML.
+     * @param primitives Primitives of parsed XML.
+     * @param components Components of parsed XML.
      */
     checkComponents({ scene, textures, materials, animations, transformations, primitives, components }) {
 

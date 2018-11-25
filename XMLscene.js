@@ -44,7 +44,7 @@ class XMLscene extends CGFscene {
         this.materialDefault.setSpecular(0.2, 0.2, 0.2, 1);
         this.materialDefault.setShininess(10);
 
-        this.fps = 5;
+        this.fps = 60;
         this.setUpdatePeriod(1000/this.fps);
 
         this.lastTime = null;
@@ -302,7 +302,10 @@ class XMLscene extends CGFscene {
                 if (obj.animIndex + 1 < obj.anims.length) {
                     obj.animIndex++;
                     obj.anims[obj.animIndex].animating = true;
-                    // obj.anims[obj.animIndex].update(this.scene.deltaTime / 1000.0);
+                    // obj.anims[obj.animIndex].update(this.deltaTime / 1000.0);
+                }
+                else {
+                    obj.anims[obj.animIndex].isEnd = true;
                 }
             }  
 

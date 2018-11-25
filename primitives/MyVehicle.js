@@ -1,4 +1,6 @@
-
+/**
+ * MyVehicle
+ */
 class MyVehicle extends CGFobject {
 
     constructor(scene) {

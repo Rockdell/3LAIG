@@ -1,3 +1,6 @@
+/**
+ * MyTerrain
+ */
 class MyTerrain extends MyPlane {
 
     constructor(scene, idTexture, idHeightMap, parts, heightScale) {

@@ -1,3 +1,6 @@
+/**
+ * MyWater
+ */
 class MyWater extends MyPlane {
 
     constructor(scene, idTexture, idWaveMap, parts, heightScale, texScale) {

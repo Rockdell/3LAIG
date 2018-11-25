@@ -137,6 +137,5 @@ class MyCylinder extends CGFobject {
 			else
 				this.indices.push(i == this.slices ? ind + 1 : (ind + i + 1), ind, ind + i);
 		}
-
 	}
 }

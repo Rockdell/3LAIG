@@ -1,3 +1,8 @@
+/**
+ * Schema's tag.
+ * @param name Name of the tag.
+ * @param required True if tag is required, false otherwise.
+ */
 function t(name, required = true) {
     return { 
         name: name, 
@@ -5,6 +10,12 @@ function t(name, required = true) {
     };
 }
 
+/**
+ * Schema's attribute.
+ * @param name Name of the attribute.
+ * @param type Type of the attribute.
+ * @param required True if attribute is required, false otherwise.
+ */
 function a(name, type, required = true) {
     return { 
         name: name, 
@@ -13,6 +24,9 @@ function a(name, type, required = true) {
     };
 }
 
+/**
+ * Schema's options.
+ */
 const opt = {
     SAVE_ID:    "id",
     SAVE_TYPE:  "type",

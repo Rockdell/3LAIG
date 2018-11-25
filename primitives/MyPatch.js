@@ -1,4 +1,6 @@
-
+/**
+ * MyPatch
+ */
 class MyPatch extends CGFobject {
 
     constructor(scene, npointsU, npointsV, npartsU, npartsV, controlPoints) {

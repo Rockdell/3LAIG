@@ -1,4 +1,6 @@
-
+/**
+ * MyPlane
+ */
 class MyPlane extends CGFobject {
 
     constructor(scene, npartsU, npartsV) {
