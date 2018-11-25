@@ -81,17 +81,17 @@ class MyCylinder extends CGFobject {
 		}
 
 		//Top
-		this.vertices.push(0.0, 0.0, this.height > 0 ? this.height : 0.0);
-		this.normals.push(0.0, 0.0, 1.0);
+		this.vertices.push(0.0, 0.0, this.height);
+		this.normals.push(0.0, 0.0, this.height > 0 ? 1.0 : -1.0);
 		this.texCoords.push(0.5, 0.5);
 
 		for (var i = 0; i < this.slices; i++) {
-
+			console.log(i);
 			var vx = this.top * Math.cos(i * alpha);
 			var vy = this.top * Math.sin(i * alpha);
 
 			//Vertices
-			this.vertices.push(vx, vy, this.height > 0 ? this.height : 0.0);
+			this.vertices.push(vx, vy, this.height);
 
 			//Normals
 			this.normals.push(0.0, 0.0, 1.0);
@@ -102,14 +102,17 @@ class MyCylinder extends CGFobject {
 
 		for (var i = 1; i <= this.slices; i++) {
 			//Indices
-			this.indices.push(i == this.slices ? ind + 1 : (ind + i + 1), ind, ind + i);
+			if(this.height > 0)
+				this.indices.push(i == this.slices ? ind + 1 : (ind + i + 1), ind, ind + i);
+			else
+				this.indices.push(ind + i, ind, i == this.slices ? ind + 1 : (ind + i + 1));
 		}
 
 		//Base
 		ind += this.slices + 1;
 
-		this.vertices.push(0.0, 0.0, this.height > 0 ? 0.0 : this.height);
-		this.normals.push(0.0, 0.0, 1.0);
+		this.vertices.push(0.0, 0.0, 0.0);
+		this.normals.push(0.0, 0.0, this.height > 0 ? 1.0 : -1.0);
 		this.texCoords.push(0.5, 0.5);
 
 		for (var i = 0; i < this.slices; i++) {
@@ -118,7 +121,7 @@ class MyCylinder extends CGFobject {
 			var vy = this.base * Math.sin(i * alpha);
 
 			//Vertices
-			this.vertices.push(vx, vy, this.height > 0 ? 0.0 : this.height);
+			this.vertices.push(vx, vy, 0);
 
 			//Normals
 			this.normals.push(0.0, 0.0, -1.0);
@@ -129,7 +132,10 @@ class MyCylinder extends CGFobject {
 
 		for (var i = 1; i <= this.slices; i++) {
 			//Indices
-			this.indices.push(ind + i, ind, i == this.slices ? ind + 1 : (ind + i + 1));
+			if(this.height > 0)
+				this.indices.push(ind + i, ind, i == this.slices ? ind + 1 : (ind + i + 1));
+			else
+				this.indices.push(i == this.slices ? ind + 1 : (ind + i + 1), ind, ind + i);
 		}
 
 	}

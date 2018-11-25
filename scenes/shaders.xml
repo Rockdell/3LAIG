@@ -82,13 +82,17 @@
                 <controlpoint x="4" y="0" z="4" />
                 <controlpoint x="4" y="0" z="-4" />
             </patch> -->
-            <vehicle/>
+            <!-- <vehicle/> -->
             <!-- <cylinder base="2" top="1" height="6" slices="10" stacks="10" />> -->
-            <!-- <cylinder2 base="2" top="1" height="6.0" slices="10" stacks="10" /> -->
+            <cylinder2 base="3" top="1" height="6.0" slices="10" stacks="10" />
         </primitive>
 
         <primitive id="cylinder">
-            <cylinder base="2" top="1" height="6.0" slices="10" stacks="10" />
+            <cylinder base="3" top="1" height="6.0" slices="10" stacks="10" />
+        </primitive>
+
+        <primitive id="rectangle">
+            <rectangle x1="-1" y1="-1" x2="1" y2="1" />
         </primitive>
     </primitives>
 
@@ -105,6 +109,7 @@
 
             <children>
                 <componentref id="hi" />
+                <componentref id="hi2" />
                 <primitiveref id="terrain_prim" />
             </children>
         </component>
@@ -112,7 +117,7 @@
          <component id="hi">
 
             <transformation> 
-                <translate x="5.0" y="0.0" z="0.0" />
+                <translate x="0.0" y="0.0" z="7.0" />
             </transformation>
 
             <materials>
@@ -123,6 +128,23 @@
 
             <children>
                 <primitiveref id="cylinder" />
+            </children>
+        </component>
+
+         <component id="hi2">
+
+            <transformation> 
+                <translate x="0.0" y="0.0" z="0.0" />
+            </transformation>
+
+            <materials>
+                <material id="cube_material" />
+            </materials>
+
+            <texture id="test" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="rectangle" />
             </children>
         </component>
     </components>
