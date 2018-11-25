@@ -432,16 +432,6 @@ class MySceneGraph {
 
         let obj = this.componentsAnimations[currentComp.id];
 
-        // if (!obj.anims[obj.animIndex].animating) {
-        //     obj.anims[obj.animIndex].apply();
-
-        //     if (obj.animIndex + 1 < obj.anims.length) {
-        //         obj.animIndex++;
-        //         obj.anims[obj.animIndex].animating = true;
-        //         // obj.anims[obj.animIndex].update(this.scene.deltaTime / 1000.0);
-        //     }
-        // }  
-
         obj.anims[obj.animIndex].apply();
     }
 

@@ -298,11 +298,9 @@ class XMLscene extends CGFscene {
             let obj = this.graph.componentsAnimations[compKey];
 
             if (!obj.anims[obj.animIndex].animating) {
-                // obj.anims[obj.animIndex].apply();
                 if (obj.animIndex + 1 < obj.anims.length) {
                     obj.animIndex++;
                     obj.anims[obj.animIndex].animating = true;
-                    // obj.anims[obj.animIndex].update(this.deltaTime / 1000.0);
                 }
                 else {
                     obj.anims[obj.animIndex].isEnd = true;
