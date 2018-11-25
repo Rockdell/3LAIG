@@ -44,7 +44,7 @@ class XMLscene extends CGFscene {
         this.materialDefault.setSpecular(0.2, 0.2, 0.2, 1);
         this.materialDefault.setShininess(10);
 
-        this.fps = 60;
+        this.fps = 5;
         this.setUpdatePeriod(1000/this.fps);
 
         this.lastTime = null;
@@ -71,6 +71,9 @@ class XMLscene extends CGFscene {
 
         // Create animations
         this.graph.createBindComponentsAnimations();
+
+        // Concatenate Components Transformations
+        this.graph.concatenateComponentsTransformations(this.graph.parsedXML.scene.root);
 
         // Initialize axis
         this.initAxis();
@@ -136,21 +139,7 @@ class XMLscene extends CGFscene {
                 case 'ortho':
 
                     let y_vector = vec3.fromValues(0, 1, 0);
-
-                    // let look_vector = vec3.create();
-                    // vec3.subtract(look_vector, vec3.fromValues(view.to.x, view.to.y, view.to.z), vec3.fromValues(view.from.x, view.from.y, view.from.y));
-
-                    // let side_vector = vec3.create();
-                    // vec3.cross(side_vector, y_vector, look_vector);
-
-                    // let up_vector = vec3.create();
-                    // vec3.cross(up_vector, look_vector, side_vector);
-
-                    // vec3.normalize(up_vector, up_vector);
-
-                    // if (up_vector.len < 0.1)
-                    //     look_vector[1] > 0 ? up_vector = vec3.fromValues(1, 0, 0) : up_vector = vec3.fromValues(-1, 0, 0);
-
+                    
                     camera = new CGFcameraOrtho(
                         view.left, view.right, view.bottom, view.top, view.near, view.far,
                         vec3.fromValues(view.from.x, view.from.y, view.from.z),
@@ -225,7 +214,6 @@ class XMLscene extends CGFscene {
     }
 
     updateCamera() {
-        
         // Update camera;
         this.camera = this.cameras[this.currentCamera];
 
@@ -238,6 +226,7 @@ class XMLscene extends CGFscene {
         // Update lights
         let i = 0;
         for (let key in this.lightValues) {
+            if (key == 'scene') continue;
 
             if (this.lightValues[key]) {
                 this.lights[i].setVisible(true);
@@ -279,9 +268,7 @@ class XMLscene extends CGFscene {
 
         if (this.sceneInited) {
 
-            this.materialDefault.apply();
-
-            this.updateCamera();
+            this.materialDefault.apply();;
 
             this.updateLights();
 
@@ -310,10 +297,17 @@ class XMLscene extends CGFscene {
 
             let obj = this.graph.componentsAnimations[compKey];
 
+            if (!obj.anims[obj.animIndex].animating) {
+                // obj.anims[obj.animIndex].apply();
+                if (obj.animIndex + 1 < obj.anims.length) {
+                    obj.animIndex++;
+                    obj.anims[obj.animIndex].animating = true;
+                    // obj.anims[obj.animIndex].update(this.scene.deltaTime / 1000.0);
+                }
+            }  
+
             for (let i = 0; i < obj.anims.length; i++)
                 obj.anims[i].update(this.deltaTime / 1000.0);
         }
-
-        //console.log(this.deltaTime);
     };
 }

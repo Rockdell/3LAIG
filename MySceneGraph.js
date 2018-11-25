@@ -240,22 +240,26 @@ class MySceneGraph {
 
             this.componentsAnimations[componentKey] = obj;
         }
-
-        /* for (let animID in animations) {
-
-            let currAnim = animations[animID];
-
-            if (currAnim.type == "linear") {
-                console.log("Linear animation created! : " + animID);
-                this.displayAnimations[animID] = new LinearAnimation(this.scene, currAnim.span, currAnim.list);
-            }
-            else if(currAnim.type == "circular") {
-                console.log("Circular animation created! : " + animID);
-                this.displayAnimations[animID] = new CircularAnimation(this.scene, currAnim.span, vec3.fromValues(currAnim.x, currAnim.y, currAnim.z), currAnim.radius, currAnim.startang, currAnim.rotang);
-            }
-        } */
-
+        
         console.log('Binded animations and components.');
+    }
+
+    /**
+    * Concatenates all transformations into a single transformation matrix for all components
+    */
+    concatenateComponentsTransformations(currentCompID) {
+
+        const { components } = this.parsedXML;
+        let currentComp = components[currentCompID];
+
+        this.concatenateTransformations(currentComp);
+
+        for (let childID in currentComp.children) {
+
+            if(currentComp.children[childID].type === 'primitiveref') continue;
+
+            this.concatenateComponentsTransformations(childID);
+        }
     }
 
     /**
@@ -271,7 +275,7 @@ class MySceneGraph {
         }
 
         this.scene.pushMatrix();
-        this.processNode(false, this.parsedXML.scene.root, this.scene.getMatrix());
+            this.processNode(false, this.parsedXML.scene.root);
         this.scene.popMatrix();
 
         this.changeMaterial = false;
@@ -338,14 +342,12 @@ class MySceneGraph {
             this.scene.pushMatrix();
 
             //Adjust transformation matrix
-            this.adjustMatrix(currentComp);
+            this.scene.multMatrix(currentComp.tranfsMatrix);
 
             //Apply Animations
             this.applyAnimations(currentComp);
 
             for (let childID in currentComp.children) {
-
-                if (!currentComp.children.hasOwnProperty(childID)) continue;
 
                 let child = currentComp.children[childID];
 
@@ -357,14 +359,18 @@ class MySceneGraph {
     }
 
     /**
-     * Adjusts the transformation matrix of the component.
+     * Puts the transformations of the component into one single Transformation Matrix.
      * @param component Component to be adjusted.
      */
-    adjustMatrix(component) {
+    concatenateTransformations(component) {
+
+        component['tranfsMatrix'] = mat4.create();
 
         // Checks if it has any transformations
         if (component.transformation.list.length == 0)
             return;
+
+        this.scene.pushMatrix();
 
         // Checks if it's a transformation reference or a new transformation
         if (component.transformation.list[0].type === 'transformationref') {
@@ -373,39 +379,41 @@ class MySceneGraph {
             let tf = this.parsedXML.transformations[component.transformation.list[0].id];
 
             for (let i = 0; i < tf.list.length; i++)
-                this.readTransformations(tf.list[i]);
+                this.readTransformations(tf.list[i], component['tranfsMatrix']);
         }
         else {
 
             // New transformation
             for (let i = 0; i < component.transformation.list.length; i++)
-                this.readTransformations(component.transformation.list[i]);
+                this.readTransformations(component.transformation.list[i], component['tranfsMatrix']);
         }
+
+        this.scene.popMatrix();
     }
 
     /**
      * Processes a transformation and aplies it to the scene.
      * @param transf Transformation to be read.
      */
-    readTransformations(transf) {
+    readTransformations(transf, matrix) {
 
         switch (transf.type) {
             case 'translate':
-                this.scene.translate(transf.x, transf.y, transf.z);
+                mat4.translate(matrix, matrix, vec3.fromValues(transf.x, transf.y, transf.z));
                 break;
             case 'scale':
-                this.scene.scale(transf.x, transf.y, transf.z);
+                mat4.scale(matrix, matrix, vec3.fromValues(transf.x, transf.y, transf.z));
                 break;
             case 'rotate':
                 switch (transf.axis) {
                     case 'x':
-                        this.scene.rotate(transf.angle * DEGREE_TO_RAD, 1, 0, 0);
+                        mat4.rotate(matrix, matrix, transf.angle * DEGREE_TO_RAD, vec3.fromValues(1,0,0));
                         break;
                     case 'y':
-                        this.scene.rotate(transf.angle * DEGREE_TO_RAD, 0, 1, 0);
+                        mat4.rotate(matrix, matrix, transf.angle * DEGREE_TO_RAD, vec3.fromValues(0,1,0));
                         break;
                     case 'z':
-                        this.scene.rotate(transf.angle * DEGREE_TO_RAD, 0, 0, 1);
+                        mat4.rotate(matrix, matrix, transf.angle * DEGREE_TO_RAD, vec3.fromValues(0,0,1));
                         break;
                 }
                 break;
@@ -424,28 +432,17 @@ class MySceneGraph {
 
         let obj = this.componentsAnimations[currentComp.id];
 
-        
+        // if (!obj.anims[obj.animIndex].animating) {
+        //     obj.anims[obj.animIndex].apply();
 
-        if (!obj.anims[obj.animIndex].animating) {
-            if (obj.animIndex + 1 < obj.anims.length) {
-                obj.animIndex++;
-                obj.anims[obj.animIndex].animating = true;
-                obj.anims[obj.animIndex].update(this.scene.deltaTime / 1000.0);
-            }
-        }  
+        //     if (obj.animIndex + 1 < obj.anims.length) {
+        //         obj.animIndex++;
+        //         obj.anims[obj.animIndex].animating = true;
+        //         // obj.anims[obj.animIndex].update(this.scene.deltaTime / 1000.0);
+        //     }
+        // }  
 
         obj.anims[obj.animIndex].apply();
-
-      /*   for (let i = 0; i < componentAnimations.length; i++) {
-            componentAnimations[i].apply();
-            console.log("YEAHHHHH - " + componentAnimations[i + 1].finalMatrixApplied);
-            if (componentAnimations[i].finalMatrixApplied) {
-                if (i + 1 < componentAnimations.length) {
-                    console.log("YEAH - " + componentAnimations[i + 1].finalMatrixApplied);
-                    componentAnimations[i + 1].animating = true;
-                }
-            }
-        } */
     }
 
     /**

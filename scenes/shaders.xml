@@ -108,8 +108,8 @@
             <texture id="test" length_s="1.0" length_t="1.0" />
 
             <children>
-                <componentref id="hi" />
-                <componentref id="hi2" />
+                <!-- <componentref id="hi" /> -->
+                <!-- <componentref id="hi2" /> -->
                 <primitiveref id="terrain_prim" />
             </children>
         </component>

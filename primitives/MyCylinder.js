@@ -86,7 +86,7 @@ class MyCylinder extends CGFobject {
 		this.texCoords.push(0.5, 0.5);
 
 		for (var i = 0; i < this.slices; i++) {
-			console.log(i);
+
 			var vx = this.top * Math.cos(i * alpha);
 			var vy = this.top * Math.sin(i * alpha);
 

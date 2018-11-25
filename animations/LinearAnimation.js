@@ -11,7 +11,6 @@ class LinearAnimation extends Animation {
             this.control_points.push(Object.values(control_points[i]));
 
         this.velocity = null;
-        //this.current_direction = null;
         this.current_segment = 0;
 
         //New directions considering that the object will always move towards positive Z becuase of the rotation inflicted over the axis!
@@ -22,7 +21,7 @@ class LinearAnimation extends Animation {
         //In RADIANS!
         this.vector_angles = [];
    
-        this.calculate();   
+        this.calculate();
     }
 
     calculate() {
@@ -57,7 +56,7 @@ class LinearAnimation extends Animation {
 
             total_distance += vec3.length(v2);
             this.cp_distances.push(vec3.length(v2) + ((i > 0) ? this.cp_distances[i - 1] : 0));
-
+            
             aux_directions.push(v2);
 
             if (i == 0)

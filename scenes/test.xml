@@ -658,7 +658,7 @@
         <component id="bottom_left_bed_leg">
 
             <transformation>
-                <translate x="0.0" y="-1.5" z="6.0" />
+                <translate x="0.0" y="-1.25" z="6.0" />
                 <scale x="0.5" y="2.5" z="0.5" />
             </transformation>
 
@@ -677,7 +677,7 @@
         <component id="bottom_right_bed_leg">
 
            <transformation>
-                <translate x="3.0" y="-1.5" z="6.0" />
+                <translate x="3.0" y="-1.25" z="6.0" />
                 <scale x="0.5" y="2.5" z="0.5" />
             </transformation>
 

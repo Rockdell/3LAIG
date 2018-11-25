@@ -37,13 +37,18 @@ class MyInterface extends CGFinterface {
         let i = 0;
         for(let key in views) {
 
-            if(key === 'default')  continue;
+            if(key === 'default') continue;
 
             this.scene.viewValues[key] = i;
             ++i;
         }
 
-        this.gui.add(this.scene, 'currentCamera', this.scene.viewValues);
+        let cameras = this.gui.add(this.scene, 'currentCamera', this.scene.viewValues);
+
+        cameras.onChange(function(value){
+            this.object.updateCamera();
+            console.log("Camera Updated.");
+        });
     }
 
     /**
@@ -60,8 +65,8 @@ class MyInterface extends CGFinterface {
 
         for (let key in lights) {
             this.scene.lightValues[key] = lights[key].enabled;
-            group.add(this.scene.lightValues, key);
-        }
+            let tmp = group.add(this.scene.lightValues, key);
+        }  
     }
 
     /**
