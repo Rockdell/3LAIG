@@ -6,6 +6,8 @@ class LinearAnimation extends Animation {
 	constructor(scene, span, control_points) {
 
         super(scene, span);
+
+        //Transform object into array
         this.control_points = [];
         for (let i = 0; i < control_points.length; i++)
             this.control_points.push(Object.values(control_points[i]));
@@ -13,7 +15,7 @@ class LinearAnimation extends Animation {
         this.velocity = null;
         this.current_segment = 0;
 
-        //New directions considering that the object will always move towards positive Z becuase of the rotation inflicted over the axis!
+        //New directions considering that the object will always move towards positive Z because of the rotation inflicted over the axis!
         this.directions = [];
 
         this.cp_distances = [];
@@ -52,9 +54,13 @@ class LinearAnimation extends Animation {
             let v1 = vec3.fromValues(this.control_points[i][0], this.control_points[i][1], this.control_points[i][2]);
             let v2 = vec3.fromValues(this.control_points[i + 1][0], this.control_points[i + 1][1], this.control_points[i + 1][2]);
 
+            //Calculate (at pairs) each segment vector
             vec3.subtract(v2, v2, v1);
 
+            //Sum to total distance
             total_distance += vec3.length(v2);
+
+            //Distances from the START POSITION till that control point (distance(cp[0] -> cp[i])) ou seja, cp[i] < cp[i+1]
             this.cp_distances.push(vec3.length(v2) + ((i > 0) ? this.cp_distances[i - 1] : 0));
             
             aux_directions.push(v2);
@@ -65,6 +71,7 @@ class LinearAnimation extends Animation {
                 this.vector_angles.push(angle(vec2.fromValues(aux_directions[i - 1][0], aux_directions[i - 1][2]), vec2.fromValues(aux_directions[i][0], aux_directions[i][2])));
         }
 
+        //Transform normal axis directions into directions in the rotated axis.
         for (let i = 0; i < aux_directions.length; i++) {
             let aux_vec = vec3.fromValues(0, aux_directions[i][1], Math.sqrt(Math.pow(aux_directions[i][0], 2.0) + Math.pow(aux_directions[i][2], 2.0)))
             this.directions.push(vec3.normalize(aux_vec, aux_vec));
@@ -107,10 +114,12 @@ class LinearAnimation extends Animation {
 
             //Move the object to the final control point of this segment (so it stays aligned with the course)
             let remainingDistance = vec3.clone(this.directions[this.current_segment]);
-            this.scaleVector(remainingDistance, this.cp_distances[this.current_segment] - this.velocity * (this.total_time - secondsElapsed));
+            let distanceToFinishSegment = this.cp_distances[this.current_segment] - this.velocity * (this.total_time - secondsElapsed);
+            
+            this.scaleVector(remainingDistance, distanceToFinishSegment);
             this.translateMatrix(this.transfMatrix, remainingDistance);
 
-            let timeAlreadyTravelled = (this.cp_distances[this.current_segment] - this.velocity * (this.total_time - secondsElapsed)) / this.velocity;
+            let timeAlreadyTravelled = distanceToFinishSegment / this.velocity;
             secondsElapsed -= timeAlreadyTravelled;
 
             this.current_segment++;

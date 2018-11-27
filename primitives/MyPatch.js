@@ -13,6 +13,8 @@ class MyPatch extends CGFobject {
         this.npartsV = npartsV;
         this.controlPoints =  controlPoints;
 
+        this.sphere = new MySphere(scene, 0.1, 10, 10);
+
         this.nurbs = new CGFnurbsObject(this.scene, this.npartsU, this.npartsV, this.generateSurface());
     }
 
@@ -32,6 +34,10 @@ class MyPatch extends CGFobject {
 
             controlVertexes.push(tmp);
         }
+
+        this.cp = controlVertexes;
+
+        console.log(controlVertexes);
         
         return new CGFnurbsSurface(this.npointsU - 1, this.npointsV - 1, controlVertexes);
     }

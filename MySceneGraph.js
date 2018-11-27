@@ -204,8 +204,7 @@ class MySceneGraph {
     */
     createBindComponentsAnimations() {
 
-        const { animations } = this.parsedXML;
-        const { components } = this.parsedXML;
+        const { animations, components } = this.parsedXML;
         
         this.componentsAnimations = {};
         

@@ -509,7 +509,7 @@ class MyParser {
             const primitive = primitives[key].list[0];
 
             if (primitive.type === 'patch' && primitive.list.length != primitive.npointsU * primitive.npointsV) {
-                this.scene.onXMLError(`Patch has wrong number of control points (at \"${key}\").`);
+                this.sceneGraph.onXMLError(`Patch has wrong number of control points (at \"${key}\").`);
                 return 1;
             }
         }

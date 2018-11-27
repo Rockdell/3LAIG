@@ -307,6 +307,7 @@ class XMLscene extends CGFscene {
                 }
             }  
 
+            //Updates all animations
             for (let i = 0; i < obj.anims.length; i++)
                 obj.anims[i].update(this.deltaTime / 1000.0);
         }
