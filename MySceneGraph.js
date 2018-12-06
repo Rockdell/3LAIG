@@ -140,6 +140,9 @@ class MySceneGraph {
                 case 'water':
                     this.displayPrimitives[primID] = new MyWater(this.scene, currPrim.idtexture, currPrim.idwavemap, currPrim.parts, currPrim.heightscale, currPrim.texscale);
                     break;
+                case 'piece':
+                    this.displayPrimitives[primID] = new MyPiece(this.scene, currPrim.dir);
+                    break;
             }
         }
 

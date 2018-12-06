@@ -7,7 +7,7 @@ class MyTerrain extends MyPlane {
         super(scene, parts, parts);
 
         this.idTexture = idTexture;
-        this.idHeightMap = idHeightMap
+        this.idHeightMap = idHeightMap;
         this.heightScale = heightScale;
 
         this.texture = scene.graph.displayTextures[idTexture];

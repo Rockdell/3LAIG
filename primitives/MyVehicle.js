@@ -58,7 +58,7 @@ class MyVehicle extends CGFobject {
 
         let currAngle = 0;
         let anglePerLine = Math.PI / 24;
-
+        console.log(bottom[0]);
         do {
             controlVertexes.push({ xx: bottom[0], yy: bottom[1], zz: bottom[2] });
             controlVertexes.push({ xx: middle[0], yy: middle[1], zz: middle[2] });

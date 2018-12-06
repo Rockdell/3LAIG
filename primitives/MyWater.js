@@ -7,7 +7,7 @@ class MyWater extends MyPlane {
         super(scene, parts, parts);
 
         this.idTexture = idTexture;
-        this.idHeightMap = idWaveMap
+        this.idHeightMap = idWaveMap;
         this.heightScale = heightScale;
         this.texScale = texScale;
 

@@ -23,7 +23,7 @@ class MyPatch extends CGFobject {
         let index = 0;
 
         let controlVertexes = [];
-
+        
         for(let u = 0; u < this.npointsU; u++) {
             let tmp = [];
 
@@ -31,13 +31,8 @@ class MyPatch extends CGFobject {
                 let cp = this.controlPoints[index++];
                 tmp.push([cp.xx, cp.yy, cp.zz, 1])
             }
-
             controlVertexes.push(tmp);
         }
-
-        this.cp = controlVertexes;
-
-        console.log(controlVertexes);
         
         return new CGFnurbsSurface(this.npointsU - 1, this.npointsV - 1, controlVertexes);
     }

@@ -51,11 +51,6 @@
     </lights>
     <textures>
         <texture id="test" file="images/testTexture.jpg" />
-        <texture id="terrain" file="images/terrain.png" />
-        <texture id="heights" file="images/heights.png" />
-        <texture id="water" file="images/water.png" />
-        <texture id="waves" file="images/waves.png" />
-        <texture id="ufo1" file="images/ufo.png" />
     </textures>
     <materials>
         <material id="material1" shininess="1.0">
@@ -95,44 +90,18 @@
         </transformation>
     </transformations>
     <animations>
-        <linear id="takeoff" span="5">
-            <controlpoint xx="0.0" yy="0.0" zz="0.0" />
-            <controlpoint xx="3.0" yy="4.0" zz="0.0" />
-        </linear>
-        <circular id="spinning" span="30" center="0.0 4.0 0.0" radius="3" startang="0.0" rotang="1080" />
-        <linear id="crash" span="5">
-            <controlpoint xx="3.0" yy="4.0" zz="0.0" />
-            <controlpoint xx="0.0" yy="0.0" zz="0.0" />
-        </linear>
+
     </animations>
     <primitives>
-        <primitive id="mountains_prim">
-            <terrain idtexture="terrain" idheightmap="heights" parts="50" heightscale="0.15" />
-        </primitive>
-        <primitive id="sea_prim">
-            <water idtexture="water" idwavemap="waves" parts="100" heightscale="0.05" texscale="1.0" />
-        </primitive>
-        <primitive id="ufo_prim">
+        <!-- <primitive id="ufo">
             <vehicle />
-        </primitive>
-        <primitive id="plane_prim">
-            <plane npartsU="50" npartsV="50" />
-        </primitive>
-        <primitive id="patch_prim">
-            <patch npointsU="3" npointsV="2" npartsU="50" npartsV="50" >
-                <controlpoint xx="-0.5" yy="0.0" zz="0.5" />
-                <controlpoint xx="-0.5" yy="0.0" zz="-0.5" />
-                <controlpoint xx="0.0" yy="1.0" zz="0.5" />
-                <controlpoint xx="0.0" yy="1.0" zz="-0.5" />
-                <controlpoint xx="0.5" yy="0.0" zz="0.5" />
-                <controlpoint xx="0.5" yy="0.0" zz="-0.5" />
-            </patch>
-        </primitive>
-        <primitive id="cylinder2_prim">
-            <cylinder2 base="1" top="1" height="5" slices="50" stacks="50" />
+        </primitive> -->
+        <primitive id="piece">
+            <piece dir="up" />
         </primitive>
     </primitives>
     <components>
+    
         <component id="world">
             <transformation></transformation>
             <materials>
@@ -144,102 +113,10 @@
             </materials>
             <texture id="none" />
             <children>
-                <componentref id="mountains" />
-				<componentref id="sea" />
-				<componentref id="ufo" />
-                <componentref id="primitives_demo" />
+                <primitiveref id="piece" />
+                <!-- <primitiveref id="ufo" /> -->
             </children>
         </component>
-        <component id="mountains">
-            <transformation>
-                <translate x="0.0" y="0.07" z="0.0" />
-                <scale x="4.0" y="4.0" z="4.0" />
-            </transformation>
-            <materials>
-                <material id="material1" />
-            </materials>
-            <texture id="none" />
-            <children>
-                <primitiveref id="mountains_prim" />
-            </children>
-        </component>
-        <component id="sea">
-            <transformation>
-                <scale x="8.0" y="8.0" z="8.0" />
-            </transformation>
-            <materials>
-                <material id="material1" />
-            </materials>
-            <texture id="none" />
-            <children>
-                <primitiveref id="sea_prim" />
-            </children>
-        </component>
-        <component id="ufo">
-            <transformation>
-                <translate x="0.0" y="0.5" z="0.0" />
-                <scale x="0.5" y="0.5" z="0.5" />
-            </transformation>
-            <animations>
-                <animationref id="takeoff" />
-                <animationref id="spinning" />
-                <animationref id="crash" />
-            </animations>
-            <materials>
-                <material id="material1" />
-            </materials>
-            <texture id="ufo1" length_s="1.0" length_t="1.0" />
-            <children>
-                <primitiveref id="ufo_prim" />
-            </children>
-        </component>
-        <component id="primitives_demo">
-            <transformation>
-                <translate x="6.0" y="0.0" z="0.0" />
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="test" length_s="1.0" length_t="1.0" />
-            <children>
-                <componentref id="plane_demo" />
-                <componentref id="patch_demo" />
-                <componentref id="cylinder2_demo" />
-            </children>
-        </component>
-        <component id="plane_demo">
-            <transformation></transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="inherit" />
-            <children>
-                <primitiveref id="plane_prim" />
-            </children>
-        </component>
-        <component id="patch_demo">
-            <transformation>
-                <translate x="2.0" y="0.0" z="0.0" />
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="inherit" />
-            <children>
-                <primitiveref id="patch_prim" />
-            </children>
-        </component>
-        <component id="cylinder2_demo">
-            <transformation>
-                <translate x="4.0" y="0.0" z="0.0" />
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="inherit" />
-            <children>
-                <primitiveref id="cylinder2_prim" />
-            </children>
-        </component>
+        
     </components>
 </yas>
