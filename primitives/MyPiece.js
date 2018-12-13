@@ -7,7 +7,21 @@ class MyPiece extends CGFobject {
         super(scene);
 
         this.scene = scene;
-        this.direction = direction;
+        
+        switch(direction) {
+            case "v":
+                this.direction = 0;
+            break;
+            case "h":
+                this.direction = Math.PI / 2.0;
+            break;
+            case "du":
+                this.direction = - Math.PI / 4.0;
+            break;
+            case "dd":
+                this.direction = Math.PI / 4.0;
+            break;
+        }
 
         this.pieceTexture = new CGFtexture(this.scene, "../scenes/images/piece.png");
         this.pieceBotTexture = new CGFtexture(this.scene, "../scenes/images/pieceBot.png")
@@ -51,20 +65,29 @@ class MyPiece extends CGFobject {
     }
     
     display() {
-        this.pieceBotTexture.bind();
 
         this.scene.pushMatrix();
-            this.scene.rotate(Math.PI, 1, 0, 0);
-            this.topDisk.display();
-        this.scene.popMatrix();
 
-        this.scene.pushMatrix();
-            this.pieceTexture.bind();
-            this.heightMap.bind(1);
+            this.scene.translate(0.5, 0.2, 0.5);
+            this.scene.rotate(this.direction, 0, 1, 0);
+            this.scene.scale(0.5, 0.5, 0.5);
 
-            this.scene.setActiveShader(this.shader);
+            this.pieceBotTexture.bind();
+
+            this.scene.pushMatrix();
+                this.scene.rotate(Math.PI, 1, 0, 0);
                 this.topDisk.display();
-            this.scene.setActiveShader(this.scene.defaultShader);
+            this.scene.popMatrix();
+
+            this.scene.pushMatrix();
+                this.pieceTexture.bind();
+                this.heightMap.bind(1);
+
+                this.scene.setActiveShader(this.shader);
+                    this.topDisk.display();
+                this.scene.setActiveShader(this.scene.defaultShader);
+            this.scene.popMatrix();
+
         this.scene.popMatrix();
     }
 }

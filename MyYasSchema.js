@@ -305,7 +305,7 @@ function makeYasSchema() {
                     tags: [
                         t("rectangle", false), t("triangle", false), t("cylinder", false), t("sphere", false), 
                         t("torus", false), t("plane", false), t("patch", false), t("vehicle", false), t("cylinder2", false),
-                        t("terrain", false), t("water", false), t("piece", false)
+                        t("terrain", false), t("water", false), t("piece", false), t("board", false)
                     ],
                     options: [opt.SAVE_ID, opt.SAVE_LIST],
 
@@ -389,6 +389,12 @@ function makeYasSchema() {
                     
                     piece: {
                         attributes: [a("dir", "ss")],
+                        tags: [],
+                        options: [opt.SAVE_TYPE]
+                    },
+
+                    board : {
+                        attributes: [a("size", "ii")],
                         tags: [],
                         options: [opt.SAVE_TYPE]
                     }

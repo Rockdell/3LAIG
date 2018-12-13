@@ -93,11 +93,11 @@
 
     </animations>
     <primitives>
-        <!-- <primitive id="ufo">
-            <vehicle />
-        </primitive> -->
         <primitive id="piece">
-            <piece dir="up" />
+            <piece dir="v" />
+        </primitive>
+        <primitive id="board">
+            <board size="5" />
         </primitive>
     </primitives>
     <components>
@@ -114,7 +114,7 @@
             <texture id="none" />
             <children>
                 <primitiveref id="piece" />
-                <!-- <primitiveref id="ufo" /> -->
+                <primitiveref id="board" />
             </children>
         </component>
         

@@ -512,6 +512,16 @@ class MyParser {
                 this.sceneGraph.onXMLError(`Patch has wrong number of control points (at \"${key}\").`);
                 return 1;
             }
+
+            if (primitive.type === "piece" && !["v", "h", "du", "dd"].includes(primitive.dir)) {
+                this.sceneGraph.onXMLError(`Piece has wrong direction (at \"${key}\").`);
+                return 1;
+            }
+
+            if (primitive.type === "board" && ![5, 6, 7].includes(primitive.size)) {
+                this.sceneGraph.onXMLError(`Board has invalid size (at \"${key}\").`);
+                return 1;
+            }
         }
 
         return 0;

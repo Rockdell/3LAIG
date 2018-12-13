@@ -143,6 +143,9 @@ class MySceneGraph {
                 case 'piece':
                     this.displayPrimitives[primID] = new MyPiece(this.scene, currPrim.dir);
                     break;
+                case 'board':
+                    this.displayPrimitives[primID] = new MyBoard(this.scene, currPrim.size);
+                    break;
             }
         }
 
