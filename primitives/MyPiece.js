@@ -7,30 +7,33 @@ class MyPiece extends CGFobject {
         super(scene);
 
         this.scene = scene;
-        
-        switch(direction) {
+
+        switch (direction) {
             case "v":
                 this.direction = 0;
-            break;
+                break;
             case "h":
                 this.direction = Math.PI / 2.0;
-            break;
+                break;
             case "du":
                 this.direction = - Math.PI / 4.0;
-            break;
+                break;
             case "dd":
                 this.direction = Math.PI / 4.0;
-            break;
+                break;
         }
 
+        let pieceBotTexture = new CGFtexture(this.scene, "../scenes/images/pieceBot.png")
+        this.appearance = new CGFappearance(this.scene);
+        this.appearance.setTexture(pieceBotTexture);
+
         this.pieceTexture = new CGFtexture(this.scene, "../scenes/images/piece.png");
-        this.pieceBotTexture = new CGFtexture(this.scene, "../scenes/images/pieceBot.png")
         this.heightMap = new CGFtexture(this.scene, "../scenes/images/pieceHeightMap.png");
 
         this.topDisk = new CGFnurbsObject(this.scene, 30, 30, this.generateSurface());
 
         this.shader = new CGFshader(this.scene.gl, "../shaders/pieceVertex.glsl", "../shaders/fragment.glsl");
-        this.shader.setUniformsValues({uSampler2: 1});
+        this.shader.setUniformsValues({ uSampler2: 1 });
     }
 
     generateSurface() {
@@ -71,23 +74,23 @@ class MyPiece extends CGFobject {
             this.scene.translate(0.5, 0.2, 0.5);
             this.scene.rotate(this.direction, 0, 1, 0);
             this.scene.scale(0.5, 0.5, 0.5);
-
-            this.pieceBotTexture.bind();
-
-            this.scene.pushMatrix();
-                this.scene.rotate(Math.PI, 1, 0, 0);
-                this.topDisk.display();
-            this.scene.popMatrix();
-
+            
             this.scene.pushMatrix();
                 this.pieceTexture.bind();
                 this.heightMap.bind(1);
-
+                
                 this.scene.setActiveShader(this.shader);
                     this.topDisk.display();
                 this.scene.setActiveShader(this.scene.defaultShader);
             this.scene.popMatrix();
 
+            this.appearance.apply();
+
+            this.scene.pushMatrix();
+                this.scene.rotate(Math.PI, 1, 0, 0);
+                this.topDisk.display();
+            this.scene.popMatrix();
+            
         this.scene.popMatrix();
     }
 }
