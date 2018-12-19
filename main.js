@@ -34,6 +34,7 @@ serialInclude([
     '../animations/Animation.js',
     '../animations/LinearAnimation.js',
     '../animations/CircularAnimation.js',
+    '../animations/ArchAnimation.js',
 
     main = function () {
 

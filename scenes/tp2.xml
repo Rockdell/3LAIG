@@ -90,7 +90,7 @@
         </transformation>
     </transformations>
     <animations>
-
+        <arch id="arch" span="3" height="3" xi="1" yi="1" xf="3" yf="3" />
     </animations>
     <primitives>
         <primitive id="piece">
@@ -104,6 +104,9 @@
     
         <component id="world">
             <transformation></transformation>
+            <animations>
+                <animationref id="arch" />
+            </animations>
             <materials>
                 <material id="material1" />
                 <material id="material2" />
@@ -114,7 +117,7 @@
             <texture id="none" />
             <children>
                 <primitiveref id="piece" />
-                <primitiveref id="board" />
+                <!-- <primitiveref id="board" /> -->
             </children>
         </component>
         

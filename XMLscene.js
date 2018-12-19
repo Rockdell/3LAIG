@@ -318,6 +318,7 @@ class XMLscene extends CGFscene {
             let obj = this.graph.componentsAnimations[compKey];
 
             if (!obj.anims[obj.animIndex].animating) {
+
                 if (obj.animIndex + 1 < obj.anims.length) {
                     obj.animIndex++;
                     obj.anims[obj.animIndex].animating = true;

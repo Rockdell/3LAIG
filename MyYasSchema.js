@@ -270,7 +270,7 @@ function makeYasSchema() {
 
             animations: {
                 attributes: [],
-                tags: [t("linear", false), t("circular", false)],
+                tags: [t("linear", false), t("circular", false), t("arch", false)],
                 options: [opt.LOG_TAG],
 
                 linear: {
@@ -289,6 +289,15 @@ function makeYasSchema() {
                     attributes: [
                         a("id", "ss"), a("span", "ff"), a("center", "ff ff ff"), a("radius", "ff"), 
                         a("startang", "ff"), a("rotang", "ff")
+                    ],
+                    tags: [],
+                    options: [opt.SAVE_ID, opt.SAVE_TYPE]
+                },
+
+                arch: {
+                    attributes: [
+                        a("id", "ss"), a("span", "ff"), a("height", "ff"), a("xi", "ff"),
+                        a("yi", "ff"), a("xf", "ff"), a("yf", "ff")
                     ],
                     tags: [],
                     options: [opt.SAVE_ID, opt.SAVE_TYPE]

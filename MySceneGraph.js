@@ -221,11 +221,11 @@ class MySceneGraph {
             //If it contains the animations section
             if(!currComp.animations)
                 continue;
-                
+
             //And if that section contains any animations
-            if(currComp.animations.list.length == 0)
-                continue;    
-                
+            if (currComp.animations.list.length == 0)
+                continue;
+
             let aux_anim = [];
 
             for (let i = 0; i < currComp.animations.list.length; i++) {
@@ -234,8 +234,10 @@ class MySceneGraph {
 
                 if (currAnim.type == "linear")
                     aux_anim.push(new LinearAnimation(this.scene, currAnim.span, currAnim.list));
-                else if(currAnim.type == "circular")
+                else if (currAnim.type == "circular")
                     aux_anim.push(new CircularAnimation(this.scene, currAnim.span, vec3.fromValues(currAnim.center.x, currAnim.center.y, currAnim.center.z), currAnim.radius, currAnim.startang, currAnim.rotang));
+                else if (currAnim.type == "arch")
+                    aux_anim.push(new ArchAnimation(this.scene, currAnim.span, currAnim.height, currAnim.xi, currAnim.yi, currAnim.xf, currAnim.yf));
             }
 
             //Tells the first animation to activate
