@@ -24,14 +24,18 @@ class Animation {
         mat4.rotateY(m, m, r);
     }
 
+    rotateXMatrix(m, r) {
+        mat4.rotateX(m, m, r);
+    }
+
     update(secondsElapsed) {
         console.error("Animation: Shouldn't be calling this function!");
     }
 
     apply() {
 
-        if (this.isEnd)
-            return;
+        // if (this.isEnd)
+        //     return;
 
         this.scene.multMatrix(this.transfMatrix);
     }
