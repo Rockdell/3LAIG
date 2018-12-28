@@ -91,6 +91,7 @@ class XMLscene extends CGFscene {
 
         // Adds views group
         this.interface.addViewsGroup(this.graph.parsedXML.views);
+        this.updateCamera();
 
         // Adds lights group.
         this.interface.addLightsGroup(this.graph.parsedXML.lights);

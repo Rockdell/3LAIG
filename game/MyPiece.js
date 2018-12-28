@@ -3,10 +3,11 @@
  */
 class MyPiece extends CGFobject {
 
-    constructor(scene, direction) {
+    constructor(scene, direction, color, pickingID) {
         super(scene);
 
         this.scene = scene;
+        this.pickingID = pickingID;
 
         switch (direction) {
             case "v":
@@ -23,14 +24,31 @@ class MyPiece extends CGFobject {
                 break;
         }
 
-        let pieceBotTexture = new CGFtexture(this.scene, "../scenes/images/pieceBot.png")
+        var pieceTopTexturePath = "../scenes/images/";
+        var pieceBotTexturePath = "../scenes/images/";
+        switch (color) {
+            case "orange":
+                pieceTopTexturePath += "orangePieceTop.png"
+                pieceBotTexturePath += "orangePieceBot.png";
+                break;
+            case "brown":
+                pieceTopTexturePath += "brownPieceTop.png"
+                pieceBotTexturePath += "brownPieceBot.png";
+                break;
+            default:
+                pieceTopTexturePath += "orangePieceTop.png"
+                pieceBotTexturePath += "orangePieceBot.png";
+                break;
+        }
+
+        let pieceBotTexture = new CGFtexture(this.scene, pieceBotTexturePath);
         this.appearance = new CGFappearance(this.scene);
         this.appearance.setTexture(pieceBotTexture);
 
-        this.pieceTexture = new CGFtexture(this.scene, "../scenes/images/piece.png");
+        this.pieceTexture = new CGFtexture(this.scene, pieceTopTexturePath);
         this.heightMap = new CGFtexture(this.scene, "../scenes/images/pieceHeightMap.png");
 
-        this.topDisk = new CGFnurbsObject(this.scene, 30, 30, this.generateSurface());
+        this.halfPiece = new CGFnurbsObject(this.scene, 30, 30, this.generateSurface());
 
         this.shader = new CGFshader(this.scene.gl, "../shaders/pieceVertex.glsl", "../shaders/fragment.glsl");
         this.shader.setUniformsValues({ uSampler2: 1 });
@@ -71,24 +89,27 @@ class MyPiece extends CGFobject {
 
         this.scene.pushMatrix();
 
+            if (this.pickingID != null)
+                this.scene.registerForPick(this.pickingID, this.halfPiece);
+
             this.scene.translate(0.5, 0.2, 0.5);
             this.scene.rotate(this.direction, 0, 1, 0);
             this.scene.scale(0.5, 0.5, 0.5);
             
             this.scene.pushMatrix();
                 this.pieceTexture.bind();
-                this.heightMap.bind(1);
+                // this.heightMap.bind(1);
                 
-                this.scene.setActiveShader(this.shader);
-                    this.topDisk.display();
-                this.scene.setActiveShader(this.scene.defaultShader);
+                // this.scene.setActiveShader(this.shader);
+                    this.halfPiece.display();
+                // this.scene.setActiveShader(this.scene.defaultShader);
             this.scene.popMatrix();
 
             this.appearance.apply();
 
             this.scene.pushMatrix();
                 this.scene.rotate(Math.PI, 1, 0, 0);
-                this.topDisk.display();
+                this.halfPiece.display();
             this.scene.popMatrix();
             
         this.scene.popMatrix();

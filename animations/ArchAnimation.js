@@ -58,7 +58,7 @@ class ArchAnimation extends Animation {
 
     update(secondsElapsed) {
 
-        console.log("Total time ARCH: " + this.total_time + " - time elapsed: " + secondsElapsed);
+        // console.log("Total time ARCH: " + this.total_time + " - time elapsed: " + secondsElapsed);
 
         if (!this.animating)
             return;

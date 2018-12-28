@@ -314,7 +314,7 @@ function makeYasSchema() {
                     tags: [
                         t("rectangle", false), t("triangle", false), t("cylinder", false), t("sphere", false), 
                         t("torus", false), t("plane", false), t("patch", false), t("vehicle", false), t("cylinder2", false),
-                        t("terrain", false), t("water", false), t("piece", false), t("board", false)
+                        t("terrain", false), t("water", false), t("piece", false), t("board", false), t("coffee", false)
                     ],
                     options: [opt.SAVE_ID, opt.SAVE_LIST],
 
@@ -404,6 +404,12 @@ function makeYasSchema() {
 
                     board : {
                         attributes: [a("size", "ii")],
+                        tags: [],
+                        options: [opt.SAVE_TYPE]
+                    },
+
+                    coffee : {
+                        attributes: [],
                         tags: [],
                         options: [opt.SAVE_TYPE]
                     }
