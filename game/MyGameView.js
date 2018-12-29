@@ -44,12 +44,12 @@ class MyGameView {
     display(GameModel) {
 
         if (this.boardView == null)
-            this.boardView = new MyBoard(scene, GameModel.currentBoardLength);
+            this.boardView = new MyBoard(this.scene, GameModel.currentBoardLength);
 
         this.boardView.display();
 
         for (let templatePieceModel in GameModel.templatePieces) {
-            this.pieceView.display(templatePieceModel);
+            this.pieceView.display(GameModel.templatePieces[templatePieceModel]);
         }
 
         // this.scene.pushMatrix();

@@ -15,10 +15,11 @@ function makeRequest(requestString) {
     return new Promise(function(resolve, reject) {
         getPrologRequest(requestString, function (data) { resolve(data.target.response); });
     });
+
+    // getPrologRequest(requestString, handleReply);
 }
 
 //Handle the Reply
 function handleReply(data) {
-    console.log('Data: ' + data);
-    resolve(data.target.response);
+    console.log('Data: ' + data.target.response);
 }

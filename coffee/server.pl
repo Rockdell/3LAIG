@@ -34,7 +34,7 @@ server_loop(Socket) :-
 			read_request(Stream, Request),
 			read_header(Stream)
 		),_Exception,(
-			% write('Error parsing request.'),nl,
+			write('Error parsing request.'), nl,
 			close_stream(Stream),
 			fail
 		)),

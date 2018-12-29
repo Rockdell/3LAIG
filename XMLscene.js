@@ -51,6 +51,9 @@ class XMLscene extends CGFscene {
         this.deltaTime = null;
 
         this.setPickEnabled(true);
+
+        this.coffeeModel = new MyGameModel();
+        this.coffeeView = new MyGameView(this);
     }
 
     /**
@@ -295,6 +298,8 @@ class XMLscene extends CGFscene {
 
             // Display scene
             this.graph.displayScene();
+
+            this.coffeeView.display(this.coffeeModel);
         }
 
         this.popMatrix();

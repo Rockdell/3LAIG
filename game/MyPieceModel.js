@@ -1,7 +1,7 @@
 /**
  * MyPieceModel
  */
-class MyPieceModel extends CGFobject {
+class MyPieceModel {
 
     constructor(xi, zi, direction, color, pickingID) {
         this.x = xi;

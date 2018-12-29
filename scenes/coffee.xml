@@ -85,14 +85,8 @@
         <arch id="arch" span="2" height="3" xi="1" yi="1" xf="3" yf="3" />
     </animations>
     <primitives>
-        <!-- <primitive id="piece">
-            <piece dir="v" />
-        </primitive>
-        <primitive id="board">
-            <board size="5" />
-        </primitive> -->
-        <primitive id="coffee">
-            <coffee />
+        <primitive id="filler">
+            <sphere radius="0.3" slices="30" stacks="30" />
         </primitive>
     </primitives>
     <components>
@@ -108,29 +102,9 @@
             </materials>
             <texture id="none" />
             <children>
-                <!-- <componentref id="piece" /> -->
-                <!-- <primitiveref id="board" /> -->
-                <primitiveref id="coffee" />
+                <primitiveref id="filler" />
             </children>
         </component>
-
-        <!-- <component id="piece">
-            <transformation></transformation>
-             <animations>
-                <animationref id="arch" />
-            </animations>
-            <materials>
-                <material id="material1" />
-                <material id="material2" />
-                <material id="material3" />
-                <material id="material4" />
-                <material id="material5" />
-            </materials>
-            <texture id="none" />
-            <children>
-                <primitiveref id="piece" />
-            </children>
-        </component> -->
         
     </components>
 </yas>

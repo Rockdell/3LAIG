@@ -9,17 +9,20 @@ class MyPieceView extends CGFobject {
         this.scene = scene;
 
         let pieceBotTextureOrange = new CGFtexture(this.scene, "../scenes/images/orangePieceBot.png");
-        this.appearanceBotOrange = new CGFappearance(this.scene).setTexture(pieceBotTextureOrange);
+        this.appearanceBotOrange = new CGFappearance(this.scene);
+        this.appearanceBotOrange.setTexture(pieceBotTextureOrange);
 
         let pieceBotTextureBrown = new CGFtexture(this.scene, "../scenes/images/brownPieceBot.png");
-        this.appearanceBotBrown = new CGFappearance(this.scene).setTexture(pieceBotTextureBrown);
+        this.appearanceBotBrown = new CGFappearance(this.scene);
+        this.appearanceBotBrown.setTexture(pieceBotTextureBrown);
 
         let pieceTopTextureOrange = new CGFtexture(this.scene, "../scenes/images/orangePieceTop.png");
-        this.appearanceTopOrange = new CGFappearance(this.scene).setTexture(pieceTopTextureOrange);
+        this.appearanceTopOrange = new CGFappearance(this.scene);
+        this.appearanceTopOrange.setTexture(pieceTopTextureOrange);
 
         let pieceTopTextureBrown = new CGFtexture(this.scene, "../scenes/images/brownPieceTop.png");
-        this.appearanceTopBrown = new CGFappearance(this.scene).setTexture(pieceTopTextureBrown);
-
+        this.appearanceTopBrown = new CGFappearance(this.scene);
+        this.appearanceTopBrown.setTexture(pieceTopTextureBrown);
 
         this.halfPiece = new CGFnurbsObject(this.scene, 30, 30, this.generateSurface());
 
@@ -68,8 +71,10 @@ class MyPieceView extends CGFobject {
 
         this.scene.pushMatrix();
 
-            if (this.pickingID != null)
-                this.scene.registerForPick(this.pickingID, this.halfPiece);
+            if (PieceModel.pickingID != null)
+                this.scene.registerForPick(PieceModel.pickingID, this.halfPiece);
+            else 
+                this.scene.registerForPick("", this.halfPiece);
 
             let direction;
             switch (PieceModel.direction) {

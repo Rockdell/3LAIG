@@ -72,14 +72,18 @@ class MyGameModel {
 
     move(move) {
 
-        //let move = `pmove(${col},${row},${dir})`;
+        // let move = `pmove(${col},${row},${dir})`;
+        // console.log(move);
+        
+        // this.board = "[[bpiece(-,' '), bpiece(-,' '), bpiece(-,' '), bpiece(-,' '), bpiece(-,' ')],[bpiece(-,' '), bpiece(-,' '), bpiece(-,' '), bpiece(-,' '), bpiece(-,' ')],[bpiece(-,' '), bpiece(-,' '), bpiece(-,' '), bpiece(-,' '), bpiece(-,' ')],[bpiece(-,' '), bpiece(-,' '), bpiece(-,' '), bpiece(-,' '), bpiece(-,' ')],[bpiece(-,' '), bpiece(-,' '), bpiece(-,' '), bpiece(-,' '), bpiece(-,' ')],]";
+        // console.log(this.board);
 
         let validateMove = makeRequest(`validate_move(${this.board},${this.lastMove},${move})`);
 
         let handler1;
         validateMove.then(handler1 = (response) => {
             if (response !== 'Bad Request') {
-                
+
                 let makeMove = makeRequest(`move(${this.board},${this.currentPlayer},${move},NewBoard)`);
 
                 let handler2;

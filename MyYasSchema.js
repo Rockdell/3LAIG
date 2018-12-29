@@ -309,12 +309,12 @@ function makeYasSchema() {
                 tags: [t("primitive", false)],
                 options: [opt.LOG_TAG],
 
-                primitive: {	
+                primitive: {
                     attributes: [a("id", "ss")],
                     tags: [
-                        t("rectangle", false), t("triangle", false), t("cylinder", false), t("sphere", false), 
+                        t("rectangle", false), t("triangle", false), t("cylinder", false), t("sphere", false),
                         t("torus", false), t("plane", false), t("patch", false), t("vehicle", false), t("cylinder2", false),
-                        t("terrain", false), t("water", false), t("piece", false), t("board", false), t("coffee", false)
+                        t("terrain", false), t("water", false)
                     ],
                     options: [opt.SAVE_ID, opt.SAVE_LIST],
 
@@ -326,7 +326,7 @@ function makeYasSchema() {
 
                     triangle: {
                         attributes: [
-                            a("x1", "ff"), a("y1", "ff"), a("z1", "ff"), a("x2", "ff"), a("y2", "ff"), a("z2", "ff"), 
+                            a("x1", "ff"), a("y1", "ff"), a("z1", "ff"), a("x2", "ff"), a("y2", "ff"), a("z2", "ff"),
                             a("x3", "ff"), a("y3", "ff"), a("z3", "ff")
                         ],
                         tags: [],
@@ -394,24 +394,6 @@ function makeYasSchema() {
                         ],
                         tags: [],
 						options: [opt.SAVE_TYPE]
-                    },
-                    
-                    piece: {
-                        attributes: [a("dir", "ss")],
-                        tags: [],
-                        options: [opt.SAVE_TYPE]
-                    },
-
-                    board : {
-                        attributes: [a("size", "ii")],
-                        tags: [],
-                        options: [opt.SAVE_TYPE]
-                    },
-
-                    coffee : {
-                        attributes: [],
-                        tags: [],
-                        options: [opt.SAVE_TYPE]
                     }
                 }
             },
