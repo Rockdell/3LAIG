@@ -1,57 +1,32 @@
 /**
- * MyPiece
+ * MyPieceView
  */
-class MyPiece extends CGFobject {
+class MyPieceView extends CGFobject {
 
-    constructor(scene, direction, color, pickingID) {
+    constructor(scene) {
         super(scene);
 
         this.scene = scene;
-        this.pickingID = pickingID;
 
-        switch (direction) {
-            case "v":
-                this.direction = 0;
-                break;
-            case "h":
-                this.direction = Math.PI / 2.0;
-                break;
-            case "du":
-                this.direction = - Math.PI / 4.0;
-                break;
-            case "dd":
-                this.direction = Math.PI / 4.0;
-                break;
-        }
+        let pieceBotTextureOrange = new CGFtexture(this.scene, "../scenes/images/orangePieceBot.png");
+        this.appearanceBotOrange = new CGFappearance(this.scene).setTexture(pieceBotTextureOrange);
 
-        var pieceTopTexturePath = "../scenes/images/";
-        var pieceBotTexturePath = "../scenes/images/";
-        switch (color) {
-            case "orange":
-                pieceTopTexturePath += "orangePieceTop.png"
-                pieceBotTexturePath += "orangePieceBot.png";
-                break;
-            case "brown":
-                pieceTopTexturePath += "brownPieceTop.png"
-                pieceBotTexturePath += "brownPieceBot.png";
-                break;
-            default:
-                pieceTopTexturePath += "orangePieceTop.png"
-                pieceBotTexturePath += "orangePieceBot.png";
-                break;
-        }
+        let pieceBotTextureBrown = new CGFtexture(this.scene, "../scenes/images/brownPieceBot.png");
+        this.appearanceBotBrown = new CGFappearance(this.scene).setTexture(pieceBotTextureBrown);
 
-        let pieceBotTexture = new CGFtexture(this.scene, pieceBotTexturePath);
-        this.appearance = new CGFappearance(this.scene);
-        this.appearance.setTexture(pieceBotTexture);
+        let pieceTopTextureOrange = new CGFtexture(this.scene, "../scenes/images/orangePieceTop.png");
+        this.appearanceTopOrange = new CGFappearance(this.scene).setTexture(pieceTopTextureOrange);
 
-        this.pieceTexture = new CGFtexture(this.scene, pieceTopTexturePath);
-        this.heightMap = new CGFtexture(this.scene, "../scenes/images/pieceHeightMap.png");
+        let pieceTopTextureBrown = new CGFtexture(this.scene, "../scenes/images/brownPieceTop.png");
+        this.appearanceTopBrown = new CGFappearance(this.scene).setTexture(pieceTopTextureBrown);
+
 
         this.halfPiece = new CGFnurbsObject(this.scene, 30, 30, this.generateSurface());
 
-        this.shader = new CGFshader(this.scene.gl, "../shaders/pieceVertex.glsl", "../shaders/fragment.glsl");
-        this.shader.setUniformsValues({ uSampler2: 1 });
+        // this.pieceTexture = new CGFtexture(this.scene, pieceTopTexturePath);
+        // this.heightMap = new CGFtexture(this.scene, "../scenes/images/pieceHeightMap.png");
+        // this.shader = new CGFshader(this.scene.gl, "../shaders/pieceVertex.glsl", "../shaders/fragment.glsl");
+        // this.shader.setUniformsValues({ uSampler2: 1 });
     }
 
     generateSurface() {
@@ -84,32 +59,57 @@ class MyPiece extends CGFobject {
 
         return new CGFnurbsSurface(uParts, 8, controlVertexes);
     }
+
+    update() {
+
+    }
     
-    display() {
+    display(PieceModel) {
 
         this.scene.pushMatrix();
 
             if (this.pickingID != null)
                 this.scene.registerForPick(this.pickingID, this.halfPiece);
 
-            this.scene.translate(0.5, 0.2, 0.5);
-            this.scene.rotate(this.direction, 0, 1, 0);
+            let direction;
+            switch (PieceModel.direction) {
+                case "v":
+                    direction = 0;
+                    break;
+                case "h":
+                    direction = Math.PI / 2.0;
+                    break;
+                case "du":
+                    direction = - Math.PI / 4.0;
+                    break;
+                case "dd":
+                    direction = Math.PI / 4.0;
+                    break;
+            }
+
+            this.scene.translate(PieceModel.x, 0.2, PieceModel.z);
+            this.scene.rotate(direction, 0, 1, 0);
             this.scene.scale(0.5, 0.5, 0.5);
             
             this.scene.pushMatrix();
-                this.pieceTexture.bind();
+                // this.pieceTexture.bind();
                 // this.heightMap.bind(1);
-                
+
                 // this.scene.setActiveShader(this.shader);
-                    this.halfPiece.display();
+
+                PieceModel.color == "o" ? this.appearanceTopOrange.apply() : this.appearanceTopBrown.apply();
+
+                this.halfPiece.display();
                 // this.scene.setActiveShader(this.scene.defaultShader);
             this.scene.popMatrix();
 
-            this.appearance.apply();
-
             this.scene.pushMatrix();
+
+                PieceModel.color == "o" ? this.appearanceBotOrange.apply() : this.appearanceBotBrown.apply();
+
                 this.scene.rotate(Math.PI, 1, 0, 0);
                 this.halfPiece.display();
+
             this.scene.popMatrix();
             
         this.scene.popMatrix();

@@ -33,10 +33,11 @@ serialInclude([
     '../animations/LinearAnimation.js',
     '../animations/CircularAnimation.js',
     '../animations/ArchAnimation.js',
-    '../game/MyPiece.js',
     '../game/MyBoard.js',
-    '../game/Coffee.js',
-    '../game/MyGame.js',
+    '../game/MyPieceModel.js',
+    '../game/MyPieceView.js',
+    '../game/MyGameModel.js',
+    '../game/MyGameView.js',
 
     main = function () {
 

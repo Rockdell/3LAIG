@@ -25,7 +25,7 @@ class MyBoard extends CGFobject {
 
             for (let i = 0; i < this.sideLength; i++) {
                 for (let j = 0; j < this.sideLength; j++) {
-                    this.scene.registerForPick((i+1)+""+(j+1), this.boardCell);
+                    this.scene.registerForPick((i + 1) + "" + (j + 1), this.boardCell);
                     this.scene.pushMatrix();
                     this.scene.translate(i, -j, 0);
                     this.boardCell.display();

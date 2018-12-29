@@ -1,4 +1,7 @@
-class MyGame {
+/**
+ * MyGameModel
+ */
+class MyGameModel {
 
     constructor() {
         this.currentBoardLength = 5;
@@ -7,6 +10,19 @@ class MyGame {
 
         this.board = null;
         this.lastMove = 'pmove(_,_,_)';
+
+        this.templatePieces = [
+            new MyPieceModel(-1, 1, "v", "o"),
+            new MyPieceModel(-1, 2.3, "h", "o"),
+            new MyPieceModel(-1, 3.6, "du", "o"),
+            new MyPieceModel(-1, 4.9, "dd", "o"),
+            new MyPieceModel(this.currentBoardLength + 1, 1, "v", "b"),
+            new MyPieceModel(this.currentBoardLength + 1, 2.3, "h", "b"),
+            new MyPieceModel(this.currentBoardLength + 1, 3.6, "du", "b"),
+            new MyPieceModel(this.currentBoardLength + 1, 4.9, "dd", "b")
+        ];
+
+        this.pieces = [];
     }
 
     setBoardSettings(currentBoardLength, currentConsecutive) {
