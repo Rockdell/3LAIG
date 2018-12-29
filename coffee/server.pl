@@ -105,11 +105,34 @@ print_header_line(_).
 :- consult('Coffee.pl').
 
 parse_input(handshake, handshake).
-parse_input(test(C,N), Res) :- test(C,Res,N).
 parse_input(quit, goodbye).
+
+% Set board settings
+parse_input(set_board_settings(BoardLength, Consecutive), ok) :-
+	retractall(currentBoardLength(_)), retractall(currentConsecutive(_)),
+    asserta(currentBoardLength(BoardLength)), asserta(currentConsecutive(Consecutive)).
+
+% Set game mode (only PvP for now)
+parse_input(set_game_move(_), ok) :-
+	retractall(ptype(_, _)),
+	asserta(ptype('o', 'User')), asserta(ptype('b', 'User')).
+
+% Create board
+parse_input(create_board(Board), Board) :-
+	create_board(Board).
+
+% Validate move
+parse_input(validate_move(Board, LastMove, NextMove), ok) :-
+	validate_move(Board, LastMove, NextMove).
+
+% Make move
+parse_input(move(Board, CurrentPlayer, NextMove, NewBoard), NewBoard) :-
+	move(Board, CurrentPlayer, NextMove, NewBoard).
+
+
+
+
+parse_input(test(C,N), Res) :- test(C,Res,N).
 
 test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
-
-
-	

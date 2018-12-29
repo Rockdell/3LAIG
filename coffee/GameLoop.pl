@@ -28,7 +28,7 @@ start_pvp :-
 start_pvb(Difficulty) :-
     Difficulty == 'Easy',
     asserta(ptype('o', 'EasyBot')), asserta(ptype('b', 'User')),
-    write('Starting'), nl, start_game,
+    start_game,
     retractall(ptype(_, _))
     ;
     Difficulty == 'Hard',

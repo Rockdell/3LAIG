@@ -36,6 +36,7 @@ serialInclude([
     '../game/MyPiece.js',
     '../game/MyBoard.js',
     '../game/Coffee.js',
+    '../game/MyGame.js',
 
     main = function () {
 

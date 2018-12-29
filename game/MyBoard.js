@@ -16,7 +16,6 @@ class MyBoard extends CGFobject {
         this.boardCell = new MyRectangle(scene, 0, -1, 1, 0);
     }
 
-
     display() {
         this.scene.pushMatrix();
 
