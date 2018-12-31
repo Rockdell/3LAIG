@@ -21,6 +21,7 @@ class MyBoard extends CGFobject {
 
             this.appearance.apply();
 
+            this.scene.translate(0.5, 0, 0.5);
             this.scene.rotate(-Math.PI / 2.0, 1, 0, 0);
 
             for (let i = 0; i < this.sideLength; i++) {

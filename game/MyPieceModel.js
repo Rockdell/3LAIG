@@ -15,5 +15,4 @@ class MyPieceModel {
         this.x = xf;
         this.z = zf;
     }
-
 }

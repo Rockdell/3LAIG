@@ -10,7 +10,7 @@ pmove/3.
 % Returns an empty piece.
 
 empty_piece(X) :-
-    X = bpiece('-', ' ').
+    X = bpiece('-', 'x').
 
 % create_board(-B)
 % Creates a new empty board.
@@ -75,20 +75,20 @@ is_position_free(Board, Col, Row) :-
 % Returns list of available positions in the direction given by the move.
 
 check_line(Board, pmove(X, Y, D), Res) :-
-    D == '-', !,
+    D == 'h', !,
     eval_hor(Board, 0, Y, [], Res1), 
     delete(Res1, [X, Y], Res)
     ;
-    D == '|', !,
+    D == 'v', !,
     eval_ver(Board, X, 0, [], Res1), 
     delete(Res1, [X, Y], Res)
     ;
-    D == '/', !,
+    D == 'du', !,
     Y1 is Y - 1, X1 is X + 1, eval_diag_up_top(Board, X1, Y1, [], Res1),
     Y2 is Y + 1, X2 is X - 1, eval_diag_up_bot(Board, X2, Y2, [], Res2),
     append(Res1, Res2, Res)
     ;
-    D == '\\', !,
+    D == 'dd', !,
     X1 is X - 1, Y1 is Y - 1, eval_diag_down_top(Board, X1, Y1, [], Res1),
     X2 is X + 1, Y2 is Y + 1, eval_diag_down_bot(Board, X2, Y2, [], Res2),
     append(Res1, Res2, Res)

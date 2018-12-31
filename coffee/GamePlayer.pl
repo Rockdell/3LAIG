@@ -11,7 +11,7 @@
 
 valid_moves(Board, LastMove, ListOfMoves) :-
     check_line(Board, LastMove, Free),
-    iterate_moves(Board, Free, ['-', '|', '/', '\\'], [], ListOfMoves).
+    iterate_moves(Board, Free, ['h', 'v', 'du', 'dd'], [], ListOfMoves).
 
 % iterate_moves(+Board, +ListOfPositions, +ListOfDirections, +List, -ListOfMoves)
 % Iterates through the positions given and returns a list of moves.
@@ -19,7 +19,7 @@ valid_moves(Board, LastMove, ListOfMoves) :-
 iterate_moves(_, [], _, List, List).
 
 iterate_moves(Board, [_|PT], [], List, Res) :-
-    iterate_moves(Board, PT, ['-', '|', '/', '\\'], List, Res).
+    iterate_moves(Board, PT, ['h', 'v', 'du', 'dd'], List, Res).
 
 iterate_moves(Board, [[X,Y]|PT], [DH|DT], List, Res) :-
     validate_direction(Board, pmove(X, Y, DH)),
@@ -93,25 +93,8 @@ compare_moves(_, _, _, MoveB, ValB, MoveB, ValB).
 % choose_move(+Board, +PlayerType, +LastMove, -NextMove)
 % Chooses the next move.
 
-choose_move(Board, 'EasyBot', LastMove, NextMove) :-
-    valid_moves(Board, LastMove, ListOfMoves),
-    random_member(NextMove, ListOfMoves),
-    sleep(1).
-
-choose_move(Board, 'HardBot', LastMove, NextMove) :-
-
-    % If bot is first player, then choose random
-    (LastMove = pmove(X, _, _), number(X),
-    ptype(Player, 'HardBot'), opponent(Player, NextPlayer),
-    asserta(maxPlayer(Player)), asserta(minPlayer(NextPlayer)),
-    minimax(3, Board, LastMove, Player, NextMove, _),
-    retractall(maxPlayer(_)), retractall(minPlayer(_))
-    ;
-    valid_moves(Board, _, ListOfMoves),
-    random_member(NextMove, ListOfMoves)),
-    sleep(1).
-
-choose_move(_, 'User', _, NextMove) :-
+choose_move(_, 'user', _, NextMove) :-
+    !,
     write(' Col: '),
     read_input(C1),
     letter(C1, Col),
@@ -131,3 +114,22 @@ choose_move(_, 'User', _, NextMove) :-
     dir(C3, Dir),
 
     NextMove = pmove(Col, Row, Dir).
+
+choose_move(Board, 'easybot', LastMove, NextMove) :-
+    !,
+    valid_moves(Board, LastMove, ListOfMoves),
+    random_member(NextMove, ListOfMoves),
+    sleep(1).
+
+choose_move(Board, HardBot, LastMove, NextMove) :-
+    !,
+    % If bot is first player, then choose random
+    (LastMove = pmove(X, _, _), number(X),
+    ptype(Player, HardBot), opponent(Player, NextPlayer),
+    asserta(maxPlayer(Player)), asserta(minPlayer(NextPlayer)),
+    minimax(3, Board, LastMove, Player, NextMove, _),
+    retractall(maxPlayer(_)), retractall(minPlayer(_))
+    ;
+    valid_moves(Board, _, ListOfMoves),
+    random_member(NextMove, ListOfMoves)),
+    sleep(1).

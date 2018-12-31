@@ -34,7 +34,7 @@ server_loop(Socket) :-
 			read_request(Stream, Request),
 			read_header(Stream)
 		),_Exception,(
-			write('Error parsing request.'), nl,
+			% write('Error parsing request.'),nl,
 			close_stream(Stream),
 			fail
 		)),
@@ -73,14 +73,13 @@ read_request(Stream, Request) :-
 	% Parse Request
 	atom_codes('GET /',Get),
 	append(Get,RL,LineCodes),
-	read_request_aux(RL,RL2),	
+	read_request_aux(RL,RL2), 
 	
 	catch(read_from_codes(RL2, Request), error(syntax_error(_),_), fail), !.
 read_request(_,syntax_error).
 	
 read_request_aux([32|_],[46]) :- !.
 read_request_aux([C|Cs],[C|RCs]) :- read_request_aux(Cs, RCs).
-
 
 % Reads and Ignores the rest of the lines of the HTTP Header
 read_header(Stream) :-
@@ -94,17 +93,19 @@ check_end_of_header(end_of_file) :- !,fail.
 check_end_of_header(_).
 
 % Function to Output Request Lines (uncomment the line bellow to see more information on received HTTP Requests)
-% print_header_line(LineCodes) :- catch((atom_codes(Line,LineCodes),write(Line),nl),_,fail), !.
+%print_header_line(LineCodes) :- catch((atom_codes(Line,LineCodes),write(Line),nl),_,fail), !.
 print_header_line(_).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%                                       Commands                                                  %%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Require your Prolog Files here
 :- consult('Coffee.pl').
 
+% Hello
 parse_input(handshake, handshake).
+
+% Goodbye
 parse_input(quit, goodbye).
 
 % Set board settings
@@ -112,14 +113,18 @@ parse_input(set_board_settings(BoardLength, Consecutive), ok) :-
 	retractall(currentBoardLength(_)), retractall(currentConsecutive(_)),
     asserta(currentBoardLength(BoardLength)), asserta(currentConsecutive(Consecutive)).
 
-% Set game mode (only PvP for now)
-parse_input(set_game_move(_), ok) :-
+% Set game settings
+parse_input(set_game_settings(Player1, Player2), ok) :-
 	retractall(ptype(_, _)),
-	asserta(ptype('o', 'User')), asserta(ptype('b', 'User')).
+	asserta(ptype('b', Player1)), asserta(ptype('o', Player2)).
 
 % Create board
 parse_input(create_board(Board), Board) :-
 	create_board(Board).
+
+% Generate bot move
+ parse_input(choose_move(Board, BotType, LastMove, NextMove), NextMove) :-
+	choose_move(Board, BotType, LastMove, NextMove).
 
 % Validate move
 parse_input(validate_move(Board, LastMove, NextMove), ok) :-
@@ -129,10 +134,14 @@ parse_input(validate_move(Board, LastMove, NextMove), ok) :-
 parse_input(move(Board, CurrentPlayer, NextMove, NewBoard), NewBoard) :-
 	move(Board, CurrentPlayer, NextMove, NewBoard).
 
+% Game over
+parse_input(game_over(Board, LastMove, LastPlayer, Consecutive), is_over) :-
+	game_over(Board, LastMove, LastPlayer, Consecutive).
 
+parse_input(game_over(_, _, _, _), not_over).
 
+parse_input(_, no).
 
-parse_input(test(C,N), Res) :- test(C,Res,N).
-
-test(_,[],N) :- N =< 0.
-test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
+% parse_input(test(C,N), Res) :- test(C,Res,N).
+% test(_,[],N) :- N =< 0.
+% test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).

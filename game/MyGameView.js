@@ -52,6 +52,10 @@ class MyGameView {
             this.pieceView.display(GameModel.templatePieces[templatePieceModel]);
         }
 
+        for (let pieceModel in GameModel.pieces) {
+            this.pieceView.display(GameModel.pieces[pieceModel]);
+        }
+
         // this.scene.pushMatrix();
         //     this.scene.translate(-3, 0, this.boardSize / 2.0 - 3.75, 1);
         //     this.orangeTemplatePieces.forEach((piece) => {

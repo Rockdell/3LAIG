@@ -18,7 +18,7 @@ start_game :-
 % Starts a PvP game.
 
 start_pvp :-
-    asserta(ptype('o', 'User')), asserta(ptype('b', 'User')),
+    asserta(ptype('o', 'user')), asserta(ptype('b', 'user')),
     start_game,
     retractall(ptype(_, _)).
 
@@ -27,12 +27,12 @@ start_pvp :-
 
 start_pvb(Difficulty) :-
     Difficulty == 'Easy',
-    asserta(ptype('o', 'EasyBot')), asserta(ptype('b', 'User')),
+    asserta(ptype('o', 'easybot')), asserta(ptype('b', 'user')),
     start_game,
     retractall(ptype(_, _))
     ;
     Difficulty == 'Hard',
-    asserta(ptype('o', 'HardBot')), asserta(ptype('b', 'User')),
+    asserta(ptype('o', 'hardbot')), asserta(ptype('b', 'user')),
     start_game,
     retractall(ptype(_, _)).
 
@@ -41,12 +41,12 @@ start_pvb(Difficulty) :-
 
 start_bvb(Difficulty) :-
     Difficulty == 'Easy',
-    asserta(ptype('o', 'EasyBot')), asserta(ptype('b', 'EasyBot')),
+    asserta(ptype('o', 'easybot')), asserta(ptype('b', 'easybot')),
     start_game,
     retractall(ptype(_, _))
     ;
     Difficulty == 'Hard',
-    asserta(ptype('o', 'HardBot')), asserta(ptype('b', 'HardBot')),
+    asserta(ptype('o', 'hardbot1')), asserta(ptype('b', 'hardbot2')),
     start_game,
     retractall(ptype(_, _)).
 

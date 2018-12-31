@@ -26,10 +26,10 @@ number('6', 5).
 number('7', 6).
 
 % Accepted directions
-dir('-', '-').
-dir('|', '|').
-dir('/', '/').  
-dir('\\', '\\').
+dir('-', 'h').
+dir('|', 'v').
+dir('/', 'du').  
+dir('\\', 'dd').
 
 % Convert char to number
 char_to_number('2', 2).
@@ -196,10 +196,10 @@ print_row_separators2(Length) :-
 translatePiece1(bpiece(Color, Dir), Str) :-
 	Color == '.', Str = '     ';
 	Color == '-', Str = '     ';
-	Dir == '|', Str = '  |  ';
-	Dir == '/', Str = '    /';
-	Dir == '-', Str = '     ';
-	Dir == '\\', Str = '\\    '.
+	Dir == 'v', Str = '  |  ';
+	Dir == 'du', Str = '    /';
+	Dir == 'h', Str = '     ';
+	Dir == 'dd', Str = '\\    '.
 
 % tranlatePiece2(+Piece, -String)
 % Translates the second line of a piece.
@@ -207,8 +207,8 @@ translatePiece1(bpiece(Color, Dir), Str) :-
 translatePiece2(bpiece(Color, Dir), Str) :-
 	Color == '.', Str = '  @  ';
 	Color == '-', Str = '     ';
-	Color == 'b', (Dir \== '-', Str = '  B  ' ; Str = '- B -') ;
-	Color == 'o', (Dir \== '-', Str = '  O  ' ; Str = '- O -') .
+	Color == 'b', (Dir \== 'h', Str = '  B  ' ; Str = '- B -') ;
+	Color == 'o', (Dir \== 'h', Str = '  O  ' ; Str = '- O -') .
 	
 % tranlatePiece3(+Piece, -String)
 % Translates the third line of a piece.
@@ -216,10 +216,10 @@ translatePiece2(bpiece(Color, Dir), Str) :-
 translatePiece3(bpiece(Color, Dir), Str) :-
 	Color == '.', Str = '     ';
 	Color == '-', Str = '     ';
-	Dir == '|', Str = '  |  ' ;
-	Dir == '/', Str = '/    ' ;
-	Dir == '-', Str = '     ' ;
-	Dir == '\\', Str = '    \\'.
+	Dir == 'v', Str = '  |  ' ;
+	Dir == 'du', Str = '/    ' ;
+	Dir == 'h', Str = '     ' ;
+	Dir == 'dd', Str = '    \\'.
 
 % translatePlayer(?Piece, ?Player)
 % Returns either the piece or the player.
