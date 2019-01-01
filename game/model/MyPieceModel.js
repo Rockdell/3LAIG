@@ -11,7 +11,7 @@ class MyPieceModel {
         this.pickingID = pickingID;
     }
 
-    move(xf, zf) {
+    update(xf, zf) {
         this.x = xf;
         this.z = zf;
     }

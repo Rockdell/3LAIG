@@ -1,13 +1,12 @@
 /**
  * MyBoard
  */
-class MyBoard extends CGFobject {
+class MyBoardView extends CGFobject {
 
-    constructor(scene, sideLength) {
+    constructor(scene) {
         super(scene);
 
         this.scene = scene;
-        this.sideLength = sideLength;
 
         let cellTexture = new CGFtexture(this.scene, "../scenes/images/cell.png");
         this.appearance = new CGFappearance(this.scene);
@@ -16,7 +15,7 @@ class MyBoard extends CGFobject {
         this.boardCell = new MyRectangle(scene, 0, -1, 1, 0);
     }
 
-    display() {
+    display(BoardModel) {
         this.scene.pushMatrix();
 
             this.appearance.apply();
@@ -24,8 +23,8 @@ class MyBoard extends CGFobject {
             this.scene.translate(0.5, 0, 0.5);
             this.scene.rotate(-Math.PI / 2.0, 1, 0, 0);
 
-            for (let i = 0; i < this.sideLength; i++) {
-                for (let j = 0; j < this.sideLength; j++) {
+            for (let i = 0; i < BoardModel.boardLength; i++) {
+                for (let j = 0; j < BoardModel.boardLength; j++) {
                     this.scene.registerForPick((i + 1) + "" + (j + 1), this.boardCell);
 
                     this.scene.pushMatrix();

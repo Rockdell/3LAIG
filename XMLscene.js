@@ -52,8 +52,10 @@ class XMLscene extends CGFscene {
 
         this.setPickEnabled(true);
 
-        this.coffeeModel = new MyGameModel();
-        this.coffeeView = new MyGameView(this);
+        // Initialize singletons
+        new MyGameController();
+        new MyGameModel();
+        new MyGameView(this);
     }
 
     /**
@@ -299,7 +301,7 @@ class XMLscene extends CGFscene {
             // Display scene
             this.graph.displayScene();
 
-            this.coffeeView.display(this.coffeeModel);
+            MyGameView.getInstance().display();
         }
 
         this.popMatrix();

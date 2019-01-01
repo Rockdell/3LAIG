@@ -5,10 +5,12 @@ class MyGameView {
 
     constructor(scene) {
 
-        this.scene = scene;
-
-        this.boardView = null;
-        this.pieceView = new MyPieceView(scene);
+        if (!MyGameView.instance) {
+            this.scene = scene;
+            this.boardView = new MyBoardView(scene);
+            this.pieceView = new MyPieceView(scene);
+            MyGameView.instance = this;
+        }
 
         //Default Board Size
         // this.boardSize = 5;
@@ -38,22 +40,25 @@ class MyGameView {
         //     this.pieceTemplatDiagUp = new MyPiece(scene, "du", "brown", this.pieceID.TBDU),
         //     this.pieceTemplateDiagDown = new MyPiece(scene, "dd", "brown", this.pieceID.TBDD)
         // ];
-
     }
 
-    display(GameModel) {
+    static getInstance() {
+        return MyGameView.instance;
+    }
 
-        if (this.boardView == null)
-            this.boardView = new MyBoard(this.scene, GameModel.currentBoardLength);
+    display() {
 
-        this.boardView.display();
+        // if (this.boardView == null)
+        //     this.boardView = new MyBoardView(this.scene, GameModel.currentBoardLength);
 
-        for (let templatePieceModel in GameModel.templatePieces) {
-            this.pieceView.display(GameModel.templatePieces[templatePieceModel]);
+        this.boardView.display(MyGameModel.getInstance().boardModel);
+
+        for (let index in MyGameModel.getInstance().templatePiecesModels) {
+            this.pieceView.display(MyGameModel.getInstance().templatePiecesModels[index]);
         }
 
-        for (let pieceModel in GameModel.pieces) {
-            this.pieceView.display(GameModel.pieces[pieceModel]);
+        for (let index in MyGameModel.getInstance().piecesModels) {
+            this.pieceView.display(MyGameModel.getInstance().piecesModels[index]);
         }
 
         // this.scene.pushMatrix();
@@ -73,7 +78,5 @@ class MyGameView {
         // this.scene.popMatrix();
 
         // this.board.display();
-
     }
-
 }

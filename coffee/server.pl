@@ -123,7 +123,7 @@ parse_input(create_board(Board), Board) :-
 	create_board(Board).
 
 % Generate bot move
- parse_input(choose_move(Board, BotType, LastMove, NextMove), NextMove) :-
+parse_input(choose_move(Board, BotType, LastMove, NextMove), NextMove) :-
 	choose_move(Board, BotType, LastMove, NextMove).
 
 % Validate move

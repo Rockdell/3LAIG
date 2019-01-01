@@ -33,12 +33,14 @@ serialInclude([
     '../animations/LinearAnimation.js',
     '../animations/CircularAnimation.js',
     '../animations/ArchAnimation.js',
-    '../game/MyBoard.js',
-    '../game/MyPieceModel.js',
-    '../game/MyPieceView.js',
-    '../game/MyGameModel.js',
-    '../game/MyGameView.js',
-
+    '../game/controller/MyGameController.js',
+    '../game/model/MyBoardModel.js',
+    '../game/model/MyGameModel.js',
+    '../game/model/MyPieceModel.js',
+    '../game/view/MyBoardView.js',
+    '../game/view/MyGameView.js',
+    '../game/view/MyPieceView.js',
+    
     main = function () {
 
         // Standard application, scene and interface setup
