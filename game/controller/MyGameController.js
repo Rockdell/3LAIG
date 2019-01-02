@@ -231,9 +231,10 @@ class MyGameController {
             MyGameModel.getInstance().currentPlayer = (MyGameModel.getInstance().currentPlayer === 'b' ? 'o' : 'b');
         }
 
+        this.validMoves();
+
         MyInputController.getInstance().reset();
         MyGameModel.getInstance().gameOver = false;
-
         MyGameModel.getInstance().scoreBoardModel.setTimer(MyGameModel.getInstance().timer);
     }
 }
