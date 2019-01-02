@@ -63,9 +63,13 @@ class MyInputController {
 
         let move = `pmove(${col},${row},${dir})`;
 
-        this.cell = null;
-        this.direction = null;
+        this.reset();
 
         return move;
+    }
+
+    reset() {
+        this.cell = null;
+        this.direction = null;
     }
 }

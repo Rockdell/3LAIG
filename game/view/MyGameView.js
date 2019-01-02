@@ -10,6 +10,7 @@ class MyGameView {
             this.boardView = new MyBoardView(scene);
             this.pieceView = new MyPieceView(scene);
             this.scoreBoardView = new MyScoreBoardView(scene);
+            this.moveView = new MyMoveView(scene);
             MyGameView.instance = this;
         }
 
@@ -49,9 +50,6 @@ class MyGameView {
 
     display() {
 
-        // if (this.boardView == null)
-        //     this.boardView = new MyBoardView(this.scene, GameModel.currentBoardLength);
-
         this.boardView.display(MyGameModel.getInstance().boardModel);
 
         this.scoreBoardView.display(MyGameModel.getInstance().scoreBoardModel);
@@ -62,6 +60,10 @@ class MyGameView {
 
         for (let index in MyGameModel.getInstance().piecesModels) {
             this.pieceView.display(MyGameModel.getInstance().piecesModels[index]);
+        }
+
+        for (let index in MyGameModel.getInstance().validMovesModels) {
+            this.moveView.display(MyGameModel.getInstance().validMovesModels[index]);
         }
 
         // this.scene.pushMatrix();

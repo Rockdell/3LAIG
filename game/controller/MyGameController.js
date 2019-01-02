@@ -161,13 +161,31 @@ class MyGameController {
         promise.then(handler = (response) => {
             if (response === 'is_over') {
                 MyGameModel.getInstance().gameOver = true;
+                MyGameModel.getInstance().removeValidMoves();
                 console.warn('Game over!');
             } else if (response === 'not_over') {
-                // console.warn('Game not over!');
+                this.validMoves();
             } else if (response === 'no') {
                 console.log('Error: game over.');
             }
         })
+    }
+
+    validMoves() {
+
+        if (MyGameController.getInstance().waitingServer) return;
+
+        let promise = makeRequest(`valid_moves(${MyGameModel.getInstance().boardModel.getBoard()},${MyGameModel.getInstance().getLastMove()},ListOfMoves)`);
+
+        let handler;
+        promise.then(handler = (response) => {
+            if (response !== 'no') {
+                MyGameModel.getInstance().removeValidMoves();
+                MyGameModel.getInstance().addValidMoves(response);
+            } else {
+                console.log('Error: getting valid moves.');
+            }
+        });
     }
 
     undoMove() {
@@ -195,6 +213,9 @@ class MyGameController {
             MyGameModel.getInstance().removePiece();
             MyGameModel.getInstance().currentPlayer = (MyGameModel.getInstance().currentPlayer === 'b' ? 'o' : 'b');
         }
+
+        MyInputController.getInstance().reset();
+        MyGameModel.getInstance().gameOver = false;
     }
 }
 

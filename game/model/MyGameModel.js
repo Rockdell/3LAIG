@@ -19,6 +19,7 @@ class MyGameModel {
             this.scoreBoardModel = new MyScoreBoardModel(0, 5, 0, 63);
             this.templatePiecesModels = [];
             this.piecesModels = [];
+            this.validMovesModels = [];
 
             // Default settings
             this.updateBoardSettings(5, 4)
@@ -63,6 +64,7 @@ class MyGameModel {
         ];
 
         this.piecesModels = [];
+        this.validMovesModels = [];
     }
 
     updateGameSettings(b, o) {
@@ -83,4 +85,14 @@ class MyGameModel {
         this.piecesModels.pop();
     }
 
+    addValidMoves(moves) {
+        let validMoves = moves.match(/(\d,\d)/g).filter(function(elem, index, self) { return index === self.indexOf(elem)});
+        validMoves.forEach(move => {
+            this.validMovesModels.push(new MyMoveModel(move));
+        });
+    }
+
+    removeValidMoves() {
+        this.validMovesModels = [];
+    }
 }

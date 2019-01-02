@@ -138,6 +138,10 @@ parse_input(move(Board, CurrentPlayer, NextMove, NewBoard), NewBoard) :-
 parse_input(game_over(Board, LastMove, LastPlayer, Consecutive), is_over) :-
 	game_over(Board, LastMove, LastPlayer, Consecutive).
 
+% Valid moves
+parse_input(valid_moves(Board, LastMove, ListOfMoves), ListOfMoves) :-
+	valid_moves(Board, LastMove, ListOfMoves).
+
 parse_input(game_over(_, _, _, _), not_over).
 
 parse_input(_, no).

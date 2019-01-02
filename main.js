@@ -37,10 +37,12 @@ serialInclude([
     '../game/controller/MyInputController.js',
     '../game/model/MyBoardModel.js',
     '../game/model/MyGameModel.js',
+    '../game/model/MyMoveModel.js',
     '../game/model/MyPieceModel.js',
     '../game/model/MyScoreBoardModel.js',
     '../game/view/MyBoardView.js',
     '../game/view/MyGameView.js',
+    '../game/view/MyMoveView.js',
     '../game/view/MyPieceView.js',
     '../game/view/MyScoreBoardView.js',
     
