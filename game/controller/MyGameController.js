@@ -139,7 +139,6 @@ class MyGameController {
         promise.then(handler = (response) => {
             if (response === 'is_over') {
                 MyGameModel.getInstance().gameOver = true;
-                MyGameModel.getInstance().removeValidMoves();
                 this.alertGameOver(lastPlayer, 'Game over!');
             } else if (response === 'not_over') {
                 this.validMoves();
@@ -163,7 +162,7 @@ class MyGameController {
         let handler;
         promise.then(handler = (response) => {
             if (response !== 'no') {
-                MyGameModel.getInstance().removeValidMoves();
+                // MyGameModel.getInstance().removeValidMoves();
                 MyGameModel.getInstance().addValidMoves(response);
             } else {
                 console.log('Error: getting valid moves.');
@@ -193,16 +192,19 @@ class MyGameController {
         if (currentPlayer === 'user' && lastPlayer !== 'user') {
             MyGameModel.getInstance().boardModel.removePiece();
             MyGameModel.getInstance().removePiece();
+            MyGameModel.getInstance().removeValidMoves();
 
             if (MyGameModel.getInstance().getLastMove() !== 'pmove(_,_,_)') {
                 MyGameModel.getInstance().boardModel.removePiece();
                 MyGameModel.getInstance().removePiece();
+                MyGameModel.getInstance().removeValidMoves();
             } else {
                 MyGameModel.getInstance().currentPlayer = (MyGameModel.getInstance().currentPlayer === 'b' ? 'o' : 'b');
             }
         } else {
             MyGameModel.getInstance().boardModel.removePiece();
             MyGameModel.getInstance().removePiece();
+            MyGameModel.getInstance().removeValidMoves();
             MyGameModel.getInstance().currentPlayer = (MyGameModel.getInstance().currentPlayer === 'b' ? 'o' : 'b');
         }
 

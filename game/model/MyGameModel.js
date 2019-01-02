@@ -109,14 +109,19 @@ class MyGameModel {
     }
 
     addValidMoves(moves) {
+
+        let currentValidMoves = [];
+
         let validMoves = moves.match(/(\d,\d)/g).filter(function(elem, index, self) { return index === self.indexOf(elem)});
         validMoves.forEach(move => {
-            this.validMovesModels.push(new MyMoveModel(move));
+            currentValidMoves.push(new MyMoveModel(move));
         });
+
+        this.validMovesModels.push(currentValidMoves);
     }
 
     removeValidMoves() {
-        this.validMovesModels = [];
+        this.validMovesModels.pop();
     }
     
     updateTemplatePiecesColor() {
