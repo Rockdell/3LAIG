@@ -70,6 +70,26 @@ class MyInterface extends CGFinterface {
     }
 
     /**
+     * Adds a folder containing Coffee's game settings.
+     */
+    addGameSettings() {
+
+        let group = this.gui.addFolder('Coffee Settings');
+        group.open();
+        
+        this.boardLengthTmp = 5;
+        let boardLength = group.add(this, 'boardLengthTmp', [5, 6, 7] );
+        group.add(MyGameModel.getInstance(), 'consecutive', [3, 4, 5, 6, 7] );
+
+        boardLength.onChange(function(value){
+            console.log(value);
+            MyGameModel.getInstance().updateBoardSettings(value);
+            console.log("Board Length Updated.");
+        });
+
+    }
+
+    /**
 	 * processKeyboard
 	 * @param event {Event}
 	 */

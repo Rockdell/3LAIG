@@ -9,6 +9,7 @@ class MyGameView {
             this.scene = scene;
             this.boardView = new MyBoardView(scene);
             this.pieceView = new MyPieceView(scene);
+            this.scoreBoardView = new MyScoreBoardView(scene);
             MyGameView.instance = this;
         }
 
@@ -52,6 +53,8 @@ class MyGameView {
         //     this.boardView = new MyBoardView(this.scene, GameModel.currentBoardLength);
 
         this.boardView.display(MyGameModel.getInstance().boardModel);
+
+        this.scoreBoardView.display(MyGameModel.getInstance().scoreBoardModel);
 
         for (let index in MyGameModel.getInstance().templatePiecesModels) {
             this.pieceView.display(MyGameModel.getInstance().templatePiecesModels[index]);

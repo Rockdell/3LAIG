@@ -1,4 +1,6 @@
-
+/**
+ * MyBoardModel
+ */
 class MyBoardModel {
 
     constructor(boardLength) {

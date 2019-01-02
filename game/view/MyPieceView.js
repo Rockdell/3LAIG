@@ -92,17 +92,21 @@ class MyPieceView extends CGFobject {
                     break;
             }
 
-            this.scene.translate(PieceModel.x, 0.2, PieceModel.z);
+            if (PieceModel.animation != null)
+                PieceModel.animation.apply();
+            else
+                this.scene.translate(PieceModel.x, 0.2, PieceModel.z);
+
             this.scene.rotate(direction, 0, 1, 0);
             this.scene.scale(0.5, 0.5, 0.5);
-            
+
             this.scene.pushMatrix();
-                // this.pieceTexture.bind();
-                // this.heightMap.bind(1);
+            // this.pieceTexture.bind();
+            // this.heightMap.bind(1);
 
-                // this.scene.setActiveShader(this.shader);
+            // this.scene.setActiveShader(this.shader);
 
-                PieceModel.color == "o" ? this.appearanceTopOrange.apply() : this.appearanceTopBrown.apply();
+            PieceModel.color == "o" ? this.appearanceTopOrange.apply() : this.appearanceTopBrown.apply();
 
                 this.halfPiece.display();
                 // this.scene.setActiveShader(this.scene.defaultShader);

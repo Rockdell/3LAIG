@@ -1,5 +1,5 @@
 /**
- * MyBoard
+ * MyBoardView
  */
 class MyBoardView extends CGFobject {
 

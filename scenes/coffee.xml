@@ -82,7 +82,7 @@
         </transformation>
     </transformations>
     <animations>
-        <arch id="arch" span="2" height="3" xi="1" yi="1" xf="3" yf="3" />
+        <arch id="arch" span="2" height="3" xi="0" yi="0" xf="3" yf="3" />
     </animations>
     <primitives>
         <primitive id="filler">
@@ -101,6 +101,9 @@
                 <material id="material5" />
             </materials>
             <texture id="none" />
+            <!-- <animations>
+                <animationref id="arch" />
+            </animations> -->
             <children>
                 <primitiveref id="filler" />
             </children>

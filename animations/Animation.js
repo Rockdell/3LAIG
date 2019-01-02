@@ -33,9 +33,9 @@ class Animation {
     }
 
     apply() {
-
-        // if (this.isEnd)
-        //     return;
+        
+        if (this.isEnd)
+            return;
 
         this.scene.multMatrix(this.transfMatrix);
     }

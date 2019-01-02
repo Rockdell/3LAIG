@@ -16,6 +16,7 @@ class MyGameModel {
 
             // Models
             this.boardModel = new MyBoardModel();
+            this.scoreBoardModel = new MyScoreBoardModel(0, 5, 0, 63);
             this.templatePiecesModels = [];
             this.piecesModels = [];
 
@@ -32,8 +33,8 @@ class MyGameModel {
     }
 
     updateBoardSettings(boardLength, consecutive) {
-        this.boardModel.boardLength = boardLength;
-        this.consecutive = consecutive;
+        this.boardModel.boardLength = boardLength || this.boardModel.boardLength;
+        this.consecutive = consecutive || this.consecutive;
 
         let cx = (this.boardModel.boardLength - 5) / 2 + 0.625 + 0.5;
         this.templatePiecesModels = [
@@ -62,6 +63,9 @@ class MyGameModel {
         let moveInfo = move.match(/[^pmove(]([^)]+)/g)[0].split(',');
 
         this.moves.push(move);
-        this.piecesModels.push(new MyPieceModel(parseInt(moveInfo[0]) + 1, parseInt(moveInfo[1]) + 1, moveInfo[2], this.currentPlayer))
+        // this.piecesModels.push(new MyPieceModel(parseInt(moveInfo[0]) + 1, parseInt(moveInfo[1]) + 1, moveInfo[2], this.currentPlayer))
+        let nextPiece = new MyPieceModel(0, 0, moveInfo[2], this.currentPlayer);
+        nextPiece.moveTo(parseInt(moveInfo[0]) + 1, parseInt(moveInfo[1]) + 1);
+        this.piecesModels.push(nextPiece);
     }
 }

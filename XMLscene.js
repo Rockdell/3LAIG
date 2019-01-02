@@ -98,8 +98,11 @@ class XMLscene extends CGFscene {
         this.interface.addViewsGroup(this.graph.parsedXML.views);
         this.updateCamera();
 
-        // Adds lights group.
+        // Adds lights group
         this.interface.addLightsGroup(this.graph.parsedXML.lights);
+
+        //Adds Coffee's game settings
+        this.interface.addGameSettings();
 
         this.sceneInited = true;
     }
@@ -340,5 +343,11 @@ class XMLscene extends CGFscene {
             for (let i = 0; i < obj.anims.length; i++)
                 obj.anims[i].update(this.deltaTime / 1000.0);
         }
+
+        for (let pieceIndex in MyGameModel.getInstance().piecesModels) {
+            MyGameModel.getInstance().piecesModels[pieceIndex].handleAnimation(this.deltaTime / 1000.0);
+        }
+
+        MyGameModel.getInstance().scoreBoardModel.update(this.deltaTime / 1000.0);
     };
 }

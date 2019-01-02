@@ -83,14 +83,14 @@ class ArchAnimation extends Animation {
         this.total_time += secondsElapsed;
 
         let nextMatrix = mat4.create();
-        this.translateMatrix(nextMatrix, vec3.fromValues(0.5, 0, 0.5));
+        // this.translateMatrix(nextMatrix, vec3.fromValues(0.5, 0, 0.5));
         this.rotateYMatrix(nextMatrix, this.angleY);
-        this.translateMatrix(nextMatrix, vec3.fromValues(-0.5, 0, -0.5));
+        // this.translateMatrix(nextMatrix, vec3.fromValues(-0.5, 0, -0.5));
         this.translateMatrix(nextMatrix, vec3.fromValues(0, this.getY(this.total_time), this.velocity * this.total_time));
         // this.translateMatrix(nextMatrix, vec3.fromValues(this.xVel * this.total_time, this.getY(this.total_time), this.zVel * this.total_time));
-        this.translateMatrix(nextMatrix, vec3.fromValues(0.5, 0, 0.5));
+        // this.translateMatrix(nextMatrix, vec3.fromValues(0.5, 0, 0.5));
         this.rotateXMatrix(nextMatrix, this.anglePerSecond * this.total_time);
-        this.translateMatrix(nextMatrix, vec3.fromValues(-0.5, 0, -0.5));
+        // this.translateMatrix(nextMatrix, vec3.fromValues(-0.5, 0, -0.5));
 
         this.transfMatrix = nextMatrix;
     }
