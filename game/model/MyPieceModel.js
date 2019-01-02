@@ -15,6 +15,10 @@ class MyPieceModel {
         this.animation = null;
     }
 
+    setColor(color) {
+        this.color = color;
+    }
+
     moveTo(xf, zf) {
         this.xf = xf;
         this.zf = zf;

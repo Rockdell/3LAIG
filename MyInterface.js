@@ -74,14 +74,18 @@ class MyInterface extends CGFinterface {
      */
     addGameSettings() {
 
-        let group = this.gui.addFolder('Coffee Settings');
-        group.open();
+        this.gameSettings = this.gui.addFolder('Coffee Settings');
+        this.gameSettings.open();
+
+        this.gameSettings.add(MyGameController.getInstance(), 'Start_Game');
 
         this.Board_Size = 5;
         this.Consecutive = 4;
+        this.Timer = 30;
 
-        this.boardLengthGroup = group.add(this, 'Board_Size', [5, 6, 7]);
-        this.consecutiveGroup = group.add(this, 'Consecutive', [3, 4, 5, 6, 7]);
+        this.boardLengthGroup = this.gameSettings.add(this, 'Board_Size', [5, 6, 7]);
+        this.consecutiveGroup = this.gameSettings.add(this, 'Consecutive', [3, 4, 5, 6, 7]);
+        this.timerGroup = this.gameSettings.add(this, 'Timer' , 0, 100 * 60 - 1);
 
         this.boardLengthGroup.onFinishChange(function (value) {
 
@@ -90,7 +94,7 @@ class MyInterface extends CGFinterface {
                 alert("Consecutive Pieces must be equal or less than Board Size!");
             }
 
-            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive));
+            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive), parseInt(this.object.Timer));
         });
 
         this.consecutiveGroup.onFinishChange(function (value) {
@@ -101,11 +105,12 @@ class MyInterface extends CGFinterface {
                 return;
             }
 
-            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive));
+            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive), parseInt(this.object.Timer));
         });
 
-        group.add(MyGameController.getInstance(), 'Start_Game');
-
+        this.timerGroup.onFinishChange(function (value) {
+            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive), parseInt(this.object.Timer));
+        });
     }
 
     /**

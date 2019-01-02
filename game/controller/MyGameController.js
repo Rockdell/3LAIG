@@ -16,23 +16,39 @@ class MyGameController {
 
     Start_Game() {
 
-        this.setBoardSettings(MyGameModel.getInstance().boardModel.boardLength, MyGameModel.getInstance().consecutive);
+        //If the game is over / hasn't begun
+        if (MyGameModel.getInstance().gameOver) {
 
-        setTimeout(() => {
-            // this.setGameSettings(MyGameModel.getInstance().b, MyGameModel.getInstance().o);
-            this.setGameSettings("user", "hardbot");
-        }, 500);
+            MyGameView.getInstance().scene.interface.boardLengthGroup.remove();
+            MyGameView.getInstance().scene.interface.consecutiveGroup.remove();
 
-        setTimeout(() => {
-            this.createBoard();
-            console.log("Game Started!");
-        }, 1000);
+            this.setBoardSettings(MyGameModel.getInstance().boardModel.boardLength, MyGameModel.getInstance().consecutive, MyGameModel.getInstance().timer);
+
+            setTimeout(() => {
+                // this.setGameSettings(MyGameModel.getInstance().b, MyGameModel.getInstance().o);
+                this.setGameSettings("user", "user");
+            }, 500);
+
+            setTimeout(() => {
+                this.createBoard();
+                MyGameView.getInstance().scene.interface.gameSettings.add(MyGameController.getInstance(), "Undo_Move");
+                MyGameModel.getInstance().scoreBoardModel.start();
+                console.log("Game Started!");
+            }, 1000);
+
+        }
 
     }
 
     gameLoop() {
 
         if (MyGameModel.getInstance().gameOver) return;
+        
+        if (MyGameModel.getInstance().scoreBoardModel.time <= 0) {
+            MyGameModel.getInstance().gameOver = true;
+            console.log("User Timed Out!");
+            return;
+        }
 
         let nextPlayer = MyGameModel.getInstance().currentPlayer === 'b' ? MyGameModel.getInstance().b : MyGameModel.getInstance().o;
 
@@ -44,7 +60,7 @@ class MyGameController {
         }
     }
 
-    setBoardSettings(boardLength, consecutive) {
+    setBoardSettings(boardLength, consecutive, timer) {
 
         if (MyGameController.getInstance().waitingServer) return;
 
@@ -53,7 +69,7 @@ class MyGameController {
         let handler;
         promise.then(handler = (response) => {
             if (response === 'ok') {
-                MyGameModel.getInstance().updateBoardSettings(boardLength, consecutive)
+                MyGameModel.getInstance().updateBoardSettings(boardLength, consecutive, timer);
             } else if (response === 'no') {
                 console.log('Error: setting game settings.');
             }
@@ -142,6 +158,7 @@ class MyGameController {
                 MyGameModel.getInstance().boardModel.update(newBoard);
                 MyGameModel.getInstance().addPiece(move);
                 MyGameModel.getInstance().currentPlayer = (MyGameModel.getInstance().currentPlayer === 'b' ? 'o' : 'b');
+                MyGameModel.getInstance().scoreBoardModel.setTimer(MyGameModel.getInstance().timer);
 
                 this.gameOver();
             } else {
@@ -188,7 +205,7 @@ class MyGameController {
         });
     }
 
-    undoMove() {
+    Undo_Move() {
 
         if (MyGameModel.getInstance().getLastMove() === 'pmove(_,_,_)') {
             console.log('Error: can\'t undo more moves.');
@@ -216,6 +233,8 @@ class MyGameController {
 
         MyInputController.getInstance().reset();
         MyGameModel.getInstance().gameOver = false;
+
+        MyGameModel.getInstance().scoreBoardModel.setTimer(MyGameModel.getInstance().timer);
     }
 }
 

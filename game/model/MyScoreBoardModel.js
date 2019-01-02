@@ -8,14 +8,30 @@ class MyScoreBoardModel {
         this.y = y;
         this.z = z;
 
+        this.running = false;
+
         //Time in seconds
-        this.setTime(time || 0);
+        this.setTimer(time || 0);
 
         this.orangeGamesWon = 0;
         this.brownGamesWon = 0;
     }
 
-    setTime(time) {
+    start() {
+        this.running = true;
+    }
+
+    stop() {
+        this.running = false;
+    }
+
+    setPosition(x, y, z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    setTimer(time) {
         if (time >= 100 * 60)
             console.log("Invalid timer: Less than 100 minutes!");
         else
@@ -23,13 +39,14 @@ class MyScoreBoardModel {
     }
 
     update(elapsedTime) {
+        if (this.running) {
+            if (this.time == 0)
+                return;
+            this.time -= elapsedTime;
 
-        if (this.time == 0)
-            return;
-        this.time -= elapsedTime;
-
-        if (this.time < 0)
-            this.time = 0;
+            if (this.time < 0)
+                this.time = 0;
+        }
     }
 
     gameWonBy(player) {

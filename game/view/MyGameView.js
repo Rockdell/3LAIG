@@ -54,6 +54,8 @@ class MyGameView {
 
         this.scoreBoardView.display(MyGameModel.getInstance().scoreBoardModel);
 
+        //Update template pieces color
+        MyGameModel.getInstance().updateTemplatePiecesColor();
         for (let index in MyGameModel.getInstance().templatePiecesModels) {
             this.pieceView.display(MyGameModel.getInstance().templatePiecesModels[index]);
         }

@@ -13,10 +13,11 @@ class MyGameModel {
             this.o = null;
             this.currentPlayer = null;
             this.gameOver = true;
+            this.timer = 30;
 
             // Models
             this.boardModel = new MyBoardModel();
-            this.scoreBoardModel = new MyScoreBoardModel(0, 5, 0, 63);
+            this.scoreBoardModel = new MyScoreBoardModel();
             this.templatePiecesModels = [];
             this.piecesModels = [];
             this.validMovesModels = [];
@@ -42,25 +43,26 @@ class MyGameModel {
         }
     }
 
-    updateBoardSettings(boardLength, consecutive) {
-
-        console.log(boardLength + " + " + consecutive);
+    updateBoardSettings(boardLength, consecutive, timer) {
 
         this.boardModel.boardLength = boardLength || this.boardModel.boardLength;
         this.consecutive = consecutive || this.consecutive;
+        this.timer = timer || this.timer;
 
-        console.log(this.boardModel.boardLength + " + " + this.consecutive);
+        this.scoreBoardModel.setPosition(this.boardModel.boardLength + 2, 0, this.boardModel.boardLength / 2.0 + 0.5);
+        this.scoreBoardModel.setTimer(this.timer);
 
-        let cx = (this.boardModel.boardLength - 5) / 2 + 0.625 + 0.5;
+        this.cz = (this.boardModel.boardLength - 5) / 2 + 0.625 + 0.5;
+
         this.templatePiecesModels = [
-            new MyPieceModel(cx, this.boardModel.boardLength + 1.5, "v", "b", 1),
-            new MyPieceModel(cx + 1.25, this.boardModel.boardLength + 1.5, "h", "b", 2),
-            new MyPieceModel(cx + 2.50, this.boardModel.boardLength + 1.5, "du", "b", 3),
-            new MyPieceModel(cx + 3.75, this.boardModel.boardLength + 1.5, "dd", "b", 4),
-            new MyPieceModel(cx + 3.75, -0.5, "v", "o", 1),
-            new MyPieceModel(cx + 2.50, -0.5, "h", "o", 2),
-            new MyPieceModel(cx + 1.25, -0.5, "du", "o", 3),
-            new MyPieceModel(cx, -0.5, "dd", "o", 4)
+            new MyPieceModel(-1, this.cz, "v", "b", 1),
+            new MyPieceModel(-1, this.cz + 1.25, "h", "b", 2),
+            new MyPieceModel(-1, this.cz + 2.50, "du", "b", 3),
+            new MyPieceModel(-1, this.cz + 3.75, "dd", "b", 4),
+            // new MyPieceModel(this.cx + 3.75, -0.5, "v", "o", 1),
+            // new MyPieceModel(this.cx + 2.50, -0.5, "h", "o", 2),
+            // new MyPieceModel(this.cx + 1.25, -0.5, "du", "o", 3),
+            // new MyPieceModel(this.cx, -0.5, "dd", "o", 4)
         ];
 
         this.piecesModels = [];
@@ -76,7 +78,26 @@ class MyGameModel {
 
     addPiece(move) {
         let moveInfo = move.match(/[^pmove(]([^)]+)/g)[0].split(',');
-        let nextPiece = new MyPieceModel(0, 0, moveInfo[2], this.currentPlayer);
+
+        // this.piecesModels.push(new MyPieceModel(parseInt(moveInfo[0]) + 1, parseInt(moveInfo[1]) + 1, moveInfo[2], this.currentPlayer))
+
+        let newZ;
+        switch (moveInfo[2]) {
+            case "v":
+                newZ = this.cz;
+                break;
+            case "h":
+                newZ = this.cz + 1.25;
+                break;
+            case "du":
+                newZ = this.cz + 2.50;
+                break;
+            case "dd":
+                newZ = this.cz + 3.75;
+                break;
+        }
+
+        let nextPiece = new MyPieceModel(-1, newZ, moveInfo[2], this.currentPlayer);
         nextPiece.moveTo(parseInt(moveInfo[0]) + 1, parseInt(moveInfo[1]) + 1);
         this.piecesModels.push(nextPiece);
     }
@@ -95,4 +116,11 @@ class MyGameModel {
     removeValidMoves() {
         this.validMovesModels = [];
     }
+    
+    updateTemplatePiecesColor() {
+        this.templatePiecesModels.forEach((element) => {
+            element.setColor(this.currentPlayer);
+        })
+    }
+
 }

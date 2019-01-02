@@ -32,6 +32,10 @@ class MyScoreBoardView extends CGFobject {
         this.scene.pushMatrix();
 
             this.scene.translate(ScoreBoardModel.x, ScoreBoardModel.y, ScoreBoardModel.z);
+            this.scene.rotate(-Math.PI / 2.0, 0, 1, 0);
+            this.scene.translate(-3, 0.5, 0);
+            this.scene.rotate(-Math.PI / 5.0, 1, 0, 0);
+            
             let time = ScoreBoardModel.getTimeArray();
 
             for (let i = 0; i < time.length; i++) {

@@ -5,7 +5,7 @@ class MyMoveView {
 
     constructor(scene) {
         this.scene = scene;
-        this.sphere = new MySphere(scene, 0.2, 10, 10);
+        this.sphere = new MySphere(scene, 0.1, 10, 10);
     }
 
     display(MoveModel) {
