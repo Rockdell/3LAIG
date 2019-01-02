@@ -149,5 +149,4 @@ class MyGameModel {
 
         this.templatePiecesModels[index].setVisible(isVisible);  
     }
-
 }

@@ -108,18 +108,11 @@ parse_input(handshake, handshake).
 % Goodbye
 parse_input(quit, goodbye).
 
-% Set board settings
-parse_input(set_board_settings(BoardLength, Consecutive), ok) :-
-	retractall(currentBoardLength(_)), retractall(currentConsecutive(_)),
-    asserta(currentBoardLength(BoardLength)), asserta(currentConsecutive(Consecutive)).
-
-% Set game settings
-parse_input(set_game_settings(Player1, Player2), ok) :-
-	retractall(ptype(_, _)),
-	asserta(ptype('b', Player1)), asserta(ptype('o', Player2)).
-
-% Create board
-parse_input(create_board(Board), Board) :-
+% Set settings
+parse_input(set_settings(BoardLength, Consecutive, Player1, Player2, Board), Board) :-
+	retractall(currentBoardLength(_)), retractall(currentConsecutive(_)), retractall(ptype(_, _)),
+    asserta(currentBoardLength(BoardLength)), asserta(currentConsecutive(Consecutive)), 
+	asserta(ptype('b', Player1)), asserta(ptype('o', Player2)),
 	create_board(Board).
 
 % Generate bot move

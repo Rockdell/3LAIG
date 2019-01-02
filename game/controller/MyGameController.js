@@ -22,23 +22,13 @@ class MyGameController {
             MyGameView.getInstance().scene.interface.boardLengthGroup.remove();
             MyGameView.getInstance().scene.interface.consecutiveGroup.remove();
 
-            this.setBoardSettings(MyGameModel.getInstance().boardModel.boardLength, MyGameModel.getInstance().consecutive, MyGameModel.getInstance().timer);
+            this.setSettings(MyGameModel.getInstance().boardModel.boardLength, MyGameModel.getInstance().consecutive, MyGameModel.getInstance().timer, 'hardbot', 'hardbot');
 
-            setTimeout(() => {
-                // this.setGameSettings(MyGameModel.getInstance().b, MyGameModel.getInstance().o);
-                // this.setGameSettings("user", "user");
-                this.setGameSettings("hardbot", "hardbot");
-            }, 500);
+            console.log("Game Started!");
 
-            setTimeout(() => {
-                this.createBoard();
-                MyGameView.getInstance().scene.interface.gameSettings.add(MyGameController.getInstance(), "Undo_Move");
-                MyGameModel.getInstance().scoreBoardModel.start();
-                console.log("Game Started!");
-            }, 1000);
-
+            MyGameView.getInstance().scene.interface.gameSettings.add(MyGameController.getInstance(), "Undo_Move");
+            MyGameModel.getInstance().scoreBoardModel.start();
         }
-
     }
 
     gameLoop() {
@@ -61,23 +51,7 @@ class MyGameController {
         }
     }
 
-    setBoardSettings(boardLength, consecutive, timer) {
-
-        if (MyGameController.getInstance().waitingServer) return;
-
-        let promise = makeRequest(`set_board_settings(${boardLength},${consecutive})`);
-
-        let handler;
-        promise.then(handler = (response) => {
-            if (response === 'ok') {
-                MyGameModel.getInstance().updateBoardSettings(boardLength, consecutive, timer);
-            } else if (response === 'no') {
-                console.log('Error: setting game settings.');
-            }
-        });
-    }
-
-    setGameSettings(b, o) {
+    setSettings(boardLength, consecutive, timer, b, o) {
 
         if (MyGameController.getInstance().waitingServer) return;
 
@@ -86,31 +60,17 @@ class MyGameController {
             o += '2';
         }
 
-        let promise = makeRequest(`set_game_settings(${b},${o})`);
-
-        let handler;
-        promise.then(handler = (response) => {
-            if (response === 'ok') {
-                MyGameModel.getInstance().updateGameSettings(b, o);
-            } else if (response === 'no') {
-                console.log('Error: setting game settings.');
-            }
-        });
-    }
-
-    createBoard() {
-
-        if (MyGameController.getInstance().waitingServer) return;  
-
-        let promise = makeRequest(`create_board(Board)`);
+        let promise = makeRequest(`set_settings(${boardLength},${consecutive},${b},${o},Board)`);
 
         let handler;
         promise.then(handler = (board) => {
             if (board !== 'no') {
+                MyGameModel.getInstance().updateBoardSettings(boardLength, consecutive, timer);
+                MyGameModel.getInstance().updateGameSettings(b, o);
                 MyGameModel.getInstance().boardModel.update(board);
                 MyGameModel.getInstance().gameOver= false;
-            } else {
-                console.log('Error: creating board');
+            } else if (board === 'no') {
+                console.log('Error: settings.');
             }
         });
     }
@@ -253,6 +213,3 @@ class MyGameController {
         MyGameModel.getInstance().scoreBoardModel.setTimer(MyGameModel.getInstance().timer);
     }
 }
-
-
-
