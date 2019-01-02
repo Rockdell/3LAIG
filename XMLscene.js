@@ -294,7 +294,7 @@ class XMLscene extends CGFscene {
 
             MyInputController.getInstance().updatePick(this);
 
-            if (MyGameModel.getInstance().gameStarted)
+            if (!MyGameModel.getInstance().gameOver)
                 MyGameController.getInstance().gameLoop();
 
             MyGameView.getInstance().display();

@@ -46,10 +46,7 @@ class MyGameController {
 
     setBoardSettings(boardLength, consecutive) {
 
-        if (MyGameController.getInstance().waitingServer)  {
-            console.log('Error: server not ready.');
-            return;
-        }    
+        if (MyGameController.getInstance().waitingServer) return;
 
         let promise = makeRequest(`set_board_settings(${boardLength},${consecutive})`);
 
@@ -65,10 +62,7 @@ class MyGameController {
 
     setGameSettings(b, o) {
 
-        if (MyGameController.getInstance().waitingServer)  {
-            console.log('Error: server not ready.');
-            return;
-        }    
+        if (MyGameController.getInstance().waitingServer) return;
 
         if (b === 'hardbot' && b === o) {
             b += '1';
@@ -89,10 +83,7 @@ class MyGameController {
 
     createBoard() {
 
-        if (MyGameController.getInstance().waitingServer)  {
-            console.log('Error: server not ready.');
-            return;
-        }    
+        if (MyGameController.getInstance().waitingServer) return;  
 
         let promise = makeRequest(`create_board(Board)`);
 
@@ -100,7 +91,7 @@ class MyGameController {
         promise.then(handler = (board) => {
             if (board !== 'no') {
                 MyGameModel.getInstance().boardModel.update(board);
-                MyGameModel.getInstance().gameStarted = true;
+                MyGameModel.getInstance().gameOver= false;
             } else {
                 console.log('Error: creating board');
             }
@@ -109,10 +100,7 @@ class MyGameController {
 
     genBotMove(botType) {
 
-        if (MyGameController.getInstance().waitingServer)  {
-            console.log('Error: server not ready.');
-            return;
-        }
+        if (MyGameController.getInstance().waitingServer) return;
 
         let promise = makeRequest(`choose_move(${MyGameModel.getInstance().boardModel.getBoard()},${botType},${MyGameModel.getInstance().getLastMove()},NextMove)`);
 
@@ -128,10 +116,7 @@ class MyGameController {
 
     validate(move) {
 
-        if (MyGameController.getInstance().waitingServer)  {
-            console.log('Error: server not ready.');
-            return;
-        }    
+        if (MyGameController.getInstance().waitingServer) return;
 
         let promise = makeRequest(`validate_move(${MyGameModel.getInstance().boardModel.getBoard()},${MyGameModel.getInstance().getLastMove()},${move})`);
 
@@ -147,10 +132,7 @@ class MyGameController {
 
     move(move) {
 
-        if (MyGameController.getInstance().waitingServer)  {
-            console.log('Error: server not ready.');
-            return;
-        }    
+        if (MyGameController.getInstance().waitingServer) return;
 
         let promise = makeRequest(`move(${MyGameModel.getInstance().boardModel.getBoard()},${MyGameModel.getInstance().currentPlayer},${move},NewBoard)`);
 
@@ -170,10 +152,7 @@ class MyGameController {
 
     gameOver() {
 
-        if (MyGameController.getInstance().waitingServer)  {
-            console.log('Error: server not ready.');
-            return;
-        }    
+        if (MyGameController.getInstance().waitingServer) return;
 
         let lastPlayer = MyGameModel.getInstance().currentPlayer === 'b' ? 'o' : 'b';
         let promise = makeRequest(`game_over(${MyGameModel.getInstance().boardModel.getBoard()},${MyGameModel.getInstance().getLastMove()},${lastPlayer},${MyGameModel.getInstance().consecutive})`)
@@ -182,7 +161,6 @@ class MyGameController {
         promise.then(handler = (response) => {
             if (response === 'is_over') {
                 MyGameModel.getInstance().gameOver = true;
-                MyGameModel.getInstance().started = false;
                 console.warn('Game over!');
             } else if (response === 'not_over') {
                 // console.warn('Game not over!');
