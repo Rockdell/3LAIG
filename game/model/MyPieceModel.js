@@ -13,10 +13,16 @@ class MyPieceModel {
         this.pickingID = pickingID;
 
         this.animation = null;
+
+        this.show = true;
     }
 
     setColor(color) {
         this.color = color;
+    }
+
+    setVisible(isVisible) {
+        this.show = isVisible;
     }
 
     moveTo(xf, zf) {
@@ -25,8 +31,19 @@ class MyPieceModel {
         this.animation = new ArchAnimation(MyGameView.getInstance().scene, 1.5, 2, this.x, this.z, this.xf, this.zf);
         this.animation.animating = true;
 
+        this.handleAnimation(0.000001);
+
         // this.x = xf;
         // this.z = zf;
+    }
+
+    scale(initialScale, endScale) {
+        this.xf = this.x;
+        this.zf = this.z;
+        this.animation = new ScaleAnimation(MyGameView.getInstance().scene, 0.3, this.x, 0.2, this.z, initialScale, endScale);
+        this.animation.animating = true;
+
+        this.handleAnimation(0.000001);
     }
 
     handleAnimation(elapsedTime) {
@@ -34,8 +51,9 @@ class MyPieceModel {
             if (this.animation.animating == true)
                 this.animation.update(elapsedTime);
             else {
-                this.x = this.animation.xf;
-                this.z = this.animation.zf;
+                MyGameModel.getInstance().setTemplateVisiblity(this.direction, true);
+                this.x = this.xf;
+                this.z = this.zf;
                 this.animation = null;
             }
         }

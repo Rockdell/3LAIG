@@ -58,58 +58,57 @@ class MyPieceView extends CGFobject {
         return new CGFnurbsSurface(uParts, 8, controlVertexes);
     }
 
-    update() {
-
-    }
-    
     display(PieceModel) {
 
-        this.scene.pushMatrix();
-
-            if (PieceModel.pickingID != null)
-                this.scene.registerForPick(PieceModel.pickingID, this.halfPiece);
-            else 
-                this.scene.registerForPick("", this.halfPiece);
-
-            let direction;
-            switch (PieceModel.direction) {
-                case "v":
-                    direction = 0;
-                    break;
-                case "h":
-                    direction = Math.PI / 2.0;
-                    break;
-                case "du":
-                    direction = - Math.PI / 4.0;
-                    break;
-                case "dd":
-                    direction = Math.PI / 4.0;
-                    break;
-            }
-
-            if (PieceModel.animation != null)
-                PieceModel.animation.apply();
-            else
-                this.scene.translate(PieceModel.x, 0.2, PieceModel.z);
-
-            this.scene.rotate(direction, 0, 1, 0);
-            this.scene.scale(0.5, 0.5, 0.5);
+        if(PieceModel.show) {
 
             this.scene.pushMatrix();
 
-            PieceModel.color == "o" ? this.appearanceTopOrange.apply() : this.appearanceTopBrown.apply();
-                this.halfPiece.display();
+                if (PieceModel.pickingID != null)
+                    this.scene.registerForPick(PieceModel.pickingID, this.halfPiece);
+                else 
+                    this.scene.registerForPick("", this.halfPiece);
+
+                let direction;
+                switch (PieceModel.direction) {
+                    case "v":
+                        direction = 0;
+                        break;
+                    case "h":
+                        direction = Math.PI / 2.0;
+                        break;
+                    case "du":
+                        direction = - Math.PI / 4.0;
+                        break;
+                    case "dd":
+                        direction = Math.PI / 4.0;
+                        break;
+                }
+
+                if (PieceModel.animation != null)
+                    PieceModel.animation.apply();
+                else
+                    this.scene.translate(PieceModel.x, 0.2, PieceModel.z);
+
+                this.scene.rotate(direction, 0, 1, 0);
+                this.scene.scale(0.5, 0.5, 0.5);
+
+                this.scene.pushMatrix();
+
+                PieceModel.color == "o" ? this.appearanceTopOrange.apply() : this.appearanceTopBrown.apply();
+                    this.halfPiece.display();
+                this.scene.popMatrix();
+
+                this.scene.pushMatrix();
+
+                    PieceModel.color == "o" ? this.appearanceBotOrange.apply() : this.appearanceBotBrown.apply();
+
+                    this.scene.rotate(Math.PI, 1, 0, 0);
+                    this.halfPiece.display();
+
+                this.scene.popMatrix();
+                
             this.scene.popMatrix();
-
-            this.scene.pushMatrix();
-
-                PieceModel.color == "o" ? this.appearanceBotOrange.apply() : this.appearanceBotBrown.apply();
-
-                this.scene.rotate(Math.PI, 1, 0, 0);
-                this.halfPiece.display();
-
-            this.scene.popMatrix();
-            
-        this.scene.popMatrix();
+        }
     }
 }

@@ -26,7 +26,8 @@ class MyGameController {
 
             setTimeout(() => {
                 // this.setGameSettings(MyGameModel.getInstance().b, MyGameModel.getInstance().o);
-                this.setGameSettings("user", "user");
+                // this.setGameSettings("user", "user");
+                this.setGameSettings("hardbot", "hardbot");
             }, 500);
 
             setTimeout(() => {
@@ -46,7 +47,7 @@ class MyGameController {
         
         if (MyGameModel.getInstance().scoreBoardModel.time <= 0) {
             MyGameModel.getInstance().gameOver = true;
-            console.log("User Timed Out!");
+            this.alertGameOver(MyGameModel.getInstance().currentPlayer === 'b' ? 'o' : 'b', 'User Timed Out!');
             return;
         }
 
@@ -179,13 +180,18 @@ class MyGameController {
             if (response === 'is_over') {
                 MyGameModel.getInstance().gameOver = true;
                 MyGameModel.getInstance().removeValidMoves();
-                console.warn('Game over!');
+                this.alertGameOver(lastPlayer, 'Game over!');
             } else if (response === 'not_over') {
                 this.validMoves();
             } else if (response === 'no') {
                 console.log('Error: game over.');
             }
         })
+    }
+
+    alertGameOver(winner, warning) {
+        console.warn(warning);
+        alert(winner == 'b' ? 'Brown' : 'Orange' + ' has Won!');
     }
 
     validMoves() {
@@ -211,6 +217,15 @@ class MyGameController {
             console.log('Error: can\'t undo more moves.');
             return;
         }
+
+        MyGameModel.getInstance().templatePiecesModels.forEach(piece => {
+            piece.setVisible(true);
+            piece.animation = null;
+        });
+
+        MyGameModel.getInstance().piecesModels.forEach(piece => {
+            piece.animation = null;
+        });
 
         let currentPlayer = MyGameModel.getInstance().currentPlayer === 'b' ? MyGameModel.getInstance().b : MyGameModel.getInstance().o;
         let lastPlayer = MyGameModel.getInstance().currentPlayer === 'b' ? MyGameModel.getInstance().o : MyGameModel.getInstance().b;

@@ -64,8 +64,10 @@ class MyGameView {
             this.pieceView.display(MyGameModel.getInstance().piecesModels[index]);
         }
 
-        for (let index in MyGameModel.getInstance().validMovesModels) {
-            this.moveView.display(MyGameModel.getInstance().validMovesModels[index]);
+        if (MyGameModel.getInstance().piecesModels.length > 0 && MyGameModel.getInstance().piecesModels[MyGameModel.getInstance().piecesModels.length - 1].animation == null) {
+            for (let index in MyGameModel.getInstance().validMovesModels) {
+                this.moveView.display(MyGameModel.getInstance().validMovesModels[index]);
+            }
         }
 
         // this.scene.pushMatrix();

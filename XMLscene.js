@@ -337,6 +337,10 @@ class XMLscene extends CGFscene {
                 obj.anims[i].update(this.deltaTime / 1000.0);
         }
 
+        for (let pieceIndex in MyGameModel.getInstance().templatePiecesModels) {
+            MyGameModel.getInstance().templatePiecesModels[pieceIndex].handleAnimation(this.deltaTime / 1000.0);
+        }
+
         for (let pieceIndex in MyGameModel.getInstance().piecesModels) {
             MyGameModel.getInstance().piecesModels[pieceIndex].handleAnimation(this.deltaTime / 1000.0);
         }

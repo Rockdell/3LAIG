@@ -73,7 +73,7 @@ class MyScoreBoardModel {
     parseIntToArray(int) {
         let result = [];
 
-        if (int > 10) {
+        if (int >= 10) {
             result.push(Math.floor(int / 10));
             result.push(Math.floor(int % 10));
         }

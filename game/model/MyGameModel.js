@@ -97,6 +97,8 @@ class MyGameModel {
                 break;
         }
 
+        this.setTemplateVisiblity(moveInfo[2], false);
+
         let nextPiece = new MyPieceModel(-1, newZ, moveInfo[2], this.currentPlayer);
         nextPiece.moveTo(parseInt(moveInfo[0]) + 1, parseInt(moveInfo[1]) + 1);
         this.piecesModels.push(nextPiece);
@@ -121,6 +123,31 @@ class MyGameModel {
         this.templatePiecesModels.forEach((element) => {
             element.setColor(this.currentPlayer);
         })
+    }
+
+    setTemplateVisiblity(direction, isVisible) {
+        
+        let index;
+        switch (direction) {
+            case "v":
+                index = 0;
+                break;
+            case "h":
+                index = 1;
+                break;
+            case "du":
+                index = 2;
+                break;
+            case "dd":
+                index = 3;
+                break;
+        }
+
+        if (isVisible) {
+            this.templatePiecesModels[index].scale(0, 1);
+        }
+
+        this.templatePiecesModels[index].setVisible(isVisible);  
     }
 
 }

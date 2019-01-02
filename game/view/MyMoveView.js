@@ -9,6 +9,9 @@ class MyMoveView {
     }
 
     display(MoveModel) {
+
+        MyGameModel.getInstance().currentPlayer == "o" ? MyGameView.getInstance().pieceView.appearanceBotOrange.apply() :  MyGameView.getInstance().pieceView.appearanceBotBrown.apply();
+
         this.scene.pushMatrix();
             this.scene.translate(MoveModel.x, 0.2, MoveModel.z);
             this.sphere.display();

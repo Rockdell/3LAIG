@@ -85,7 +85,7 @@ class MyInterface extends CGFinterface {
 
         this.boardLengthGroup = this.gameSettings.add(this, 'Board_Size', [5, 6, 7]);
         this.consecutiveGroup = this.gameSettings.add(this, 'Consecutive', [3, 4, 5, 6, 7]);
-        this.timerGroup = this.gameSettings.add(this, 'Timer' , 0, 100 * 60 - 1);
+        this.timerGroup = this.gameSettings.add(this, 'Timer' , 10, 100 * 60 - 1);
 
         this.boardLengthGroup.onFinishChange(function (value) {
 

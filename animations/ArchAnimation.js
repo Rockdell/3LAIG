@@ -39,8 +39,8 @@ class ArchAnimation extends Animation {
             }
         }
 
-        this.xVel = (this.xf - this.xi) / this.span;
-        this.zVel = (this.zf - this.zi) / this.span;
+        // this.xVel = (this.xf - this.xi) / this.span;
+        // this.zVel = (this.zf - this.zi) / this.span;
 
         this.angleY = angle(vec2.fromValues(0,1), vec2.fromValues(this.xf - this.xi, this.zf - this.zi));
         this.velocity = Math.sqrt(Math.pow(this.xf - this.xi, 2.0) + Math.pow(this.zf - this.zi, 2.0)) / this.span;

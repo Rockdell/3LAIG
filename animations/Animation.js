@@ -28,6 +28,10 @@ class Animation {
         mat4.rotateX(m, m, r);
     }
 
+    scaleMatrix(m, v) {
+        mat4.scale(m, m, v);
+    }
+
     update(secondsElapsed) {
         console.error("Animation: Shouldn't be calling this function!");
     }
