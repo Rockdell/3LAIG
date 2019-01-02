@@ -25,11 +25,6 @@ class MyPieceView extends CGFobject {
         this.appearanceTopBrown.setTexture(pieceTopTextureBrown);
 
         this.halfPiece = new CGFnurbsObject(this.scene, 30, 30, this.generateSurface());
-
-        // this.pieceTexture = new CGFtexture(this.scene, pieceTopTexturePath);
-        // this.heightMap = new CGFtexture(this.scene, "../scenes/images/pieceHeightMap.png");
-        // this.shader = new CGFshader(this.scene.gl, "../shaders/pieceVertex.glsl", "../shaders/fragment.glsl");
-        // this.shader.setUniformsValues({ uSampler2: 1 });
     }
 
     generateSurface() {
@@ -101,15 +96,9 @@ class MyPieceView extends CGFobject {
             this.scene.scale(0.5, 0.5, 0.5);
 
             this.scene.pushMatrix();
-            // this.pieceTexture.bind();
-            // this.heightMap.bind(1);
-
-            // this.scene.setActiveShader(this.shader);
 
             PieceModel.color == "o" ? this.appearanceTopOrange.apply() : this.appearanceTopBrown.apply();
-
                 this.halfPiece.display();
-                // this.scene.setActiveShader(this.scene.defaultShader);
             this.scene.popMatrix();
 
             this.scene.pushMatrix();

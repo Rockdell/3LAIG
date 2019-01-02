@@ -54,6 +54,7 @@ class XMLscene extends CGFscene {
 
         // Initialize singletons
         new MyGameController();
+        new MyInputController();
         new MyGameModel();
         new MyGameView(this);
     }
@@ -254,28 +255,15 @@ class XMLscene extends CGFscene {
         }
     }
 
-    logPicking() {
-        if (this.pickMode == false) {
-            if (this.pickResults != null && this.pickResults.length > 0) {
-                for (var i = 0; i < this.pickResults.length; i++) {
-                    var obj = this.pickResults[i][0];
-                    if (obj) {
-                        var customId = this.pickResults[i][1];
-                        console.log("Picked object: " + obj + ", with pick id " + customId);
-                    }
-                }
-                this.pickResults.splice(0, this.pickResults.length);
-            }
-        }
-    }
-
     /**
      * Displays the scene.
      */
     display() {
 
-        this.logPicking();
-        this.clearPickRegistration();
+        // MyInputController.getInstance().updatePick(this);
+
+        // this.logPicking();
+        // this.clearPickRegistration();
 
         // ---- BEGIN Background, camera and axis setup
 
@@ -303,6 +291,11 @@ class XMLscene extends CGFscene {
 
             // Display scene
             this.graph.displayScene();
+
+            MyInputController.getInstance().updatePick(this);
+
+            if (MyGameModel.getInstance().gameStarted)
+                MyGameController.getInstance().gameLoop();
 
             MyGameView.getInstance().display();
         }

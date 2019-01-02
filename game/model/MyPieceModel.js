@@ -6,6 +6,8 @@ class MyPieceModel {
     constructor(xi, zi, direction, color, pickingID) {
         this.x = xi;
         this.z = zi;
+        this.xf = null;
+        this.zf = null;
         this.direction = direction;
         this.color = color;
         this.pickingID = pickingID;
@@ -14,7 +16,9 @@ class MyPieceModel {
     }
 
     moveTo(xf, zf) {
-        this.animation = new ArchAnimation(MyGameView.getInstance().scene, 1.5, 2, this.x, this.z, xf, zf);
+        this.xf = xf;
+        this.zf = zf;
+        this.animation = new ArchAnimation(MyGameView.getInstance().scene, 1.5, 2, this.x, this.z, this.xf, this.zf);
         this.animation.animating = true;
 
         // this.x = xf;

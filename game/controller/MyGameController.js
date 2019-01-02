@@ -5,6 +5,7 @@ class MyGameController {
 
     constructor() {
         if (!MyGameController.instance) {
+            this.waitingServer = false;
             MyGameController.instance = this;
         }
     }
@@ -13,11 +14,6 @@ class MyGameController {
         return MyGameController.instance;
     }
 
-    // setBoardSettings(5,4)
-    // setGameSettings('user', 'user) ('user', 'easybot' ou 'hardbot')
-    // createBoard()
-    // gameLoop()
-
     gameLoop() {
 
         if (MyGameModel.getInstance().gameOver) return;
@@ -25,13 +21,20 @@ class MyGameController {
         let nextPlayer = MyGameModel.getInstance().currentPlayer === 'b' ? MyGameModel.getInstance().b : MyGameModel.getInstance().o;
 
         if (nextPlayer === 'user') {
-            return; // TODO later - move(InputController.getInstance().getNextMove())
+            let nextMove = MyInputController.getInstance().getUserMove();
+            if (nextMove) this.validate(nextMove);
         } else {
             this.genBotMove(nextPlayer);
         }
     }
 
     setBoardSettings(boardLength, consecutive) {
+
+        if (MyGameController.getInstance().waitingServer)  {
+            console.log('Error: server not ready.');
+            return;
+        }    
+
         let promise = makeRequest(`set_board_settings(${boardLength},${consecutive})`);
 
         let handler;
@@ -45,6 +48,11 @@ class MyGameController {
     }
 
     setGameSettings(b, o) {
+
+        if (MyGameController.getInstance().waitingServer)  {
+            console.log('Error: server not ready.');
+            return;
+        }    
 
         if (b === 'hardbot' && b === o) {
             b += '1';
@@ -64,12 +72,19 @@ class MyGameController {
     }
 
     createBoard() {
+
+        if (MyGameController.getInstance().waitingServer)  {
+            console.log('Error: server not ready.');
+            return;
+        }    
+
         let promise = makeRequest(`create_board(Board)`);
 
         let handler;
         promise.then(handler = (board) => {
             if (board !== 'no') {
                 MyGameModel.getInstance().boardModel.update(board);
+                MyGameModel.getInstance().gameStarted = true;
             } else {
                 console.log('Error: creating board');
             }
@@ -78,8 +93,12 @@ class MyGameController {
 
     genBotMove(botType) {
 
-        let lastMove = MyGameModel.getInstance().moves[MyGameModel.getInstance().moves.length - 1];
-        let promise = makeRequest(`choose_move(${MyGameModel.getInstance().boardModel.board},${botType},${lastMove},NextMove)`);
+        if (MyGameController.getInstance().waitingServer)  {
+            console.log('Error: server not ready.');
+            return;
+        }
+
+        let promise = makeRequest(`choose_move(${MyGameModel.getInstance().boardModel.getBoard()},${botType},${MyGameModel.getInstance().getLastMove()},NextMove)`);
 
         let handler;
         promise.then(handler = (botMove) => {
@@ -93,8 +112,12 @@ class MyGameController {
 
     validate(move) {
 
-        let lastMove = MyGameModel.getInstance().moves[MyGameModel.getInstance().moves.length - 1];
-        let promise = makeRequest(`validate_move(${MyGameModel.getInstance().boardModel.board},${lastMove},${move})`);
+        if (MyGameController.getInstance().waitingServer)  {
+            console.log('Error: server not ready.');
+            return;
+        }    
+
+        let promise = makeRequest(`validate_move(${MyGameModel.getInstance().boardModel.getBoard()},${MyGameModel.getInstance().getLastMove()},${move})`);
 
         let handler;
         promise.then(handler = (valid) => {
@@ -104,12 +127,16 @@ class MyGameController {
                 console.log('Error: validating move.');
             }
         });
-
     }
 
     move(move) {
 
-        let promise = makeRequest(`move(${MyGameModel.getInstance().boardModel.board},${MyGameModel.getInstance().currentPlayer},${move},NewBoard)`);
+        if (MyGameController.getInstance().waitingServer)  {
+            console.log('Error: server not ready.');
+            return;
+        }    
+
+        let promise = makeRequest(`move(${MyGameModel.getInstance().boardModel.getBoard()},${MyGameModel.getInstance().currentPlayer},${move},NewBoard)`);
 
         let handler;
         promise.then(handler = (newBoard) => {
@@ -123,55 +150,57 @@ class MyGameController {
                 console.log('Error: making move.');
             }
         });
-
-        // pmove(col,row,dir), dir = [v,h,du,dd]
-
-        // let lastMove = MyGameModel.getInstance().moves[MyGameModel.getInstance().moves.length - 1];
-        // let promise1 = makeRequest(`validate_move(${MyGameModel.getInstance().boardModel.board},${lastMove},${move})`);
-
-        // let handler1;
-        // promise1.then(handler1 = (valid) => {
-        //     if (valid === 'ok') {
-
-        //         let promise2 = makeRequest(`move(${MyGameModel.getInstance().boardModel.board},${MyGameModel.getInstance().currentPlayer},${move},NewBoard)`);
-
-        //         let handler2;
-        //         promise2.then(handler2 = (newBoard) => {
-        //             if (newBoard !== 'no') {
-        //                 MyGameModel.getInstance().boardModel.update(newBoard);
-        //                 MyGameModel.getInstance().addPiece(move);
-        //                 MyGameModel.getInstance().currentPlayer = (MyGameModel.getInstance().currentPlayer === 'b' ? 'o' : 'b');
-
-                        
-
-
-        //             } else {
-        //                 console.log('Error: making move.');
-        //             }
-        //         })
-        //     } else if (valid === 'no') {
-        //         console.log('Error: validating move.');
-        //     }
-        // });
     }
 
     gameOver() {
 
-        let lastMove = MyGameModel.getInstance().moves[MyGameModel.getInstance().moves.length - 1];
+        if (MyGameController.getInstance().waitingServer)  {
+            console.log('Error: server not ready.');
+            return;
+        }    
+
         let lastPlayer = MyGameModel.getInstance().currentPlayer === 'b' ? 'o' : 'b';
-        let promise = makeRequest(`game_over(${MyGameModel.getInstance().boardModel.board},${lastMove},${lastPlayer},${MyGameModel.getInstance().consecutive})`)
+        let promise = makeRequest(`game_over(${MyGameModel.getInstance().boardModel.getBoard()},${MyGameModel.getInstance().getLastMove()},${lastPlayer},${MyGameModel.getInstance().consecutive})`)
 
         let handler;
         promise.then(handler = (response) => {
             if (response === 'is_over') {
                 MyGameModel.getInstance().gameOver = true;
+                MyGameModel.getInstance().started = false;
                 console.warn('Game over!');
             } else if (response === 'not_over') {
-                MyGameModel.getInstance().gameOver = false;
+                // console.warn('Game not over!');
             } else if (response === 'no') {
                 console.log('Error: game over.');
             }
         })
+    }
+
+    undoMove() {
+
+        if (MyGameModel.getInstance().getLastMove() === 'pmove(_,_,_)') {
+            console.log('Error: can\'t undo more moves.');
+            return;
+        }
+
+        let currentPlayer = MyGameModel.getInstance().currentPlayer === 'b' ? MyGameModel.getInstance().b : MyGameModel.getInstance().o;
+        let lastPlayer = MyGameModel.getInstance().currentPlayer === 'b' ? MyGameModel.getInstance().o : MyGameModel.getInstance().b;
+
+        if (currentPlayer === 'user' && lastPlayer !== 'user') {
+            MyGameModel.getInstance().boardModel.removePiece();
+            MyGameModel.getInstance().removePiece();
+
+            if (MyGameModel.getInstance().getLastMove() !== 'pmove(_,_,_)') {
+                MyGameModel.getInstance().boardModel.removePiece();
+                MyGameModel.getInstance().removePiece();
+            } else {
+                MyGameModel.getInstance().currentPlayer = (MyGameModel.getInstance().currentPlayer === 'b' ? 'o' : 'b');
+            }
+        } else {
+            MyGameModel.getInstance().boardModel.removePiece();
+            MyGameModel.getInstance().removePiece();
+            MyGameModel.getInstance().currentPlayer = (MyGameModel.getInstance().currentPlayer === 'b' ? 'o' : 'b');
+        }
     }
 }
 

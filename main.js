@@ -34,6 +34,7 @@ serialInclude([
     '../animations/CircularAnimation.js',
     '../animations/ArchAnimation.js',
     '../game/controller/MyGameController.js',
+    '../game/controller/MyInputController.js',
     '../game/model/MyBoardModel.js',
     '../game/model/MyGameModel.js',
     '../game/model/MyPieceModel.js',

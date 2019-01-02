@@ -12,11 +12,13 @@ function getPrologRequest(requestString, onSuccess, onError, port) {
 
 // Make Request
 function makeRequest(requestString) {
+    MyGameController.getInstance().waitingServer = true;
     return new Promise(function(resolve, reject) {
-        getPrologRequest(requestString, function (data) { resolve(data.target.response); });
+        getPrologRequest(requestString, function (data) { 
+            resolve(data.target.response);
+            MyGameController.getInstance().waitingServer = false;
+        });
     });
-
-    // getPrologRequest(requestString, handleReply);
 }
 
 //Handle the Reply

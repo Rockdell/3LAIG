@@ -9,10 +9,11 @@ class MyGameModel {
 
             // Game Logic
             this.consecutive = null;
-            this.b = null, this.o = null;
+            this.b = null;
+            this.o = null;
             this.currentPlayer = null;
-            this.moves = [];
-            this.gameOver =  false;
+            this.gameStarted = false;
+            this.gameOver = false;
 
             // Models
             this.boardModel = new MyBoardModel();
@@ -30,6 +31,15 @@ class MyGameModel {
 
     static getInstance() {
         return MyGameModel.instance;
+    }
+    
+    getLastMove() {
+        if (this.piecesModels.length === 0) {
+            return 'pmove(_,_,_)';
+        } else {
+            let lastMove = this.piecesModels[this.piecesModels.length - 1];
+            return `pmove(${lastMove.xf - 1},${lastMove.zf - 1},${lastMove.direction})`;
+        }
     }
 
     updateBoardSettings(boardLength, consecutive) {
@@ -55,17 +65,20 @@ class MyGameModel {
         this.b = b;
         this.o = o;
         this.currentPlayer = 'b';
-        this.moves = ['pmove(_,_,_)'];
+        this.gameStarted = false;
         this.gameOver = false;          //TODO Change later - player may not change game settings b4 starting new game
     }
 
     addPiece(move) {
         let moveInfo = move.match(/[^pmove(]([^)]+)/g)[0].split(',');
 
-        this.moves.push(move);
         // this.piecesModels.push(new MyPieceModel(parseInt(moveInfo[0]) + 1, parseInt(moveInfo[1]) + 1, moveInfo[2], this.currentPlayer))
         let nextPiece = new MyPieceModel(0, 0, moveInfo[2], this.currentPlayer);
         nextPiece.moveTo(parseInt(moveInfo[0]) + 1, parseInt(moveInfo[1]) + 1);
         this.piecesModels.push(nextPiece);
+    }
+
+    removePiece() {
+        this.piecesModels.pop();
     }
 }
