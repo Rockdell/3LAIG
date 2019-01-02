@@ -76,16 +76,35 @@ class MyInterface extends CGFinterface {
 
         let group = this.gui.addFolder('Coffee Settings');
         group.open();
-        
-        this.boardLengthTmp = 5;
-        let boardLength = group.add(this, 'boardLengthTmp', [5, 6, 7] );
-        group.add(MyGameModel.getInstance(), 'consecutive', [3, 4, 5, 6, 7] );
 
-        boardLength.onChange(function(value){
-            console.log(value);
-            MyGameModel.getInstance().updateBoardSettings(value);
-            console.log("Board Length Updated.");
+        this.Board_Size = 5;
+        this.Consecutive = 4;
+
+        this.boardLengthGroup = group.add(this, 'Board_Size', [5, 6, 7]);
+        this.consecutiveGroup = group.add(this, 'Consecutive', [3, 4, 5, 6, 7]);
+
+        this.boardLengthGroup.onFinishChange(function (value) {
+
+            if (parseInt(value) < parseInt(this.object.Consecutive)) {
+                this.object.consecutiveGroup.setValue(value);
+                alert("Consecutive Pieces must be equal or less than Board Size!");
+            }
+
+            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive));
         });
+
+        this.consecutiveGroup.onFinishChange(function (value) {
+
+            if (parseInt(value) > parseInt(this.object.Board_Size)) {
+                this.object.consecutiveGroup.setValue(this.object.Board_Size);
+                alert("Consecutive Pieces must be equal or less than Board Size!");
+                return;
+            }
+
+            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive));
+        });
+
+        group.add(MyGameController.getInstance(), 'Start_Game');
 
     }
 

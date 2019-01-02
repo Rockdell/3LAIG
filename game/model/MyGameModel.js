@@ -43,8 +43,13 @@ class MyGameModel {
     }
 
     updateBoardSettings(boardLength, consecutive) {
+
+        console.log(boardLength + " + " + consecutive);
+
         this.boardModel.boardLength = boardLength || this.boardModel.boardLength;
         this.consecutive = consecutive || this.consecutive;
+
+        console.log(this.boardModel.boardLength + " + " + this.consecutive);
 
         let cx = (this.boardModel.boardLength - 5) / 2 + 0.625 + 0.5;
         this.templatePiecesModels = [
@@ -81,4 +86,5 @@ class MyGameModel {
     removePiece() {
         this.piecesModels.pop();
     }
+
 }

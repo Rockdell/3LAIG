@@ -14,6 +14,22 @@ class MyGameController {
         return MyGameController.instance;
     }
 
+    Start_Game() {
+
+        this.setBoardSettings(MyGameModel.getInstance().boardModel.boardLength, MyGameModel.getInstance().consecutive);
+
+        setTimeout(() => {
+            // this.setGameSettings(MyGameModel.getInstance().b, MyGameModel.getInstance().o);
+            this.setGameSettings("user", "hardbot");
+        }, 500);
+
+        setTimeout(() => {
+            this.createBoard();
+            console.log("Game Started!");
+        }, 1000);
+
+    }
+
     gameLoop() {
 
         if (MyGameModel.getInstance().gameOver) return;
