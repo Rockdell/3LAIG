@@ -78,7 +78,7 @@ class MyGameController {
 
     genBotMove(botType) {
 
-        if (MyGameController.getInstance().waitingServer) return;
+        if (!MyGameModel.getInstance().boardModel.getBoard() || MyGameController.getInstance().waitingServer) return;
 
         let promise = makeRequest(`choose_move(${MyGameModel.getInstance().boardModel.getBoard()},${botType},${MyGameModel.getInstance().getLastMove()},NextMove)`);
 
@@ -94,7 +94,7 @@ class MyGameController {
 
     validate(move) {
 
-        if (MyGameController.getInstance().waitingServer) return;
+        if (!MyGameModel.getInstance().boardModel.getBoard() || MyGameController.getInstance().waitingServer) return;
 
         let promise = makeRequest(`validate_move(${MyGameModel.getInstance().boardModel.getBoard()},${MyGameModel.getInstance().getLastMove()},${move})`);
 
@@ -110,7 +110,7 @@ class MyGameController {
 
     move(move) {
 
-        if (MyGameController.getInstance().waitingServer) return;
+        if (!MyGameModel.getInstance().boardModel.getBoard() || MyGameController.getInstance().waitingServer) return;
 
         let promise = makeRequest(`move(${MyGameModel.getInstance().boardModel.getBoard()},${MyGameModel.getInstance().currentPlayer},${move},NewBoard)`);
 
@@ -131,7 +131,7 @@ class MyGameController {
 
     gameOver() {
 
-        if (MyGameController.getInstance().waitingServer) return;
+        if (!MyGameModel.getInstance().boardModel.getBoard() || MyGameController.getInstance().waitingServer) return;
 
         let lastPlayer = MyGameModel.getInstance().currentPlayer === 'b' ? 'o' : 'b';
         let promise = makeRequest(`game_over(${MyGameModel.getInstance().boardModel.getBoard()},${MyGameModel.getInstance().getLastMove()},${lastPlayer},${MyGameModel.getInstance().consecutive})`)
@@ -161,7 +161,7 @@ class MyGameController {
 
     validMoves() {
 
-        if (MyGameController.getInstance().waitingServer) return;
+        if (!MyGameModel.getInstance().boardModel.getBoard() || MyGameController.getInstance().waitingServer) return;
 
         let promise = makeRequest(`valid_moves(${MyGameModel.getInstance().boardModel.getBoard()},${MyGameModel.getInstance().getLastMove()},ListOfMoves)`);
 
@@ -238,7 +238,6 @@ class MyGameController {
             return;
 
         // Clean state
-        MyGameModel.getInstance().boardModel.update(MyGameModel.getInstance().boardModel.boards[0]);
         MyGameModel.getInstance().currentPlayer = 'b';
 
         let moves = [];
@@ -263,7 +262,5 @@ class MyGameController {
             this.replayPlaying = false;
             MyGameView.getInstance().scene.interface.addGameSettings();
         }, timeout);
-
-        MyGameModel.getInstance().boardModel.removePiece();
     }
 }

@@ -229,8 +229,8 @@ class XMLscene extends CGFscene {
         // Update camera;
         this.camera = this.cameras[this.currentCamera];
 
-        if(this.camera instanceof CGFcamera)
-            this.interface.setActiveCamera(this.camera);
+        // if(this.camera instanceof CGFcamera)
+        //     this.interface.setActiveCamera(this.camera);
     }
 
     updateLights() {   
@@ -288,6 +288,8 @@ class XMLscene extends CGFscene {
             this.materialDefault.apply();;
 
             this.updateLights();
+
+            this.translate(-0.5 - MyGameModel.getInstance().boardModel.boardLength / 2, 0, -0.5 - MyGameModel.getInstance().boardModel.boardLength / 2);
 
             // Display scene
             this.graph.displayScene();

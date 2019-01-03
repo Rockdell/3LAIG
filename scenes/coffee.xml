@@ -1,14 +1,10 @@
 <yas>
     <scene root="world" axis_length="1.0" />
-    <views default="Perspective">
-        <perspective id="Perspective" near="0.1" far="500.0" angle="60">
-            <from x="10.0" y="10.0" z="10.0" />
+    <views default="MainCamera">
+        <perspective id="MainCamera" near="0.1" far="500.0" angle="60">
+            <from x="0.0" y="10.0" z="7.0" />
             <to x="0.0" y="0.0" z="0.0" />
         </perspective>
-        <ortho id="Isometric" near="0.1" far="70" left="-7" right="7" top="7" bottom="-7">
-            <from x="10" y="10" z="10" />
-            <to x="0" y="0" z="0" />
-        </ortho>
     </views>
     <ambient>
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
