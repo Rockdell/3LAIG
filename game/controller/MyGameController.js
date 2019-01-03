@@ -36,7 +36,6 @@ class MyGameController {
         if (MyGameModel.getInstance().gameOver) return;
         
         if (MyGameModel.getInstance().scoreBoardModel.time <= 0) {
-            MyGameModel.getInstance().gameOver = true;
             this.alertGameOver(MyGameModel.getInstance().currentPlayer === 'b' ? 'o' : 'b', 'User Timed Out!');
             return;
         }
@@ -69,7 +68,7 @@ class MyGameController {
                 MyGameModel.getInstance().updateTimer(timer);
                 MyGameModel.getInstance().updateGameSettings(b, o);
                 MyGameModel.getInstance().boardModel.update(board);
-                MyGameModel.getInstance().gameOver= false;
+                MyGameModel.getInstance().gameOver = false;
                 MyInputController.getInstance().reset();
             } else if (board === 'no') {
                 console.log('Error: settings.');
@@ -140,7 +139,6 @@ class MyGameController {
         let handler;
         promise.then(handler = (response) => {
             if (response === 'is_over') {
-                MyGameModel.getInstance().gameOver = true;
                 this.alertGameOver(lastPlayer, 'Game over!');
             } else if (response === 'not_over') {
                 this.validMoves();
@@ -151,14 +149,24 @@ class MyGameController {
     }
 
     alertGameOver(winner, warning) {
+
+        MyGameModel.getInstance().gameOver = true;
+
         console.warn(warning);
-        console.warn(winner == 'b' ? 'Brown' : 'Orange' + ' has Won!');
+
+        if(winner != null)
+            console.warn(winner == 'b' ? 'Brown' : 'Orange' + ' has Won!');
 
         MyGameModel.getInstance().scoreBoardModel.stop();
         MyGameModel.getInstance().scoreBoardModel.gameWonBy(winner);
 
         MyGameView.getInstance().scene.interface.removeStartGameOptions();
         MyGameView.getInstance().scene.interface.addGameSettings();
+    }
+
+    quitGame() {
+        // MyGameModel.getInstance().boardModel.boards = [];
+        this.alertGameOver(null, 'Game Ended!');
     }
 
     validMoves() {

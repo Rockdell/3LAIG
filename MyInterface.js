@@ -164,6 +164,7 @@ class MyInterface extends CGFinterface {
     */
     addStartGameOptions() {
         this.undoGroup = this.gameSettings.add(MyGameController.getInstance(), 'undoMove').name('Undo Move');
+        this.quitGroup = this.gameSettings.add(MyGameController.getInstance(), 'quitGame').name('Quit Game');
     }
 
      /**
@@ -171,6 +172,7 @@ class MyInterface extends CGFinterface {
     */
     removeStartGameOptions() {
         this.undoGroup.remove();
+        this.quitGroup.remove();
     }
 
     /**
