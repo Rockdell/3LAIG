@@ -40,7 +40,7 @@ class MyPieceModel {
     scale(initialScale, endScale) {
         this.xf = this.x;
         this.zf = this.z;
-        this.animation = new ScaleAnimation(MyGameView.getInstance().scene, 0.3, this.x, 0.2, this.z, initialScale, endScale);
+        this.animation = new ScaleAnimation(MyGameView.getInstance().scene, 0.6, this.x, 0.2, this.z, initialScale, endScale);
         this.animation.animating = true;
 
         this.handleAnimation(0.000001);
@@ -51,7 +51,7 @@ class MyPieceModel {
             if (this.animation.animating == true)
                 this.animation.update(elapsedTime);
             else {
-                MyGameModel.getInstance().setTemplateVisiblity(this.direction, true);
+                // MyGameModel.getInstance().setTemplateVisiblity(this.direction, true);
                 this.x = this.xf;
                 this.z = this.zf;
                 this.animation = null;

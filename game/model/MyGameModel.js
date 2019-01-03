@@ -95,7 +95,8 @@ class MyGameModel {
                 break;
         }
 
-        this.setTemplateVisiblity(moveInfo[2], false);
+        // this.setTemplateVisiblity(moveInfo[2], false);
+        this.setTemplateVisiblity(moveInfo[2], true);
 
         let nextPiece = new MyPieceModel(-1, newZ, moveInfo[2], this.currentPlayer);
         nextPiece.moveTo(parseInt(moveInfo[0]) + 1, parseInt(moveInfo[1]) + 1);
@@ -129,7 +130,7 @@ class MyGameModel {
     }
 
     setTemplateVisiblity(direction, isVisible) {
-        
+
         let index;
         switch (direction) {
             case "v":

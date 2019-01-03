@@ -6,6 +6,7 @@ class MyGameController {
     constructor() {
         if (!MyGameController.instance) {
             this.waitingServer = false;
+            this.replayPlaying = false;
             MyGameController.instance = this;
         }
     }
@@ -14,19 +15,18 @@ class MyGameController {
         return MyGameController.instance;
     }
 
-    Start_Game() {
+    startGame() {
 
         //If the game is over / hasn't begun
         if (MyGameModel.getInstance().gameOver) {
 
-            MyGameView.getInstance().scene.interface.boardLengthGroup.remove();
-            MyGameView.getInstance().scene.interface.consecutiveGroup.remove();
-
-            this.setSettings(MyGameModel.getInstance().boardModel.boardLength, MyGameModel.getInstance().consecutive, MyGameModel.getInstance().timer, 'hardbot', 'hardbot');
+            this.setSettings(MyGameModel.getInstance().boardModel.boardLength, MyGameModel.getInstance().consecutive, MyGameModel.getInstance().timer, MyGameModel.getInstance().b, MyGameModel.getInstance().o);
 
             console.log("Game Started!");
 
-            MyGameView.getInstance().scene.interface.gameSettings.add(MyGameController.getInstance(), "Undo_Move");
+            MyGameView.getInstance().scene.interface.removeGameSettings();
+            MyGameView.getInstance().scene.interface.addStartGameOptions();
+
             MyGameModel.getInstance().scoreBoardModel.start();
         }
     }
@@ -150,7 +150,12 @@ class MyGameController {
 
     alertGameOver(winner, warning) {
         console.warn(warning);
-        alert(winner == 'b' ? 'Brown' : 'Orange' + ' has Won!');
+        console.warn(winner == 'b' ? 'Brown' : 'Orange' + ' has Won!');
+
+        MyGameModel.getInstance().scoreBoardModel.stop();
+
+        MyGameView.getInstance().scene.interface.removeStartGameOptions();
+        MyGameView.getInstance().scene.interface.addGameSettings();
     }
 
     validMoves() {
@@ -170,7 +175,7 @@ class MyGameController {
         });
     }
 
-    Undo_Move() {
+    undoMove() {
 
         if (MyGameModel.getInstance().getLastMove() === 'pmove(_,_,_)') {
             console.log('Error: can\'t undo more moves.');
@@ -219,6 +224,18 @@ class MyGameController {
 
         if (!MyGameModel.getInstance().gameOver) return;
 
+        if (MyGameModel.getInstance().piecesModels.length == 0) {
+            console.warn("No replay available!");
+            return;
+        };
+
+        if(!this.replayPlaying) {
+            this.replayPlaying = true;
+            MyGameView.getInstance().scene.interface.removeGameSettings();
+        }
+        else
+            return;
+
         // Clean state
         MyGameModel.getInstance().boardModel.update(MyGameModel.getInstance().boardModel.boards[0]);
         MyGameModel.getInstance().currentPlayer = 'b';
@@ -239,6 +256,12 @@ class MyGameController {
 
             timeout += 1000;
         });
+
+        timeout += 600;
+        setTimeout(() => {
+            this.replayPlaying = false;
+            MyGameView.getInstance().scene.interface.addGameSettings();
+        }, timeout);
 
         MyGameModel.getInstance().boardModel.removePiece();
     }

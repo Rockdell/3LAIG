@@ -19,7 +19,6 @@ class MyInterface extends CGFinterface {
         //  http://workshop.chromeexperiments.com/examples/gui
 
         this.gui = new dat.GUI();
-
         // add a group of controls (and open/expand by defult)
 
         return true;
@@ -44,6 +43,7 @@ class MyInterface extends CGFinterface {
         }
 
         let cameras = this.gui.add(this.scene, 'currentCamera', this.scene.viewValues);
+        cameras.name('Current Camera');
 
         cameras.onChange(function(value){
             this.object.updateCamera();
@@ -66,29 +66,38 @@ class MyInterface extends CGFinterface {
         for (let key in lights) {
             this.scene.lightValues[key] = lights[key].enabled;
             let tmp = group.add(this.scene.lightValues, key);
-        }  
+        }
     }
 
     /**
-     * Adds a folder containing Coffee's game settings.
+     * Adds a folder containing Coffee's main game settings.
      */
     addGameSettings() {
 
-        this.gameSettings = this.gui.addFolder('Coffee Settings');
-        this.gameSettings.open();
+        if (!this.gui.__folders.hasOwnProperty('Coffee Settings')) {
+            this.gameSettings = this.gui.addFolder('Coffee Settings');
+            this.gameSettings.open();
+        }
 
-        this.gameSettings.add(MyGameController.getInstance(), 'Start_Game');
+        this.startGroup = this.gameSettings.add(MyGameController.getInstance(), 'startGame').name('Start Game');
 
         this.Board_Size = 5;
         this.Consecutive = 4;
-        this.Timer = 30;
+        this.Minutes = 0;
+        this.Seconds = 30;
 
-        this.boardLengthGroup = this.gameSettings.add(this, 'Board_Size', [5, 6, 7]);
+        this.boardLengthGroup = this.gameSettings.add(this, 'Board_Size', [5, 6, 7]).name('Board Size');
         this.consecutiveGroup = this.gameSettings.add(this, 'Consecutive', [3, 4, 5, 6, 7]);
-        this.timerGroup = this.gameSettings.add(this, 'Timer' , 10, 100 * 60 - 1);
+        this.minutesGroup = this.gameSettings.add(this, 'Minutes', 0, 60).step(1);
+        this.secondsGroup = this.gameSettings.add(this, 'Seconds', 0, 59).step(1);
+
+        this.playerB = this.gameSettings.add(MyGameModel.getInstance(), 'b', { 'Player': 'user', 'Easy Bot': 'easybot', 'Hard Bot': 'hardbot' }).name('Brown');
+        this.playerO = this.gameSettings.add(MyGameModel.getInstance(), 'o', { 'Player': 'user', 'Easy Bot': 'easybot', 'Hard Bot': 'hardbot' }).name('Orange');
+
+        this.replayGroup = this.gameSettings.add(MyGameController.getInstance(), 'replay').name('Replay Last Game');
 
         this.boardLengthGroup.onFinishChange(function (value) {
-
+            console.log(this);
             if (parseInt(value) < parseInt(this.object.Consecutive)) {
                 this.object.consecutiveGroup.setValue(value);
                 alert("Consecutive Pieces must be equal or less than Board Size!");
@@ -102,15 +111,59 @@ class MyInterface extends CGFinterface {
             if (parseInt(value) > parseInt(this.object.Board_Size)) {
                 this.object.consecutiveGroup.setValue(this.object.Board_Size);
                 alert("Consecutive Pieces must be equal or less than Board Size!");
-                return;
             }
 
             MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive), parseInt(this.object.Timer));
         });
 
-        this.timerGroup.onFinishChange(function (value) {
-            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive), parseInt(this.object.Timer));
+        this.minutesGroup.onFinishChange(function (value) {
+            
+            if (parseInt(value) == 0 && parseInt(this.object.Seconds) < 10) {
+                this.object.secondsGroup.setValue(10);
+                alert("Minimal Timer = 10 seconds!");
+            }
+
+            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive), parseInt(this.object.Minutes) * 60 + parseInt(this.object.Seconds));
         });
+
+        this.secondsGroup.onFinishChange(function (value) {
+
+            if (parseInt(value) < 10 && parseInt(this.object.Minutes) == 0) {
+                this.object.secondsGroup.setValue(10);
+                alert("Minimal Timer = 10 seconds!");
+            }
+
+            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive), parseInt(this.object.Minutes) * 60 + parseInt(this.object.Seconds));
+        });
+
+    }
+
+    /**
+    * Removes the folder containing Coffee's game settings.
+    */
+    removeGameSettings() {
+        this.startGroup.remove();
+        this.boardLengthGroup.remove();
+        this.consecutiveGroup.remove();
+        this.minutesGroup.remove();
+        this.secondsGroup.remove();
+        this.playerB.remove();
+        this.playerO.remove();
+        this.replayGroup.remove();
+    }
+
+    /**
+    * Adds a folder containing Coffee's game options.
+    */
+    addStartGameOptions() {
+        this.undoGroup = this.gameSettings.add(MyGameController.getInstance(), 'undoMove').name('Undo Move');
+    }
+
+     /**
+    * Removes the folder containing Coffee's game options.
+    */
+    removeStartGameOptions() {
+        this.undoGroup.remove();
     }
 
     /**
