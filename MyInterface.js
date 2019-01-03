@@ -70,13 +70,6 @@ class MyInterface extends CGFinterface {
     }
 
     /**
-    * Adds a camera rotation setting
-    */
-    addCameraRotation() {
-        this.cameraRotationGroup = this.gameSettings.add(MyGameView.getInstance(), 'cameraRotation').name('Camera Rotation');
-    }
-
-    /**
      * Adds a folder containing Coffee's main game settings.
      */
     addGameSettings() {

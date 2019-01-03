@@ -154,12 +154,12 @@ class MyGameController {
 
         console.warn(warning);
 
-        if(winner != null)
+        if(winner != null) {
             console.warn(winner == 'b' ? 'Brown' : 'Orange' + ' has Won!');
+            MyGameModel.getInstance().scoreBoardModel.gameWonBy(winner);
+        }
 
         MyGameModel.getInstance().scoreBoardModel.stop();
-        MyGameModel.getInstance().scoreBoardModel.gameWonBy(winner);
-
         MyGameView.getInstance().scene.interface.removeStartGameOptions();
         MyGameView.getInstance().scene.interface.addGameSettings();
     }

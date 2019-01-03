@@ -12,7 +12,6 @@ class MyGameView {
             this.scoreBoardView = new MyScoreBoardView(scene);
             this.moveView = new MyMoveView(scene);
             this.pov = { player: 'b', target: Math.PI, angle: Math.PI };
-            this.cameraRotation = true;
             MyGameView.instance = this;
         }
     }
@@ -23,21 +22,27 @@ class MyGameView {
 
     rotateCamera() {
 
-        if (this.cameraRotation) {
+        // Choose target
+        if (MyGameController.getInstance().replayPlaying)
+            this.pov.target = Math.PI / 2;
+        else
+            this.pov.target = MyGameModel.getInstance().currentPlayer === 'b' ? Math.PI : 0;
 
-            if (this.pov.angle === this.pov.target) return;
+        if (this.pov.angle === this.pov.target) return;
 
-            let angle = this.pov.angle > this.pov.target ? - Math.PI / 100 : Math.PI / 100;
+        // Calculate angle
+        let angle = this.pov.angle > this.pov.target ? - Math.PI / 100 : Math.PI / 100;
 
-            if (this.pov.angle > this.pov.target) {
-                if (this.pov.angle + angle < this.pov.target) angle = this.pov.target - this.pov.angle;
-            } else {
-                if (this.pov.angle + angle > this.pov.target) angle = this.pov.target - this.pov.angle;
-            }
-
-            this.scene.camera.orbit(CGFcameraAxis.Y, angle);
-            this.pov.angle += angle;
+        // Check if angle is too big
+        if (this.pov.angle > this.pov.target) {
+            if (this.pov.angle + angle < this.pov.target) angle = this.pov.target - this.pov.angle;
+        } else {
+            if (this.pov.angle + angle > this.pov.target) angle = this.pov.target - this.pov.angle;
         }
+
+        // Rotate
+        this.scene.camera.orbit(CGFcameraAxis.Y, angle);
+        this.pov.angle += angle;
     }
 
     display() {
@@ -64,11 +69,8 @@ class MyGameView {
             }
         }
 
-        if (MyGameController.getInstance().replayPlaying)
-            this.pov.target = Math.PI / 2;
-        else
-            this.pov.target = MyGameModel.getInstance().currentPlayer === 'b' ? Math.PI : 0;
-
-        this.rotateCamera();
+        let cameraType = Object.keys(this.scene.viewValues).find(key => this.scene.viewValues[key] === parseInt(this.scene.currentCamera));
+        if (cameraType === 'MainCamera')
+            this.rotateCamera();
     }
 }

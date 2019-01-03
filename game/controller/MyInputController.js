@@ -26,8 +26,6 @@ class MyInputController {
                     if (obj) { 
                         let customId = scene.pickResults[i][1];
                         Number.isInteger(customId) ? this.direction = customId : this.cell = customId;
-
-                        console.log("Picked object: " + obj + ", with pick id " + customId);
                     }
                 }
                 scene.pickResults.splice(0, scene.pickResults.length);

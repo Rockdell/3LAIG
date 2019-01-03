@@ -5,6 +5,10 @@
             <from x="0.0" y="10.0" z="7.0" />
             <to x="0.0" y="0.0" z="0.0" />
         </perspective>
+        <perspective id="FreeCamera" near="0.1" far="500.0" angle="60">
+            <from x="-7.0" y="10.0" z="0.0" />
+            <to x="0.0" y="0.0" z="0.0" />
+        </perspective>
     </views>
     <ambient>
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
