@@ -79,8 +79,6 @@ class MyGameModel {
     addPiece(move) {
         let moveInfo = move.match(/[^pmove(]([^)]+)/g)[0].split(',');
 
-        // this.piecesModels.push(new MyPieceModel(parseInt(moveInfo[0]) + 1, parseInt(moveInfo[1]) + 1, moveInfo[2], this.currentPlayer))
-
         let newZ;
         switch (moveInfo[2]) {
             case "v":

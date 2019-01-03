@@ -214,4 +214,32 @@ class MyGameController {
         MyGameModel.getInstance().gameOver = false;
         MyGameModel.getInstance().scoreBoardModel.setTimer(MyGameModel.getInstance().timer);
     }
+
+    replay() {
+
+        if (!MyGameModel.getInstance().gameOver) return;
+
+        // Clean state
+        MyGameModel.getInstance().boardModel.update(MyGameModel.getInstance().boardModel.boards[0]);
+        MyGameModel.getInstance().currentPlayer = 'b';
+
+        let moves = [];
+        MyGameModel.getInstance().piecesModels.forEach(moveModel => {
+            moves.push(`pmove(${moveModel.x - 1},${moveModel.z - 1},${moveModel.direction})`)
+        });
+
+        MyGameModel.getInstance().piecesModels = [];
+
+        let timeout = 1000;
+        moves.forEach(move => {
+                setTimeout(() => {
+                MyGameModel.getInstance().addPiece(move);
+                MyGameModel.getInstance().currentPlayer = MyGameModel.getInstance().currentPlayer === 'b' ? 'o' : 'b';
+            }, timeout);
+
+            timeout += 1000;
+        });
+
+        MyGameModel.getInstance().boardModel.removePiece();
+    }
 }
