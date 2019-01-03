@@ -70,6 +70,13 @@ class MyInterface extends CGFinterface {
     }
 
     /**
+    * Adds a camera rotation setting
+    */
+    addCameraRotation() {
+        this.cameraRotationGroup = this.gameSettings.add(MyGameView.getInstance(), 'cameraRotation').name('Camera Rotation');
+    }
+
+    /**
      * Adds a folder containing Coffee's main game settings.
      */
     addGameSettings() {
@@ -81,10 +88,10 @@ class MyInterface extends CGFinterface {
 
         this.startGroup = this.gameSettings.add(MyGameController.getInstance(), 'startGame').name('Start Game');
 
-        this.Board_Size = 5;
-        this.Consecutive = 4;
-        this.Minutes = 0;
-        this.Seconds = 30;
+        this.Board_Size = MyGameModel.getInstance().boardModel.boardLength;
+        this.Consecutive = MyGameModel.getInstance().consecutive;
+        this.Minutes = Math.floor(MyGameModel.getInstance().scoreBoardModel.time / 60);;
+        this.Seconds = MyGameModel.getInstance().scoreBoardModel.time % 60;
 
         this.boardLengthGroup = this.gameSettings.add(this, 'Board_Size', [5, 6, 7]).name('Board Size');
         this.consecutiveGroup = this.gameSettings.add(this, 'Consecutive', [3, 4, 5, 6, 7]);
@@ -97,13 +104,13 @@ class MyInterface extends CGFinterface {
         this.replayGroup = this.gameSettings.add(MyGameController.getInstance(), 'replay').name('Replay Last Game');
 
         this.boardLengthGroup.onFinishChange(function (value) {
-            console.log(this);
+            
             if (parseInt(value) < parseInt(this.object.Consecutive)) {
                 this.object.consecutiveGroup.setValue(value);
                 alert("Consecutive Pieces must be equal or less than Board Size!");
             }
 
-            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive), parseInt(this.object.Timer));
+            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive));
         });
 
         this.consecutiveGroup.onFinishChange(function (value) {
@@ -113,17 +120,17 @@ class MyInterface extends CGFinterface {
                 alert("Consecutive Pieces must be equal or less than Board Size!");
             }
 
-            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive), parseInt(this.object.Timer));
+            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive));
         });
 
         this.minutesGroup.onFinishChange(function (value) {
-            
+
             if (parseInt(value) == 0 && parseInt(this.object.Seconds) < 10) {
                 this.object.secondsGroup.setValue(10);
                 alert("Minimal Timer = 10 seconds!");
             }
 
-            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive), parseInt(this.object.Minutes) * 60 + parseInt(this.object.Seconds));
+            MyGameModel.getInstance().updateTimer(parseInt(this.object.Minutes) * 60 + parseInt(this.object.Seconds));
         });
 
         this.secondsGroup.onFinishChange(function (value) {
@@ -133,7 +140,7 @@ class MyInterface extends CGFinterface {
                 alert("Minimal Timer = 10 seconds!");
             }
 
-            MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive), parseInt(this.object.Minutes) * 60 + parseInt(this.object.Seconds));
+            MyGameModel.getInstance().updateTimer(parseInt(this.object.Minutes) * 60 + parseInt(this.object.Seconds));
         });
 
     }

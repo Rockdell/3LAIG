@@ -65,7 +65,8 @@ class MyGameController {
         let handler;
         promise.then(handler = (board) => {
             if (board !== 'no') {
-                MyGameModel.getInstance().updateBoardSettings(boardLength, consecutive, timer);
+                MyGameModel.getInstance().updateBoardSettings(boardLength, consecutive);
+                MyGameModel.getInstance().updateTimer(timer);
                 MyGameModel.getInstance().updateGameSettings(b, o);
                 MyGameModel.getInstance().boardModel.update(board);
                 MyGameModel.getInstance().gameOver= false;
@@ -154,6 +155,7 @@ class MyGameController {
         console.warn(winner == 'b' ? 'Brown' : 'Orange' + ' has Won!');
 
         MyGameModel.getInstance().scoreBoardModel.stop();
+        MyGameModel.getInstance().scoreBoardModel.gameWonBy(winner);
 
         MyGameView.getInstance().scene.interface.removeStartGameOptions();
         MyGameView.getInstance().scene.interface.addGameSettings();

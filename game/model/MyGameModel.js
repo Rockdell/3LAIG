@@ -24,6 +24,8 @@ class MyGameModel {
 
             // Default settings
             this.updateBoardSettings(5, 4)
+            this.updateTimer(this.timer);
+            
             this.updateGameSettings('user', 'user');
 
             MyGameModel.instance = this;
@@ -43,14 +45,12 @@ class MyGameModel {
         }
     }
 
-    updateBoardSettings(boardLength, consecutive, timer) {
+    updateBoardSettings(boardLength, consecutive) {
 
         this.boardModel.boardLength = boardLength || this.boardModel.boardLength;
         this.consecutive = consecutive || this.consecutive;
-        this.timer = timer || this.timer;
 
         this.scoreBoardModel.setPosition(this.boardModel.boardLength + 2, 0, this.boardModel.boardLength / 2.0 + 0.5);
-        this.scoreBoardModel.setTimer(this.timer);
 
         this.cz = (this.boardModel.boardLength - 5) / 2 + 0.625 + 0.5;
 
@@ -59,14 +59,15 @@ class MyGameModel {
             new MyPieceModel(-1, this.cz + 1.25, "h", "b", 2),
             new MyPieceModel(-1, this.cz + 2.50, "du", "b", 3),
             new MyPieceModel(-1, this.cz + 3.75, "dd", "b", 4),
-            // new MyPieceModel(this.cx + 3.75, -0.5, "v", "o", 1),
-            // new MyPieceModel(this.cx + 2.50, -0.5, "h", "o", 2),
-            // new MyPieceModel(this.cx + 1.25, -0.5, "du", "o", 3),
-            // new MyPieceModel(this.cx, -0.5, "dd", "o", 4)
         ];
 
         this.piecesModels = [];
         this.validMovesModels = [];
+    }
+
+    updateTimer(timer) {
+        this.timer = timer || this.timer;
+        this.scoreBoardModel.setTimer(this.timer);
     }
 
     updateGameSettings(b, o) {

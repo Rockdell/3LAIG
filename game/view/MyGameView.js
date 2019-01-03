@@ -12,6 +12,7 @@ class MyGameView {
             this.scoreBoardView = new MyScoreBoardView(scene);
             this.moveView = new MyMoveView(scene);
             this.pov = { player: 'b', target: Math.PI, angle: Math.PI };
+            this.cameraRotation = true;
             MyGameView.instance = this;
         }
     }
@@ -22,18 +23,21 @@ class MyGameView {
 
     rotateCamera() {
 
-        if (this.pov.angle === this.pov.target) return;
+        if (this.cameraRotation) {
 
-        let angle = this.pov.angle > this.pov.target ? - Math.PI / 100 : Math.PI / 100;
+            if (this.pov.angle === this.pov.target) return;
 
-        if (this.pov.angle > this.pov.target) {
-            if (this.pov.angle + angle < this.pov.target) angle = this.pov.target - this.pov.angle;
-        } else {
-            if (this.pov.angle + angle > this.pov.target) angle = this.pov.target - this.pov.angle;
+            let angle = this.pov.angle > this.pov.target ? - Math.PI / 100 : Math.PI / 100;
+
+            if (this.pov.angle > this.pov.target) {
+                if (this.pov.angle + angle < this.pov.target) angle = this.pov.target - this.pov.angle;
+            } else {
+                if (this.pov.angle + angle > this.pov.target) angle = this.pov.target - this.pov.angle;
+            }
+
+            this.scene.camera.orbit(CGFcameraAxis.Y, angle);
+            this.pov.angle += angle;
         }
-
-        this.scene.camera.orbit(CGFcameraAxis.Y, angle);
-        this.pov.angle += angle;
     }
 
     display() {

@@ -10,7 +10,7 @@ class MyScoreBoardView extends CGFobject {
 
         this.appearances = [];
 
-        for (let i = 0; i <= 10; i++) {
+        for (let i = 0; i <= 11; i++) {
             let tex = new CGFtexture(this.scene, `../scenes/images/number${i}.png`);
             this.app = new CGFappearance(this.scene);
             this.app.setTexture(tex);
@@ -24,6 +24,8 @@ class MyScoreBoardView extends CGFobject {
     applyAppearance(digit) {
         if (digit == ":")
             this.appearances[10].apply();
+        else if (digit == "..")
+            this.appearances[11].apply();
         else
             this.appearances[digit].apply();
     }
@@ -37,9 +39,16 @@ class MyScoreBoardView extends CGFobject {
             this.scene.rotate(-Math.PI / 5.0, 1, 0, 0);
             
             let time = ScoreBoardModel.getTimeArray();
-
             for (let i = 0; i < time.length; i++) {
                 this.applyAppearance(time[i]);
+                this.scene.translate(1, 0, 0);
+                this.scoreCell.display();
+            }
+
+            this.scene.translate(-5, 1, 0);
+            let gamesWon = ScoreBoardModel.getGamesWonArray();
+            for (let i = 0; i < gamesWon.length; i++) {
+                this.applyAppearance(gamesWon[i]);
                 this.scene.translate(1, 0, 0);
                 this.scoreCell.display();
             }

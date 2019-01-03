@@ -42,6 +42,7 @@ class MyScoreBoardModel {
         if (this.running) {
             if (this.time == 0)
                 return;
+                
             this.time -= elapsedTime;
 
             if (this.time < 0)
@@ -54,6 +55,10 @@ class MyScoreBoardModel {
             this.orangeGamesWon++;
         else
             this.brownGamesWon++;
+    }
+
+    getGamesWonArray() {
+        return this.parseIntToArray(this.orangeGamesWon).concat([".."]).concat(this.parseIntToArray(this.brownGamesWon));
     }
 
     getTimeArray() {

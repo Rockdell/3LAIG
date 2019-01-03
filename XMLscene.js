@@ -104,6 +104,7 @@ class XMLscene extends CGFscene {
 
         //Adds Coffee's game settings
         this.interface.addGameSettings();
+        this.interface.addCameraRotation();
 
         this.sceneInited = true;
     }
@@ -229,8 +230,8 @@ class XMLscene extends CGFscene {
         // Update camera;
         this.camera = this.cameras[this.currentCamera];
 
-        // if(this.camera instanceof CGFcamera)
-        //     this.interface.setActiveCamera(this.camera);
+        if(this.camera instanceof CGFcamera)
+            this.interface.setActiveCamera(this.camera);
     }
 
     updateLights() {   
