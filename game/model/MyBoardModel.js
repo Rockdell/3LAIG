@@ -6,6 +6,8 @@ class MyBoardModel {
     constructor(boardLength) {
         this.boards = [];
         this.boardLength = boardLength;
+
+        this.selectedCell = null;
     }
 
     getBoard() {

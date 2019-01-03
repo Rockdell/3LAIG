@@ -15,6 +15,7 @@ class MyPieceModel {
         this.animation = null;
 
         this.show = true;
+        this.selected = false;
     }
 
     setColor(color) {

@@ -39,6 +39,24 @@ class MyInputController {
 
     getUserMove() {
 
+        if (this.direction != null) {
+            for (let i = 0; i < MyGameModel.getInstance().templatePiecesModels.length; i++) {
+                if (i == (this.direction - 1))
+                    MyGameModel.getInstance().templatePiecesModels[i].selected = true;
+                else
+                    MyGameModel.getInstance().templatePiecesModels[i].selected = false;
+            }
+        } else {
+            for (let i = 0; i < MyGameModel.getInstance().templatePiecesModels.length; i++) {
+                MyGameModel.getInstance().templatePiecesModels[i].selected = false;
+            }
+        }
+
+        if (this.cell != null)
+            MyGameModel.getInstance().boardModel.selectedCell = this.cell;
+        else
+            MyGameModel.getInstance().boardModel.selectedCell = null;
+
         if (this.direction == null || this.cell == null)
             return null;
 

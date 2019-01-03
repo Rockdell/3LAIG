@@ -24,6 +24,14 @@ class MyPieceView extends CGFobject {
         this.appearanceTopBrown = new CGFappearance(this.scene);
         this.appearanceTopBrown.setTexture(pieceTopTextureBrown);
 
+        let selectedPieceTop = new CGFtexture(this.scene, "../scenes/images/selectedPieceTop.png");
+        this.selectedTopAppearance = new CGFappearance(this.scene);
+        this.selectedTopAppearance.setTexture(selectedPieceTop);
+
+        let selectedPieceBot = new CGFtexture(this.scene, "../scenes/images/selectedPieceBot.png");
+        this.selectedBotAppearance = new CGFappearance(this.scene);
+        this.selectedBotAppearance.setTexture(selectedPieceBot);
+
         this.halfPiece = new CGFnurbsObject(this.scene, 30, 30, this.generateSurface());
     }
 
@@ -94,14 +102,21 @@ class MyPieceView extends CGFobject {
                 this.scene.scale(0.5, 0.5, 0.5);
 
                 this.scene.pushMatrix();
+                
+                    if(!PieceModel.selected)
+                        PieceModel.color == "o" ? this.appearanceTopOrange.apply() : this.appearanceTopBrown.apply();
+                    else
+                        this.selectedTopAppearance.apply();
 
-                PieceModel.color == "o" ? this.appearanceTopOrange.apply() : this.appearanceTopBrown.apply();
                     this.halfPiece.display();
                 this.scene.popMatrix();
 
                 this.scene.pushMatrix();
 
-                    PieceModel.color == "o" ? this.appearanceBotOrange.apply() : this.appearanceBotBrown.apply();
+                    if(!PieceModel.selected)
+                        PieceModel.color == "o" ? this.appearanceBotOrange.apply() : this.appearanceBotBrown.apply();
+                    else
+                        this.selectedBotAppearance.apply();
 
                     this.scene.rotate(Math.PI, 1, 0, 0);
                     this.halfPiece.display();

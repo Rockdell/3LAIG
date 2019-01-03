@@ -69,6 +69,7 @@ class MyGameController {
                 MyGameModel.getInstance().updateGameSettings(b, o);
                 MyGameModel.getInstance().boardModel.update(board);
                 MyGameModel.getInstance().gameOver= false;
+                MyInputController.getInstance().reset();
             } else if (board === 'no') {
                 console.log('Error: settings.');
             }
