@@ -290,10 +290,10 @@ class XMLscene extends CGFscene {
 
             this.updateLights();
 
-            this.translate(-0.5 - MyGameModel.getInstance().boardModel.boardLength / 2, 0, -0.5 - MyGameModel.getInstance().boardModel.boardLength / 2);
-
             // Display scene
             this.graph.displayScene();
+
+            this.translate(-0.5 - MyGameModel.getInstance().boardModel.boardLength / 2, 0, -0.5 - MyGameModel.getInstance().boardModel.boardLength / 2);
 
             MyInputController.getInstance().updatePick(this);
 

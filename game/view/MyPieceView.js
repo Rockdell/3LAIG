@@ -96,7 +96,7 @@ class MyPieceView extends CGFobject {
                 if (PieceModel.animation != null)
                     PieceModel.animation.apply();
                 else
-                    this.scene.translate(PieceModel.x, 0.2, PieceModel.z);
+                    this.scene.translate(PieceModel.x, 0.1, PieceModel.z);
 
                 this.scene.rotate(direction, 0, 1, 0);
                 this.scene.scale(0.5, 0.5, 0.5);
