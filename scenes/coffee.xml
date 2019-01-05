@@ -115,10 +115,199 @@
             <texture id="none" />
 
             <children>
+                <componentref id="seats" />
                 <componentref id="table" />
                 <componentref id="walls" />
             </children>
 
+        </component>
+
+        <component id="seats">
+            <transformation>
+                <scale x="9.0" y="9.0" z="9.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="none" />
+
+            <children>
+                <componentref id="seat_right" />
+                <componentref id="seat_left" />
+            </children>
+        </component>
+
+        <component id="seat_right">
+            <transformation>
+                <rotate axis="y" angle="-180" />
+                <translate x="0.0" y="0.0" z="-1.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="none" />
+
+            <children>
+                <componentref id="seat" />
+            </children>
+        </component>
+
+        <component id="seat_left">
+            <transformation>
+                <translate x="0.0" y="0.0" z="-1.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="none" />
+
+            <children>
+                <componentref id="seat" />
+            </children>
+        </component>
+
+        <component id="seat">
+            <transformation>
+                <translate x="0.0" y="0.8" z="0.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="wood" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="seat_base" />
+                <componentref id="seat_back" />
+                <componentref id="seat_legs" />
+            </children>
+        </component>
+
+        <component id="seat_base">
+            <transformation>
+                <translate x="0.0" y="-0.325" z="0.0" />
+                <scale x="0.5" y="0.05" z="0.5" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+
+        <component id="seat_back">
+            <transformation>
+                <translate x="0.0" y="0.0" z="-0.225" />
+                <scale x="0.5" y="0.60" z="0.05" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+
+        <component id="seat_legs">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="seat_leg1" />
+                <componentref id="seat_leg2" />
+                <componentref id="seat_leg3" />
+                <componentref id="seat_leg4" />
+            </children>
+        </component>
+
+        <component id="seat_leg1">
+            <transformation>
+                <translate x="-0.225" y="-0.575" z="0.225" />
+                <scale x="0.05" y="0.45" z="0.05" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+
+        <component id="seat_leg2">
+            <transformation>
+                <translate x="0.225" y="-0.575" z="0.225" />
+                <scale x="0.05" y="0.45" z="0.05" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+
+        <component id="seat_leg3">
+            <transformation>
+                <translate x="-0.225" y="-0.575" z="-0.225" />
+                <scale x="0.05" y="0.45" z="0.05" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+
+        <component id="seat_leg4">
+            <transformation>
+                <translate x="0.225" y="-0.575" z="-0.225" />
+                <scale x="0.05" y="0.45" z="0.05" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <componentref id="cube" />
+            </children>
         </component>
 
         <component id="table">
