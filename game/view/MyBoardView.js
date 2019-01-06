@@ -12,7 +12,7 @@ class MyBoardView extends CGFobject {
         this.appearance = new CGFappearance(this.scene);
         this.appearance.setTexture(cellTexture);
 
-        let supportTexture = new CGFtexture(this.scene, "../scenes/images/boardSupport.png");
+        let supportTexture = new CGFtexture(this.scene, "../scenes/images/chair.jpg");
         this.supportAppearance = new CGFappearance(this.scene);
         this.supportAppearance.setTexture(supportTexture);
 
@@ -21,19 +21,29 @@ class MyBoardView extends CGFobject {
         this.selectedAppearance.setTexture(selectedCellTexture);
 
         this.boardCell = new MyRectangle(scene, 0, -1, 1, 0);
-
         this.coffeeMug = new MyCoffeeMug(this.scene);
     }
 
     display(BoardModel) {
         this.scene.pushMatrix();
       
-            this.scene.translate(0, -0.1, 0);
-            // this.coffeeMug.display();            
-            
-            this.scene.translate(0.5, 0, 0.5);
+            this.scene.translate(0, -0.1, 0, 1);
+
+            //Coffee Mugs
+            this.scene.pushMatrix();
+                this.scene.translate(BoardModel.boardLength / 2.0 + 0.5, 0, BoardModel.boardLength / 2.0 - 4.5, 1);
+                this.coffeeMug.display();
+            this.scene.popMatrix();
+            this.scene.pushMatrix();
+                this.scene.translate(BoardModel.boardLength / 2.0 + 0.5, 0, (BoardModel.boardLength / 2.0 + 5.5) , 1);
+                this.scene.rotate(Math.PI, 0, 1, 0);    
+                this.coffeeMug.display();   
+            this.scene.popMatrix();
+
+            this.scene.translate(0.5, 0, 0.5, 1);
             this.scene.rotate(-Math.PI / 2.0, 1, 0, 0);
 
+            //Board Cells
             this.scene.pushMatrix();
                 this.supportAppearance.apply();
                 this.scene.scale(1, 1, 0.5, 1);

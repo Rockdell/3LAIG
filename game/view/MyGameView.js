@@ -10,6 +10,7 @@ class MyGameView {
             this.boardView = new MyBoardView(scene);
             this.pieceView = new MyPieceView(scene);
             this.scoreBoardView = new MyScoreBoardView(scene);
+            this.piecesSupportView = new MyPiecesSupportView(scene);
             this.moveView = new MyMoveView(scene);
             this.pov = { player: 'b', target: Math.PI, angle: Math.PI };
             MyGameView.instance = this;
@@ -46,6 +47,38 @@ class MyGameView {
     }
 
     display() {
+
+        //Template Pieces Support
+        // this.scene.pushMatrix();
+        //     this.scene.translate(-1, 0, 0.5);
+        //     this.scene.rotate(Math.PI, 0, 1, 0);
+        //     this.piecesSupport.display();
+        // this.scene.popMatrix();
+        // this.scene.pushMatrix();
+        //     this.scene.translate(-1, 0, 0.5 + MyGameModel.getInstance().templatePiecesModels.length + 0.25 * MyGameModel.getInstance().templatePiecesModels.length);
+        //     this.piecesSupport.display();
+        // this.scene.popMatrix();
+        // this.scene.pushMatrix();
+        //     this.scene.translate(-0.5, 0, 0.5 + (MyGameModel.getInstance().templatePiecesModels.length + 0.25 * MyGameModel.getInstance().templatePiecesModels.length) / 2.0);
+        //     this.scene.rotate(Math.PI / 2.0, 0, 1, 0);
+        //     this.scene.scale(MyGameModel.getInstance().templatePiecesModels.length + 0.25 * MyGameModel.getInstance().templatePiecesModels.length, 1, 1);
+        //     this.piecesSupport.display();
+        // this.scene.popMatrix();
+        // this.scene.pushMatrix();
+        //     this.scene.translate(-1.5, 0, 0.5 + (MyGameModel.getInstance().templatePiecesModels.length + 0.25 * MyGameModel.getInstance().templatePiecesModels.length) / 2.0);
+        //     this.scene.rotate(-Math.PI / 2.0, 0, 1, 0);
+        //     this.scene.scale(MyGameModel.getInstance().templatePiecesModels.length + 0.25 * MyGameModel.getInstance().templatePiecesModels.length, 1, 1);
+        //     this.piecesSupport.display();
+        // this.scene.popMatrix();
+        // this.scene.pushMatrix();
+        //     this.scene.translate(-1, 0.4, 0.5 + (MyGameModel.getInstance().templatePiecesModels.length + 0.25 * MyGameModel.getInstance().templatePiecesModels.length) / 2.0);
+        //     this.scene.rotate(-Math.PI / 2.0, 0, 1, 0);
+        //     this.scene.rotate(-Math.PI / 2.0, 1, 0, 0);
+        //     this.scene.scale(MyGameModel.getInstance().templatePiecesModels.length + 0.25 * MyGameModel.getInstance().templatePiecesModels.length, 1/0.8, 1);
+        //     this.piecesSupport.display();
+        // this.scene.popMatrix();
+
+        this.piecesSupportView.display();
 
         this.boardView.display(MyGameModel.getInstance().boardModel);
 
