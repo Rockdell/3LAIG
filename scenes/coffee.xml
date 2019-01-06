@@ -121,6 +121,48 @@
         <primitive id="light_bulb">
             <sphere radius="0.6" slices="30" stacks="30" />
         </primitive>
+        <primitive id="seat_top_front" >
+            <patch npointsU="6" npointsV="2" npartsU="10" npartsV="10" >
+                <controlpoint xx="-1.0" yy="2.0" zz="1.0" />
+                <controlpoint xx="-1.0" yy="2.0" zz="-1.0" />
+
+                <controlpoint xx="-0.8" yy="1.0" zz="1.0" />
+                <controlpoint xx="-0.8" yy="1.0" zz="-1.0" />
+
+                <controlpoint xx="0.0" yy="0.0" zz="1.0" />
+                <controlpoint xx="0.0" yy="0.0" zz="-1.0" />
+
+                <controlpoint xx="0.5" yy="-0.3" zz="1.0" />
+                <controlpoint xx="0.5" yy="-0.3" zz="-1.0" />
+
+                <controlpoint xx="1.0" yy="-0.3" zz="1.0" />
+                <controlpoint xx="1.0" yy="-0.3" zz="-1.0" />
+
+                <controlpoint xx="1.4" yy="-0.3" zz="1.0" />
+                <controlpoint xx="1.4" yy="-0.3" zz="-1.0" />
+            </patch>
+        </primitive>
+        <primitive id="seat_top_back" >
+            <patch npointsU="6" npointsV="2" npartsU="10" npartsV="10" >
+                <controlpoint xx="-1.0" yy="2.0" zz="-1.0" />
+                <controlpoint xx="-1.0" yy="2.0" zz="1.0" />
+
+                <controlpoint xx="-0.8" yy="1.0" zz="-1.0" />
+                <controlpoint xx="-0.8" yy="1.0" zz="1.0" />
+
+                <controlpoint xx="0.0" yy="0.0" zz="-1.0" />
+                <controlpoint xx="0.0" yy="0.0" zz="1.0" />
+
+                <controlpoint xx="0.5" yy="-0.3" zz="-1.0" />
+                <controlpoint xx="0.5" yy="-0.3" zz="1.0" />
+
+                <controlpoint xx="1.0" yy="-0.3" zz="-1.0" />
+                <controlpoint xx="1.0" yy="-0.3" zz="1.0" />
+
+                <controlpoint xx="1.4" yy="-0.3" zz="-1.0" />
+                <controlpoint xx="1.4" yy="-0.3" zz="1.0" />
+            </patch>
+        </primitive>
     </primitives>
     
     <components>
@@ -137,13 +179,13 @@
             <texture id="none" />
 
             <children>
-                <componentref id="world1" />
-                <!-- <componentref id="world2" /> -->
+                <componentref id="theme2" />
+                <componentref id="theme1" />
             </children>
 
         </component>
     
-        <component id="world1">
+        <component id="theme1">
 
             <transformation>
                 <transformationref id="transl_scene" />
@@ -167,6 +209,90 @@
             </children>
 
         </component>
+
+        <component id="theme2">
+
+            <transformation>
+                <transformationref id="transl_scene" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+                <material id="material2" />
+                <material id="material3" />
+                <material id="material4" />
+                <material id="material5" />
+            </materials>
+
+            <texture id="none" />
+
+            <children>
+                <primitiveref id="seat_top_front" />
+                <primitiveref id="seat_top_back" />
+                <componentref id="seat_support1" />
+                <componentref id="seat_support2" />
+                <componentref id="seat_support3" />
+                <!-- <componentref id="table" />
+                <componentref id="walls" />
+                <componentref id="lamp" /> -->
+            </children>
+
+        </component>
+
+        <component id="seat_support1">
+            <transformation>
+                <rotate axis="z" angle="35" />
+                <translate x="0.3" y="0.5" z="-1.0" />
+                <scale x="0.25" y="4.0" z="0.25" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="lamp" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+
+        <component id="seat_support2">
+            <transformation>
+                <rotate axis="z" angle="35" />
+                <translate x="0.3" y="0.5" z="1.0" />
+                <scale x="0.25" y="4.0" z="0.25" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="lamp" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+
+        <component id="seat_support3">
+            <transformation>
+                <rotate axis="z" angle="-35" />
+                <translate x="0.3" y="0.0" z="1.0" />
+                <scale x="0.25" y="2.0" z="0.25" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="lamp" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+
 
         <component id="coffee_mugs">
             <transformation>
