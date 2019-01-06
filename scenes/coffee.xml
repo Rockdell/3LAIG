@@ -1,7 +1,7 @@
 <yas>
     <scene root="world" axis_length="1.0" />~
 
-    <views default="MainCamera">
+    <views default="FreeCamera">
         <perspective id="MainCamera" near="0.1" far="500.0" angle="60">
             <from x="0.0" y="10.0" z="7.0" />
             <to x="0.0" y="0.0" z="0.0" />
@@ -19,26 +19,32 @@
 
     <lights>
         <omni id="light1" enabled="1">
-            <location x="6.0" y="6.0" z="1.0" w="1.0" />
+            <location x="13.5" y="12" z="13.5" w="1.0" />
             <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
         </omni>	
 		 <omni id="light2" enabled="1">
-            <location x="3.5" y="6.0" z="6.0" w="1.0" />
+            <location x="13.5" y="12" z="-13.5" w="1.0" />
             <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
         </omni>	
         <omni id="light3" enabled="1">
-            <location x="0.1" y="8.0" z="1.0" w="1.0" />
+            <location x="-13.5" y="12" z="13.5" w="1.0" />
             <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
         </omni>
-        <spot id="light4" enabled="0" angle="35" exponent="0.1">
-            <location x="-6.0" y="3.0" z="3.0" w="1.0" />
-            <target x="0.0" y="3.0" z="3.0" />
+        <omni id="light4" enabled="1">
+            <location x="-13.5" y="12" z="-13.5" w="1.0" />
+            <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+        </omni>
+        <spot id="light5" enabled="0" angle="35" exponent="0.1">
+            <location x="0" y="8" z="0" w="1.0" />
+            <target x="0.0" y="0.0" z="0.0" />
             <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
@@ -47,10 +53,16 @@
 
     <textures>
         <texture id="test" file="images/testTexture.jpg" />
-        <texture id="wood" file="images/wood.jpg" />
+        <texture id="dark_wood" file="images/dark_wood.jpg" />
+        <texture id="table_leg" file="images/scoreBoardSupport.png" />
+        <texture id="chair" file="images/chair.jpg" />
+        <texture id="white_wood" file="images/white_wood.jpg" />
+        <texture id="galaxy" file="images/galaxy.png" />
         <texture id="floor" file="images/floor.jpg" />
         <texture id="wall" file="images/wall.jpg" />
         <texture id="ceilling" file="images/bank.jpg" />
+        <texture id="light_bulb" file="images/light_bulb.jpg" />
+        <texture id="lamp" file="images/lamp.jpg" />
     </textures>
 
     <materials>
@@ -103,6 +115,12 @@
         <primitive id="cylinder">
             <cylinder base="1.0" top="1.0" height="1.0" slices="30" stacks="30" />
         </primitive>
+        <primitive id="lamp">
+            <cylinder base="2.0" top="0.3" height="1" slices="30" stacks="30" />
+        </primitive>
+        <primitive id="light_bulb">
+            <sphere radius="0.6" slices="30" stacks="30" />
+        </primitive>
     </primitives>
     
     <components>
@@ -145,8 +163,79 @@
                 <componentref id="seats" />
                 <componentref id="table" />
                 <componentref id="walls" />
+                <componentref id="lamp" />
             </children>
 
+        </component>
+
+        <component id="coffee_mugs">
+            <transformation>
+                <!-- <translate x="0" y="14.5" z="0" /> -->
+                <!-- <rotate axis="x" angle="-90" /> -->
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="lamp" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="lamp" />
+                <componentref id="light_bulb" />
+                <componentref id="lamp_post" />
+            </children>
+        </component>
+
+        <component id="lamp">
+            <transformation>
+                <translate x="0" y="14.5" z="0" />
+                <rotate axis="x" angle="-90" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="lamp" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="lamp" />
+                <componentref id="light_bulb" />
+                <componentref id="lamp_post" />
+            </children>
+        </component>
+
+        <component id="light_bulb">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="light_bulb" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="light_bulb" />
+            </children>
+        </component>
+
+        <component id="lamp_post">
+            <transformation>
+                <translate x="0" y="0" z="0.6" />
+                <scale x="0.2" y="0.2" z="5.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="cylinder" />
+            </children>
         </component>
 
         <component id="seats">
@@ -208,7 +297,7 @@
                 <material id="material1" />
             </materials>
 
-            <texture id="wood" length_s="1.0" length_t="1.0" />
+            <texture id="chair" length_s="1.0" length_t="1.0" />
 
             <children>
                 <componentref id="seat_base" />
@@ -347,7 +436,7 @@
                 <material id="material1" />
             </materials>
 
-            <texture id="wood" length_s="1.0" length_t="1.0" />
+            <texture id="dark_wood" length_s="1.0" length_t="1.0" />
 
             <children>
                 <componentref id="table_top" />
@@ -386,7 +475,7 @@
                 <material id="material1" />
             </materials>
 
-            <texture id="inherit" />
+            <texture id="table_leg" length_s="1.0" length_t="1.0" />
 
             <children>
                 <componentref id="table_leg1" />
@@ -585,7 +674,7 @@
                 <material id="material1" />
             </materials>
 
-            <texture id="ceilling" length_s="1.0" length_t="1.0" />
+            <texture id="galaxy" length_s="1.0" length_t="1.0" />
 
             <children>
                 <primitiveref id="rectangle" />

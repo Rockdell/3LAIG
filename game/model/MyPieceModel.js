@@ -29,7 +29,7 @@ class MyPieceModel {
     moveTo(xf, zf) {
         this.xf = xf;
         this.zf = zf;
-        this.animation = new ArchAnimation(MyGameView.getInstance().scene, 1.5, 2, this.x, this.z, this.xf, this.zf);
+        this.animation = new ArchAnimation(MyGameView.getInstance().scene, 1.5, 2, this.x, 0, this.z, this.xf, 0.5, this.zf);
         this.animation.animating = true;
 
         this.handleAnimation(0.000001);

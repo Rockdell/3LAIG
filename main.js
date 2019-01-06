@@ -29,6 +29,8 @@ serialInclude([
     '../primitives/MyVehicle.js',
     '../primitives/MyTerrain.js',
     '../primitives/MyWater.js',
+    '../primitives/MyCircle.js',
+    '../primitives/MyCoffeeMug.js',
     '../animations/Animation.js',
     '../animations/LinearAnimation.js',
     '../animations/CircularAnimation.js',
