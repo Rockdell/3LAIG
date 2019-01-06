@@ -12,6 +12,7 @@ class XMLscene extends CGFscene {
         super();
 
         this.interface = myinterface;
+        this.themeValues = {};
         this.viewValues = {};
         this.lightValues = {};
     }
@@ -33,8 +34,10 @@ class XMLscene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
 
         this.axis = new CGFaxis(this);
+        this.theme = null;
         this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 
+        this.currentTheme = 0;
         this.currentCamera = 0;
         this.cameras = [];
 
@@ -94,6 +97,9 @@ class XMLscene extends CGFscene {
 
         // Initialize lights
         this.initLights();
+
+        this.interface.addThemesGroup(this.graph.parsedXML.components[this.graph.parsedXML.scene.root].children);
+        this.updateTheme();
 
         // Adds views group
         this.interface.addViewsGroup(this.graph.parsedXML.views);
@@ -225,6 +231,13 @@ class XMLscene extends CGFscene {
         console.log('Initialized lights.');
     }
 
+    updateTheme() {
+
+        // Update theme
+        let themes = Object.keys(this.graph.parsedXML.components[this.graph.parsedXML.scene.root].children);
+        this.theme = themes[this.currentTheme];
+    }
+
     updateCamera() {
         // Update camera;
         this.camera = this.cameras[this.currentCamera];
@@ -286,7 +299,7 @@ class XMLscene extends CGFscene {
             this.updateLights();
 
             // Display scene
-            this.graph.displayScene();
+            this.graph.displayScene(this.theme);
 
             this.translate(-0.5 - MyGameModel.getInstance().boardModel.boardLength / 2, 0, -0.5 - MyGameModel.getInstance().boardModel.boardLength / 2);
 

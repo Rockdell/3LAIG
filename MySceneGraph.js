@@ -266,7 +266,7 @@ class MySceneGraph {
     /**
      * Displays the scene, processing each node, starting in the root node.
      */
-    displayScene() {
+    displayScene(component) {
 
         // Adjust material
         if (this.changeMaterial) {
@@ -275,8 +275,10 @@ class MySceneGraph {
             }
         }
 
+        let root = component || this.parsedXML.scene.root;
+
         this.scene.pushMatrix();
-            this.processNode(false, this.parsedXML.scene.root);
+            this.processNode(false, root);
         this.scene.popMatrix();
 
         this.changeMaterial = false;

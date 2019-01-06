@@ -24,6 +24,31 @@ class MyInterface extends CGFinterface {
         return true;
     }
 
+    addThemesGroup(components) {
+
+        let group = this.gui.addFolder('Themes');
+        group.open();
+
+        let i = 0;
+        for(let key in components) {
+
+            // Check if it's not a primitive
+            if (!this.scene.graph.parsedXML.components[key]) continue;
+
+            this.scene.themeValues[key] = i;
+            ++i;
+        }
+
+        let themes = this.gui.add(this.scene, 'currentTheme', this.scene.themeValues);
+        themes.name('Current Theme');
+
+        themes.onChange(function(value) {
+            this.object.updateTheme();
+            console.log('Theme updated')
+        })
+
+    }
+
     /**
      * Adds a folder containing the active camera and a list of available cameras.
      * @param {array} views
