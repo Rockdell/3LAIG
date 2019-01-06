@@ -125,7 +125,18 @@ class MyInterface extends CGFinterface {
             
             if (parseInt(value) < parseInt(this.object.Consecutive)) {
                 this.object.consecutiveGroup.setValue(value);
-                alert("Consecutive Pieces must be equal or less than Board Size!");
+
+                const toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                  
+                toast({
+                    type: 'warning',
+                    title: 'Consecutive Pieces must be equal or less than Board Size!'
+                });
             }
 
             MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive));
@@ -135,7 +146,18 @@ class MyInterface extends CGFinterface {
 
             if (parseInt(value) > parseInt(this.object.Board_Size)) {
                 this.object.consecutiveGroup.setValue(this.object.Board_Size);
-                alert("Consecutive Pieces must be equal or less than Board Size!");
+
+                const toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                  
+                toast({
+                    type: 'warning',
+                    title: 'Consecutive Pieces must be equal or less than Board Size!'
+                });
             }
 
             MyGameModel.getInstance().updateBoardSettings(parseInt(this.object.Board_Size), parseInt(this.object.Consecutive));
@@ -145,7 +167,18 @@ class MyInterface extends CGFinterface {
 
             if (parseInt(value) == 0 && parseInt(this.object.Seconds) < 10) {
                 this.object.secondsGroup.setValue(10);
-                alert("Minimal Timer = 10 seconds!");
+
+                const toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                  
+                toast({
+                    type: 'warning',
+                    title: 'Minimal Timer = 10 seconds!'
+                });
             }
 
             MyGameModel.getInstance().updateTimer(parseInt(this.object.Minutes) * 60 + parseInt(this.object.Seconds));
@@ -155,7 +188,18 @@ class MyInterface extends CGFinterface {
 
             if (parseInt(value) < 10 && parseInt(this.object.Minutes) == 0) {
                 this.object.secondsGroup.setValue(10);
-                alert("Minimal Timer = 10 seconds!");
+
+                const toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                  
+                toast({
+                    type: 'warning',
+                    title: 'Minimal Timer = 10 seconds!'
+                });
             }
 
             MyGameModel.getInstance().updateTimer(parseInt(this.object.Minutes) * 60 + parseInt(this.object.Seconds));

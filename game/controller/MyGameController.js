@@ -90,7 +90,7 @@ class MyGameController {
                   
                 toast({
                     type: 'error',
-                    title: 'Setting game settings!'
+                    title: 'Error setting game settings!'
                 });
             }
         });
@@ -116,7 +116,7 @@ class MyGameController {
                   
                 toast({
                     type: 'error',
-                    title: 'Generating bot move!'
+                    title: 'Error generating bot move!'
                 });
             }
         });
@@ -142,7 +142,7 @@ class MyGameController {
                   
                 toast({
                     type: 'error',
-                    title: 'Validating move!'
+                    title: 'Error validating move!'
                 });
             }
         });
@@ -173,7 +173,7 @@ class MyGameController {
                   
                 toast({
                     type: 'error',
-                    title: 'Making move!'
+                    title: 'Error making move!'
                 });
             }
         });
@@ -215,7 +215,7 @@ class MyGameController {
         let text = null;
 
         if(winner != null) {
-            text = winner == 'b' ? 'Brown' : 'Orange' + ' has Won!';
+            text = (winner == 'b' ? 'Brown' : 'Orange') + ' has Won!';
             MyGameModel.getInstance().scoreBoardModel.gameWonBy(winner);
         }
 
@@ -323,7 +323,18 @@ class MyGameController {
         if (!MyGameModel.getInstance().gameOver) return;
 
         if (MyGameModel.getInstance().piecesModels.length == 0) {
-            console.warn("No replay available!");
+            const toast = Swal.mixin({
+                toast: true,
+                position: 'top-start',
+                showConfirmButton: false,
+                timer: 3000
+            });
+              
+            toast({
+                type: 'warning',
+                title: 'No replay available!'
+            });
+
             return;
         };
 
