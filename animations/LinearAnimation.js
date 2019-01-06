@@ -29,7 +29,6 @@ class LinearAnimation extends Animation {
     calculate() {
 
         function angle(v2, v1) {
-            //console.log("Calculate angle between vectors: v1 = " + v1 + " - v2 = " + v2);
             if (v1 !== null && v2 != null) {
                 if (!((v1[0] === 0 && v1[1] === 0) || (v2[0] === 0 && v2[1] === 0))) {
                     let dot = vec2.dot(v1, v2);                 // dot product
@@ -86,8 +85,6 @@ class LinearAnimation extends Animation {
         function equals(v1, v2) {
             return (v1 != null && v2 != null && v1[0] === v2[0] && v1[1] === v2[1] && v1[2] === v2[2]);
         }
-
-        //console.log("Total time LINEAR: " + this.total_time + " - time elapsed: " + secondsElapsed);
 
         if (!this.animating)
             return;

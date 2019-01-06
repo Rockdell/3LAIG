@@ -33,7 +33,7 @@ class MyScoreBoardModel {
 
     setTimer(time) {
         if (time >= 100 * 60)
-            console.log("Invalid timer: Less than 100 minutes!");
+            console.error("Invalid timer: Less than 100 minutes!");
         else
             this.time = time;
     }

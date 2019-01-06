@@ -19,13 +19,11 @@ class CircularAnimation extends Animation {
     }
     
     update(secondsElapsed) {
-
-        //console.log("Total time CIRCULAR: " + this.total_time + " - time elapsed: " + secondsElapsed);
-
         if (!this.animating)
             return;
 
         if (this.total_time + secondsElapsed >= this.span) {
+
             //Calculates the time it takes to fully complete the animation and not go beyond the last control point
             secondsElapsed = this.span - this.total_time;
             this.animating = false;

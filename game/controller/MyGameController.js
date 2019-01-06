@@ -22,7 +22,17 @@ class MyGameController {
 
             this.setSettings(MyGameModel.getInstance().boardModel.boardLength, MyGameModel.getInstance().consecutive, MyGameModel.getInstance().timer, MyGameModel.getInstance().b, MyGameModel.getInstance().o);
 
-            console.log("Game Started!");
+            const toast = Swal.mixin({
+                toast: true,
+                position: 'top-start',
+                showConfirmButton: false,
+                timer: 3000
+            });
+              
+            toast({
+                type: 'success',
+                title: 'Game Started!'
+            });
 
             MyGameView.getInstance().scene.interface.removeGameSettings();
             MyGameView.getInstance().scene.interface.addStartGameOptions();
@@ -71,7 +81,17 @@ class MyGameController {
                 MyGameModel.getInstance().gameOver = false;
                 MyInputController.getInstance().reset();
             } else if (board === 'no') {
-                console.log('Error: settings.');
+                const toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                  
+                toast({
+                    type: 'error',
+                    title: 'Setting game settings!'
+                });
             }
         });
     }
@@ -87,7 +107,17 @@ class MyGameController {
             if (botMove !== 'no') {
                 this.validate(botMove);
             } else {
-                console.log('Error: generating bot move.');
+                const toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                  
+                toast({
+                    type: 'error',
+                    title: 'Generating bot move!'
+                });
             }
         });
     }
@@ -103,7 +133,17 @@ class MyGameController {
             if (valid === 'ok') {
                 this.move(move);
             } else if (valid === 'no') {
-                console.log('Error: validating move.');
+                const toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                  
+                toast({
+                    type: 'error',
+                    title: 'Validating move!'
+                });
             }
         });
     }
@@ -124,7 +164,17 @@ class MyGameController {
 
                 this.gameOver();
             } else {
-                console.log('Error: making move.');
+                const toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                  
+                toast({
+                    type: 'error',
+                    title: 'Making move!'
+                });
             }
         });
     }
@@ -143,7 +193,17 @@ class MyGameController {
             } else if (response === 'not_over') {
                 this.validMoves();
             } else if (response === 'no') {
-                console.log('Error: game over.');
+                const toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                  
+                toast({
+                    type: 'error',
+                    title: 'Game is already over!'
+                });
             }
         })
     }
@@ -152,12 +212,18 @@ class MyGameController {
 
         MyGameModel.getInstance().gameOver = true;
 
-        console.warn(warning);
+        let text = null;
 
         if(winner != null) {
-            console.warn(winner == 'b' ? 'Brown' : 'Orange' + ' has Won!');
+            text = winner == 'b' ? 'Brown' : 'Orange' + ' has Won!';
             MyGameModel.getInstance().scoreBoardModel.gameWonBy(winner);
         }
+
+        Swal({
+            type: 'warning',
+            title: warning,
+            text: text
+        });
 
         MyGameModel.getInstance().scoreBoardModel.stop();
         MyGameView.getInstance().scene.interface.removeStartGameOptions();
@@ -181,7 +247,17 @@ class MyGameController {
                 // MyGameModel.getInstance().removeValidMoves();
                 MyGameModel.getInstance().addValidMoves(response);
             } else {
-                console.log('Error: getting valid moves.');
+                const toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                  
+                toast({
+                    type: 'error',
+                    title: 'Getting valid moves!'
+                });
             }
         });
     }
@@ -189,7 +265,18 @@ class MyGameController {
     undoMove() {
 
         if (MyGameModel.getInstance().getLastMove() === 'pmove(_,_,_)') {
-            console.log('Error: can\'t undo more moves.');
+            const toast = Swal.mixin({
+                toast: true,
+                position: 'top-start',
+                showConfirmButton: false,
+                timer: 3000
+            });
+              
+            toast({
+                type: 'error',
+                title: 'Can\'t undo more moves!'
+            });
+
             return;
         }
 

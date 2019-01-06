@@ -16,8 +16,6 @@ class ScaleAnimation extends Animation {
 
     update(secondsElapsed) {
 
-        // console.log("Total time SCALAR: " + this.total_time + " - time elapsed: " + secondsElapsed + " - scale: " + this.scaleVel * this.total_time);
-
         if (!this.animating)
             return;
 

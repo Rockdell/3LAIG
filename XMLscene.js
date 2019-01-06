@@ -261,11 +261,6 @@ class XMLscene extends CGFscene {
      */
     display() {
 
-        // MyInputController.getInstance().updatePick(this);
-
-        // this.logPicking();
-        // this.clearPickRegistration();
-
         // ---- BEGIN Background, camera and axis setup
 
         // Clear image and depth buffer everytime we update the scene
