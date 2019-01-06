@@ -1,7 +1,7 @@
 <yas>
     <scene root="world" axis_length="1.0" />~
 
-    <views default="FreeCamera">
+    <views default="MainCamera">
         <perspective id="MainCamera" near="0.1" far="500.0" angle="60">
             <from x="0.0" y="10.0" z="7.0" />
             <to x="0.0" y="0.0" z="0.0" />
@@ -63,6 +63,11 @@
         <texture id="ceilling" file="images/bank.jpg" />
         <texture id="light_bulb" file="images/light_bulb.jpg" />
         <texture id="lamp" file="images/lamp.jpg" />
+        <texture id="water" file="images/water.png" />
+        <texture id="waves" file="images/waves.png" />
+        <texture id="sky" file="images/sky.jpg" />
+        <texture id="sea_horizon" file="images/sea.png" />
+        <texture id="reclining_chair_skin" file="images/reclining_chair.png" />
     </textures>
 
     <materials>
@@ -121,7 +126,7 @@
         <primitive id="light_bulb">
             <sphere radius="0.6" slices="30" stacks="30" />
         </primitive>
-        <primitive id="seat_top_front" >
+        <primitive id="reclining_chair_top_front" >
             <patch npointsU="6" npointsV="2" npartsU="10" npartsV="10" >
                 <controlpoint xx="-1.0" yy="2.0" zz="1.0" />
                 <controlpoint xx="-1.0" yy="2.0" zz="-1.0" />
@@ -142,7 +147,7 @@
                 <controlpoint xx="1.4" yy="-0.3" zz="-1.0" />
             </patch>
         </primitive>
-        <primitive id="seat_top_back" >
+        <primitive id="reclining_chair_top_back" >
             <patch npointsU="6" npointsV="2" npartsU="10" npartsV="10" >
                 <controlpoint xx="-1.0" yy="2.0" zz="-1.0" />
                 <controlpoint xx="-1.0" yy="2.0" zz="1.0" />
@@ -162,6 +167,9 @@
                 <controlpoint xx="1.4" yy="-0.3" zz="-1.0" />
                 <controlpoint xx="1.4" yy="-0.3" zz="1.0" />
             </patch>
+        </primitive>
+        <primitive id="sea" >
+            <water idtexture="water" idwavemap="waves" parts="100" heightscale="1" texscale="1.0" />
         </primitive>
     </primitives>
     
@@ -179,13 +187,13 @@
             <texture id="none" />
 
             <children>
-                <componentref id="theme2" />
-                <componentref id="theme1" />
+                <componentref id="beach" />
+                <componentref id="room" />    
             </children>
 
         </component>
     
-        <component id="theme1">
+        <component id="room">
 
             <transformation>
                 <transformationref id="transl_scene" />
@@ -203,14 +211,14 @@
 
             <children>
                 <componentref id="seats" />
-                <componentref id="table" />
-                <componentref id="walls" />
+                <componentref id="table1" />
+                <componentref id="walls1" />
                 <componentref id="lamp" />
             </children>
 
         </component>
 
-        <component id="theme2">
+        <component id="beach">
 
             <transformation>
                 <transformationref id="transl_scene" />
@@ -227,19 +235,143 @@
             <texture id="none" />
 
             <children>
-                <primitiveref id="seat_top_front" />
-                <primitiveref id="seat_top_back" />
-                <componentref id="seat_support1" />
-                <componentref id="seat_support2" />
-                <componentref id="seat_support3" />
-                <!-- <componentref id="table" />
-                <componentref id="walls" />
-                <componentref id="lamp" /> -->
+                <componentref id="table2" />
+                <componentref id="reclining_chairs" />
+                <componentref id="walls2" />
+                <componentref id="sea_floor" />
             </children>
 
         </component>
 
-        <component id="seat_support1">
+        <component id="sea_floor">
+            <transformation>
+                <scale x="30.0" y="1.0" z="30.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="none" />
+
+            <children>
+                <primitiveref id="sea" />
+            </children>
+
+        </component>
+
+        <component id="reclining_chairs">
+
+            <transformation>
+                <scale x="2.5" y="2.5" z="2.5" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="none" />
+
+            <children>
+                <componentref id="reclining_chair_right" />
+                <componentref id="reclining_chair_left" />
+            </children>
+
+        </component>
+
+        <component id="reclining_chair_right">
+
+           <transformation>
+                <rotate axis="y" angle="90" />
+                <translate x="-4.0" y="0.0" z="0.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="none" />
+
+            <children>
+                <componentref id="reclining_chair" />
+            </children>
+
+        </component>
+
+        <component id="reclining_chair_left">
+
+           <transformation>
+                <rotate axis="y" angle="-90" />
+                <translate x="-4.0" y="0.0" z="0.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="none" />
+
+            <children>
+                <componentref id="reclining_chair" />
+            </children>
+
+        </component>
+
+        <component id="reclining_chair">
+            <transformation>
+                <translate x="0.0" y="1.2" z="0.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+                <material id="material2" />
+                <material id="material3" />
+            </materials>
+
+            <texture id="none" />
+
+            <children>
+                <componentref id="reclining_chair_front" />
+                <componentref id="reclining_chair_back" />
+                <componentref id="reclining_chair_support1" />
+                <componentref id="reclining_chair_support2" />
+                <componentref id="reclining_chair_support3" />
+                <componentref id="reclining_chair_support4" />
+            </children>
+
+        </component>
+
+        <component id="reclining_chair_front">
+            <transformation>
+            </transformation>
+            
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="reclining_chair_skin" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="reclining_chair_top_front" />
+            </children>
+        </component>
+
+        <component id="reclining_chair_back">
+            <transformation>
+            </transformation>
+            
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="reclining_chair_skin" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="reclining_chair_top_back" />
+            </children>
+        </component>
+        
+        <component id="reclining_chair_support1">
             <transformation>
                 <rotate axis="z" angle="35" />
                 <translate x="0.3" y="0.5" z="-1.0" />
@@ -247,7 +379,7 @@
             </transformation>
 
             <materials>
-                <material id="material1" />
+                <material id="inherit" />
             </materials>
 
             <texture id="lamp" length_s="1.0" length_t="1.0" />
@@ -257,7 +389,7 @@
             </children>
         </component>
 
-        <component id="seat_support2">
+        <component id="reclining_chair_support2">
             <transformation>
                 <rotate axis="z" angle="35" />
                 <translate x="0.3" y="0.5" z="1.0" />
@@ -265,7 +397,7 @@
             </transformation>
 
             <materials>
-                <material id="material1" />
+                <material id="inherit" />
             </materials>
 
             <texture id="lamp" length_s="1.0" length_t="1.0" />
@@ -275,15 +407,33 @@
             </children>
         </component>
 
-        <component id="seat_support3">
+        <component id="reclining_chair_support3">
             <transformation>
-                <rotate axis="z" angle="-35" />
-                <translate x="0.3" y="0.0" z="1.0" />
-                <scale x="0.25" y="2.0" z="0.25" />
+                <rotate axis="z" angle="-50" />
+                <translate x="0.5" y="-0.5" z="1.0" />
+                <scale x="0.2" y="1.4" z="0.2" />
             </transformation>
 
             <materials>
-                <material id="material1" />
+                <material id="inherit" />
+            </materials>
+
+            <texture id="lamp" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+
+        <component id="reclining_chair_support4">
+            <transformation>
+                <rotate axis="z" angle="-50" />
+                <translate x="0.5" y="-0.5" z="-1.0" />
+                <scale x="0.2" y="1.4" z="0.2" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
             </materials>
 
             <texture id="lamp" length_s="1.0" length_t="1.0" />
@@ -296,8 +446,6 @@
 
         <component id="coffee_mugs">
             <transformation>
-                <!-- <translate x="0" y="14.5" z="0" /> -->
-                <!-- <rotate axis="x" angle="-90" /> -->
             </transformation>
 
             <materials>
@@ -552,7 +700,7 @@
             </children>
         </component>
 
-        <component id="table">
+        <component id="table1">
 
             <transformation>
                 <scale x="8.0" y="8.0" z="8.0" />
@@ -563,6 +711,25 @@
             </materials>
 
             <texture id="dark_wood" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="table_top" />
+                <componentref id="table_legs" />
+            </children>
+
+        </component>
+
+        <component id="table2">
+
+            <transformation>
+                <scale x="8.0" y="8.0" z="8.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="white_wood" length_s="1.0" length_t="1.0" />
 
             <children>
                 <componentref id="table_top" />
@@ -679,7 +846,7 @@
             </children>
         </component>
 
-        <component id="walls">
+        <component id="walls1">
             <transformation>
                 <translate x="0.0" y="10.0" z="0.0" />
             </transformation>
@@ -688,19 +855,40 @@
                 <material id="material1" />
             </materials>
 
-            <texture id="inherit" />
+            <texture id="wall" length_s="0.25" length_t="0.25" />
 
             <children>
-                <componentref id="right_wall" />
-                <componentref id="left_wall" />
-                <componentref id="front_wall" />
-                <componentref id="back_wall" />
+                <componentref id="right_wall1" />
+                <componentref id="left_wall1" />
+                <componentref id="front_wall1" />
+                <componentref id="back_wall1" />
                 <componentref id="floor" />
-                <componentref id="ceiling" />
+                <componentref id="ceiling1" />
             </children>
         </component>
 
-        <component id="right_wall">
+        <component id="walls2">
+            <transformation>
+                <translate x="0.0" y="10.0" z="0.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="sea_horizon" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <componentref id="right_wall2" />
+                <componentref id="left_wall2" />
+                <componentref id="front_wall2" />
+                <componentref id="back_wall2" />
+                <componentref id="floor" />
+                <componentref id="ceiling2" />
+            </children>
+        </component>
+
+        <component id="right_wall1">
             <transformation>
                 <rotate axis="y" angle="-180" />
                 <translate x="0.0" y="0.0" z="-15.0" />
@@ -711,14 +899,32 @@
                 <material id="material1" />
             </materials>
 
-            <texture id="wall" length_s="0.25" length_t="0.25" />
+            <texture id="inherit" />
 
             <children>
                 <primitiveref id="rectangle" />
             </children>
         </component>
 
-        <component id="left_wall">
+        <component id="right_wall2">
+            <transformation>
+                <rotate axis="y" angle="-180" />
+                <translate x="0.0" y="0.0" z="-15.0" />
+                <scale x="30.0" y="20.0" z="1.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="rectangle" />
+            </children>
+        </component>
+
+        <component id="left_wall1">
             <transformation>
                 <translate x="0.0" y="0.0" z="-15.0" />
                 <scale x="30.0" y="20.0" z="1.0" />
@@ -728,14 +934,31 @@
                 <material id="material1" />
             </materials>
 
-            <texture id="wall" length_s="0.25" length_t="0.25" />
+            <texture id="inherit" />
 
             <children>
                 <primitiveref id="rectangle" />
             </children>
         </component>
 
-        <component id="front_wall">
+        <component id="left_wall2">
+            <transformation>
+                <translate x="0.0" y="0.0" z="-15.0" />
+                <scale x="30.0" y="20.0" z="1.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="rectangle" />
+            </children>
+        </component>
+
+        <component id="front_wall1">
             <transformation>
                 <rotate axis="y" angle="90" />
                 <translate x="0.0" y="0.0" z="-15.0" />
@@ -746,14 +969,32 @@
                 <material id="material1" />
             </materials>
 
-            <texture id="wall" length_s="0.25" length_t="0.25" />
+            <texture id="inherit" />
 
             <children>
                 <primitiveref id="rectangle" />
             </children>
         </component>
 
-        <component id="back_wall">
+        <component id="front_wall2">
+            <transformation>
+                <rotate axis="y" angle="90" />
+                <translate x="0.0" y="0.0" z="-15.0" />
+                <scale x="30.0" y="20.0" z="1.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="rectangle" />
+            </children>
+        </component>
+
+        <component id="back_wall1">
             <transformation>
                 <rotate axis="y" angle="-90" />
                 <translate x="0.0" y="0.0" z="-15.0" />
@@ -764,7 +1005,25 @@
                 <material id="material1" />
             </materials>
 
-            <texture id="wall" length_s="0.25" length_t="0.25" />
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="rectangle" />
+            </children>
+        </component>
+
+        <component id="back_wall2">
+            <transformation>
+                <rotate axis="y" angle="-90" />
+                <translate x="0.0" y="0.0" z="-15.0" />
+                <scale x="30.0" y="20.0" z="1.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="inherit" />
 
             <children>
                 <primitiveref id="rectangle" />
@@ -789,7 +1048,7 @@
             </children>
         </component>
 
-        <component id="ceiling">
+        <component id="ceiling1">
             <transformation>
                 <translate x="0.0" y="10.0" z="0.0" />
                 <rotate axis="x" angle="90" />
@@ -801,6 +1060,24 @@
             </materials>
 
             <texture id="galaxy" length_s="1.0" length_t="1.0" />
+
+            <children>
+                <primitiveref id="rectangle" />
+            </children>
+        </component>
+
+        <component id="ceiling2">
+            <transformation>
+                <translate x="0.0" y="10.0" z="0.0" />
+                <rotate axis="x" angle="90" />
+                <scale x="30.0" y="30.0" z="1.0" />
+            </transformation>
+
+            <materials>
+                <material id="material1" />
+            </materials>
+
+            <texture id="sky" length_s="1.0" length_t="1.0" />
 
             <children>
                 <primitiveref id="rectangle" />
