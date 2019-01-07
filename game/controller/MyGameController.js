@@ -22,22 +22,6 @@ class MyGameController {
 
             this.setSettings(MyGameModel.getInstance().boardModel.boardLength, MyGameModel.getInstance().consecutive, MyGameModel.getInstance().timer, MyGameModel.getInstance().b, MyGameModel.getInstance().o);
 
-            const toast = Swal.mixin({
-                toast: true,
-                position: 'top-start',
-                showConfirmButton: false,
-                timer: 3000
-            });
-              
-            toast({
-                type: 'success',
-                title: 'Game Started!'
-            });
-
-            MyGameView.getInstance().scene.interface.removeGameSettings();
-            MyGameView.getInstance().scene.interface.addStartGameOptions();
-
-            MyGameModel.getInstance().scoreBoardModel.start();
         }
     }
 
@@ -61,6 +45,7 @@ class MyGameController {
     }
 
     setSettings(boardLength, consecutive, timer, b, o) {
+        // console.log("controller: " + b + " - " + o);
 
         if (MyGameController.getInstance().waitingServer) return;
 
@@ -80,6 +65,24 @@ class MyGameController {
                 MyGameModel.getInstance().boardModel.update(board);
                 MyGameModel.getInstance().gameOver = false;
                 MyInputController.getInstance().reset();
+
+                const toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                  
+                toast({
+                    type: 'success',
+                    title: 'Game Started!'
+                });
+    
+                MyGameView.getInstance().scene.interface.removeGameSettings();
+                MyGameView.getInstance().scene.interface.addStartGameOptions();
+    
+                MyGameModel.getInstance().scoreBoardModel.start();
+                
             } else if (board === 'no') {
                 const toast = Swal.mixin({
                     toast: true,
@@ -211,6 +214,15 @@ class MyGameController {
     alertGameOver(winner, warning) {
 
         MyGameModel.getInstance().gameOver = true;
+
+        if (MyGameModel.getInstance().b == "hardbot1" || MyGameModel.getInstance().b == "hardbot2")
+            MyGameModel.getInstance().b = MyGameModel.getInstance().b.slice(0, -1);
+
+        if (MyGameModel.getInstance().o == "hardbot1" || MyGameModel.getInstance().o == "hardbot2")
+            MyGameModel.getInstance().o = MyGameModel.getInstance().o.slice(0, -1);
+
+        // console.log(MyGameModel.getInstance().o + " - " + MyGameModel.getInstance().b);
+        MyGameModel.getInstance().updateGameSettings(MyGameModel.getInstance().b, MyGameModel.getInstance().o);
 
         let text = null;
 
